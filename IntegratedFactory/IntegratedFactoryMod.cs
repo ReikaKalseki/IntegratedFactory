@@ -163,7 +163,15 @@ namespace ReikaKalseki.IntegratedFactory
        		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.PerfectLensChromer"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ReflectiveAlloy", 1F);
        		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.ExceptionalLensChromer"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ReflectiveAlloy", 1F);
        	}
-        
+       	/*
+       	FUtil.log("Pipe reinforcer ("+GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.ReinforcedPipeMaker"].Value+"="+GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.ReinforcedPipeMaker"].CubeValue+"):");
+       	FUtil.log("Ingredients:");
+       	rec = GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.ReinforcedPipeMaker"].Recipe;
+       	rec.Costs.ForEach(cc => {
+       	    bool flag = MaterialData.GetItemIdOrCubeValues(cc.Key, out cc.ItemType, out cc.CubeType, out cc.CubeValue);
+			FUtil.log(cc.ingredientToString()+" {"+flag+"}");
+		});
+        */
         if (config.getBoolean(IFConfig.ConfigEntries.EFFICIENT_BLAST)) {
     		foreach (CraftData br in CraftData.GetRecipesForSet("BlastFurnace")) {
     			if (br.Costs[0].Amount == 16)
@@ -179,8 +187,8 @@ namespace ReikaKalseki.IntegratedFactory
     
     private void addItemButScaleRest(string gac, string add, float scale) {
     	CraftData rec = GenericAutoCrafterNew.mMachinesByKey[gac].Recipe;
-    	rec.CraftedAmount *= scale;
-    	rec.Costs.ForEach(cc => cc.Amount *= scale);
+    	rec.CraftedAmount = (int)(rec.CraftedAmount*scale);
+    	rec.Costs.ForEach(cc => cc.Amount = (uint)(cc.Amount*scale));
     	rec.addIngredient(add, 1);
     }
     
@@ -220,7 +228,10 @@ namespace ReikaKalseki.IntegratedFactory
     }
     
     private static int getBeltGACItem(string set, ItemBase item) {
-    	return CraftData.GetRecipesForSet(set).First(rec => rec.Costs[0].ItemType == item.mnItemID).CraftableItemType;
+    	if (item == null)
+    		return -1;
+    	CraftData cc = CraftData.GetRecipesForSet(set).FirstOrDefault(rec => rec.Costs[0].ItemType == item.mnItemID);
+    	return cc == null ? -1 : cc.CraftableItemType;
     }
     
     public static int GetPlateFromBar(ConveyorEntity stamper, ItemBase item) {

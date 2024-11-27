@@ -24,7 +24,7 @@
 				<Amount>1</Amount>
 			</CraftCost>
 			<CraftCost>
-				<Key>Crystal Fiber Mesh</Key>
+				<Key>CrystalFiberMesh</Key>
 				<Amount>1</Amount>
 			</CraftCost>
 		</Costs>
