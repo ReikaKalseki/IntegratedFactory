@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GenericAutoCrafterDataEntry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<FriendlyName>Turbomotor Crafter</FriendlyName>
+	<SpawnObject>ServoMotorMaker</SpawnObject>
+	<Value>ReikaKalseki.TurbomotorCrafter</Value>
+			
+	<PowerUsePerSecond>200</PowerUsePerSecond>  <!-- optional -->
+	<PowerTransferPerSecond>1000</PowerTransferPerSecond>  <!-- optional -->
+	<MaxPowerStorage>5000</MaxPowerStorage>  <!-- optional -->
+	<CraftingString>Spooling...</CraftingString>  <!-- optional -->
+	<WorkingAnimation000></WorkingAnimation000>  <!-- optional -->
+	
+	<CraftTime>5</CraftTime>  <!-- optional -->
+	<OptionalIngredients>false</OptionalIngredients>  <!-- optional -->
+	<Recipe>
+		<Key>ReikaKalseki.Turbomotor</Key>
+		<CraftedName>Turbomotor</CraftedName>
+		<CraftedAmount>1</CraftedAmount>
+		<Costs>
+			<CraftCost>
+				<Key>ServoMotor</Key>
+				<Amount>2</Amount>
+			</CraftCost>
+			<CraftCost>
+				<Key>IronGear</Key>
+				<Amount>10</Amount>
+			</CraftCost>
+			<CraftCost>
+				<Key>MolybdenumWire</Key>
+				<Amount>10</Amount>
+			</CraftCost>
+		</Costs>
+		<Description>Turbocharges motors for use in heavy machinery.</Description>
+	</Recipe>
+</GenericAutoCrafterDataEntry>

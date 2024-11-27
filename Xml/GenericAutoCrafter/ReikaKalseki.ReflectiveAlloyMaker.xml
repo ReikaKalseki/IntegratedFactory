@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GenericAutoCrafterDataEntry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<FriendlyName>Reflective Alloy Furnace</FriendlyName>
+	<SpawnObject>MiniSmelterObj</SpawnObject>
+	<Value>ReikaKalseki.ReflectiveAlloyMaker</Value>
+			
+	<PowerUsePerSecond>1000</PowerUsePerSecond>  <!-- optional -->
+	<PowerTransferPerSecond>4000</PowerTransferPerSecond>  <!-- optional -->
+	<MaxPowerStorage>25000</MaxPowerStorage>  <!-- optional -->
+	<CraftingString>Alloying...</CraftingString>  <!-- optional -->
+	<WorkingAnimation000></WorkingAnimation000>  <!-- optional -->
+	
+	<CraftTime>5</CraftTime>  <!-- optional -->
+	<OptionalIngredients>false</OptionalIngredients>  <!-- optional -->
+	<Recipe>
+		<Key>ReikaKalseki.ReflectiveAlloy</Key>
+		<CraftedName>Reflective Alloy</CraftedName>
+		<CraftedAmount>5</CraftedAmount>
+		<Costs>
+			<CraftCost>
+				<Key>ChromiumBar</Key>
+				<Amount>5</Amount>
+			</CraftCost>
+			<CraftCost>
+				<Key>GoldFoil</Key>
+				<Amount>1</Amount>
+			</CraftCost>
+		</Costs>
+		<Description>Creates an alloy perfect for the mirror finish necessary for both optimum lenses and for heat reflection.</Description>
+	</Recipe>
+</GenericAutoCrafterDataEntry>

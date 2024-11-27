@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfItemEntry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<ItemEntry>
+		<Key>ReikaKalseki.ChromiumPlate</Key>
+		<Name>Chromium Plate</Name>
+		<Plural>Chromium Plates</Plural>
+		<Type>ItemStack</Type>	
+		<Object>PlateLithium</Object>
+		<Sprite>ReikaKalseki.ChromiumPlate</Sprite>
+		<!-- Atlas optional -->
+		<Category>CraftingIngredient</Category>
+		<ResearchRequirements>
+			<Research>T0 assist machines</Research>
+		</ResearchRequirements>
+		<ScanRequirements>
+			<Scan>ChromiumOre</Scan>
+		</ScanRequirements>	
+	</ItemEntry>
+	<ItemEntry>
+		<Key>ReikaKalseki.MolybdenumPlate</Key>
+		<Name>Molybdenum Plate</Name>
+		<Plural>Molybdenum Plates</Plural>
+		<Type>ItemStack</Type>	
+		<Object>PlateTin</Object>
+		<Sprite>ReikaKalseki.MolybdenumPlate</Sprite>
+		<!-- Atlas optional -->
+		<Category>CraftingIngredient</Category>
+		<ResearchRequirements>
+			<Research>T0 assist machines</Research>
+		</ResearchRequirements>
+		<ScanRequirements>
+			<Scan>MolybdenumOre</Scan>
+		</ScanRequirements>	
+	</ItemEntry>
+	<ItemEntry>
+		<Key>ReikaKalseki.ChromiumWire</Key>
+		<Name>Chromium Wire</Name>
+		<Plural>Chromium Wires</Plural>
+		<Type>ItemStack</Type>	
+		<Object>WireLithium</Object>
+		<Sprite>ReikaKalseki.ChromiumWire</Sprite>
+		<Category>CraftingIngredient</Category>
+		<ResearchRequirements>
+      <Research>T0 assist machines</Research>
+		</ResearchRequirements>
+		<ScanRequirements>
+			<Scan>ChromiumOre</Scan>
+		</ScanRequirements>		
+	</ItemEntry>
+	<ItemEntry>
+		<Key>ReikaKalseki.MolybdenumWire</Key>
+		<Name>Molybdenum Wire</Name>
+		<Plural>Molybdenum Wires</Plural>
+		<Type>ItemStack</Type>	
+		<Object>WireTin</Object>
+		<Sprite>ReikaKalseki.MolybdenumWire</Sprite>
+		<Category>CraftingIngredient</Category>
+		<ResearchRequirements>
+      <Research>T0 assist machines</Research>
+		</ResearchRequirements>
+		<ScanRequirements>
+			<Scan>MolybdenumOre</Scan>
+		</ScanRequirements>		
+	</ItemEntry>
+	<ItemEntry>
+		<Key>ReikaKalseki.ChromiumCoil</Key>
+		<Name>Chromium Coil</Name>
+		<Plural>Chromium Coils</Plural>
+		<Type>ItemStack</Type>	
+		<Object>CoilLithium</Object>
+		<Sprite>ReikaKalseki.ChromiumCoil</Sprite>
+		<!-- Atlas optional -->
+		<Category>CraftingIngredient</Category>
+		<ResearchRequirements>
+			<Research>T0 assist machines</Research>
+		</ResearchRequirements>
+		<ScanRequirements>
+			<Scan>ChromiumOre</Scan>
+		</ScanRequirements>		
+	</ItemEntry>
+	<ItemEntry>
+		<Key>ReikaKalseki.MolybdenumCoil</Key>
+		<Name>Molybdenum Coil</Name>
+		<Plural>Molybdenum Coils</Plural>
+		<Type>ItemStack</Type>	
+		<Object>CoilTin</Object>
+		<Sprite>ReikaKalseki.MolybdenumCoil</Sprite>
+		<!-- Atlas optional -->
+		<Category>CraftingIngredient</Category>
+		<ResearchRequirements>
+			<Research>T0 assist machines</Research>
+		</ResearchRequirements>
+		<ScanRequirements>
+			<Scan>MolybdenumOre</Scan>
+		</ScanRequirements>		
+	</ItemEntry>
+	<ItemEntry>
+		<Key>ReikaKalseki.ChromiumPCB</Key>
+		<Name>Reflective PCB</Name>
+		<Plural>Reflective PCBs</Plural>
+		<Type>ItemStack</Type>	
+		<Object>ConductivePCB</Object>
+		<Sprite>ReikaKalseki.ChromiumPCB</Sprite>
+		<!-- Atlas optional -->
+		<Category>CraftingIngredient</Category>
+		<ResearchRequirements>
+      <Research>T0 assist machines</Research>
+		</ResearchRequirements>
+		<ScanRequirements>
+			<Scan>ChromiumOre</Scan>
+		</ScanRequirements>		
+	</ItemEntry>
+	<ItemEntry>
+		<Key>ReikaKalseki.MolybdenumPCB</Key>
+		<Name>Magnetic PCB</Name>
+		<Plural>Magnetic PCBs</Plural>
+		<Type>ItemStack</Type>	
+		<Object>PrimaryPCB</Object>
+		<Sprite>ReikaKalseki.MolybdenumPCB</Sprite>
+		<!-- Atlas optional -->
+		<Category>CraftingIngredient</Category>
+		<ResearchRequirements>
+      <Research>T0 assist machines</Research>
+		</ResearchRequirements>
+		<ScanRequirements>
+			<Scan>MolybdenumOre</Scan>
+		</ScanRequirements>		
+	</ItemEntry>
+	<ItemEntry>
+		<Key>ReikaKalseki.ChromiumPipe</Key>
+		<Name>Chromium Pipe</Name>
+		<Plural>Chromium Pipes</Plural>
+		<Type>ItemStack</Type>	
+		<Object>PipeLithium</Object>
+		<Sprite>ReikaKalseki.ChromiumPipe</Sprite>
+		<!-- Atlas optional -->
+		<Category>CraftingIngredient</Category>
+		<ResearchRequirements>
+			<Research>Advanced Research</Research>
+		</ResearchRequirements>
+		<ScanRequirements>
+			<Scan>ChromiumOre</Scan>
+		</ScanRequirements>		
+	</ItemEntry>
+	<ItemEntry>
+		<Key>ReikaKalseki.MolybdenumPipe</Key>
+		<Name>Molybdenum Pipe</Name>
+		<Plural>Molybdenum Pipes</Plural>
+		<Type>ItemStack</Type>	
+		<Object>PipeTin</Object>
+		<Sprite>ReikaKalseki.MolybdenumPipe</Sprite>
+		<!-- Atlas optional -->
+		<Category>CraftingIngredient</Category>
+		<ResearchRequirements>
+			<Research>Advanced Research</Research>
+		</ResearchRequirements>
+		<ScanRequirements>
+			<Scan>MolybdenumOre</Scan>
+		</ScanRequirements>		
+	</ItemEntry>
+	<ItemEntry>
+		<Key>ReikaKalseki.ReflectiveAlloy</Key>
+		<Name>Reflective Alloy</Name>
+		<Plural>Reflective Alloy</Plural>
+		<Type>ItemStack</Type>	
+		<Object>BarGold</Object>
+		<Sprite>ReikaKalseki.ReflectiveAlloy</Sprite>
+		<!-- Atlas optional -->
+		<Category>CraftingIngredient</Category>
+		<ResearchRequirements>
+			<Research>T4 ore extracting</Research>
+		</ResearchRequirements>
+		<ScanRequirements>
+			<Scan>ChromiumOre</Scan>
+		</ScanRequirements>		
+	</ItemEntry>
+	<ItemEntry>
+		<Key>ReikaKalseki.Turbomotor</Key>
+		<Name>Turbomotor</Name>
+		<Plural>Turbomotors</Plural>
+		<Type>ItemStack</Type>	
+		<Object>ServoMotor</Object>
+		<Sprite>ReikaKalseki.Turbomotor</Sprite>
+		<!-- Atlas optional -->
+		<Category>CraftingIngredient</Category>
+		<ResearchRequirements>
+			<Research>T4 ore extracting</Research>
+		</ResearchRequirements>
+		<ScanRequirements>
+			<Scan>ChromiumOre</Scan>
+			<Scan>MolybdenumOre</Scan>
+		</ScanRequirements>		
+	</ItemEntry>
+	<ItemEntry>
+		<Key>ReikaKalseki.ReinforcedPipe</Key>
+		<Name>Reinforced Pipe</Name>
+		<Plural>Reinforced Pipes</Plural>
+		<Type>ItemStack</Type>	
+		<Object>HeatConductantPipe</Object>
+		<Sprite>ReikaKalseki.ReinforcedPipe</Sprite>
+		<!-- Atlas optional -->
+		<Category>CraftingIngredient</Category>
+		<ResearchRequirements>
+			<Research>T4 ore extracting</Research>
+		</ResearchRequirements>
+		<ScanRequirements>
+			<Scan>ChromiumOre</Scan>
+			<Scan>MolybdenumOre</Scan>
+		</ScanRequirements>		
+	</ItemEntry>
+</ArrayOfItemEntry>

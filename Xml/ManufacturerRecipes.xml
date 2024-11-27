@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfCraftData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CraftData>
+    <Key>ReikaKalseki.ReflectiveAlloyMaker</Key>
+    <Category>manufacturing</Category>
+    <Tier>4</Tier>
+    <CraftedKey>ReikaKalseki.ReflectiveAlloyMaker</CraftedKey>
+    <CraftedAmount>1</CraftedAmount>
+    <Costs>
+      <CraftCost>
+        <Key>ReikaKalseki.ChromiumPlate</Key>
+        <Amount>5</Amount>
+      </CraftCost>
+      <CraftCost>
+        <Key>ReikaKalseki.MolybdenumPlate</Key>
+        <Amount>5</Amount>
+      </CraftCost>
+      <CraftCost>
+        <Key>TitaniumHousing</Key>
+        <Amount>6</Amount>
+      </CraftCost>
+      <CraftCost>
+        <Key>AdvancedMachineBlock</Key>
+        <Amount>30</Amount>
+      </CraftCost>
+    </Costs>
+    <Description>Creates an alloy perfect for the mirror finish necessary for both optimum lenses and for heat reflection.</Description>
+    <ResearchRequirements>
+      <Research>T4 ore extracting</Research>
+    </ResearchRequirements>
+    <CanCraftAnywhere>false</CanCraftAnywhere>
+  </CraftData>
+  <CraftData>
+    <Key>ReikaKalseki.TurbomotorCrafter</Key>
+    <Category>manufacturing</Category>
+    <Tier>4</Tier>
+    <CraftedKey>ReikaKalseki.TurbomotorCrafter</CraftedKey>
+    <CraftedAmount>1</CraftedAmount>
+    <Costs>
+      <CraftCost>
+        <Key>ReikaKalseki.ChromiumPCB</Key>
+        <Amount>5</Amount>
+      </CraftCost>
+      <CraftCost>
+        <Key>ReikaKalseki.MolybdenumPlate</Key>
+        <Amount>10</Amount>
+      </CraftCost>
+      <CraftCost>
+        <Key>UltimatePCB</Key>
+        <Amount>1</Amount>
+      </CraftCost>
+      <CraftCost>
+        <Key>OverlockedCrystalClock</Key>
+        <Amount>50</Amount>
+      </CraftCost>
+    </Costs>
+    <Description>Turbocharges motors for use in heavy machinery.</Description>
+    <ResearchRequirements>
+      <Research>T4 ore extracting</Research>
+    </ResearchRequirements>
+    <CanCraftAnywhere>false</CanCraftAnywhere>
+  </CraftData>
+</ArrayOfCraftData>	

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GenericAutoCrafterDataEntry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<FriendlyName>Pipe Reinforcer</FriendlyName>
+	<SpawnObject>PipeExtruder_T1</SpawnObject>
+	<Value>ReikaKalseki.ReinforcedPipeMaker</Value>
+			
+	<PowerUsePerSecond>30</PowerUsePerSecond>  <!-- optional -->
+	<PowerTransferPerSecond>100</PowerTransferPerSecond>  <!-- optional -->
+	<MaxPowerStorage>200</MaxPowerStorage>  <!-- optional -->
+	
+	<CraftTime>10</CraftTime>  <!-- optional -->
+	<OptionalIngredients>false</OptionalIngredients>  <!-- optional -->
+	<Recipe>
+		<Key>ReikaKalseki.ReinforcedPipe</Key>
+		<CraftedName>ReikaKalseki.ReinforcedPipe</CraftedName>
+		<CraftedAmount>1</CraftedAmount>
+		<Costs>
+			<CraftCost>
+				<Name>IronPlate</Name>
+				<Amount>2</Amount>
+			</CraftCost>
+			<CraftCost>
+				<Name>ReikaKalseki.MolybdenumPipe</Name>
+				<Amount>1</Amount>
+			</CraftCost>
+			<CraftCost>
+				<Name>Crystal Fiber Mesh</Name>
+				<Amount>1</Amount>
+			</CraftCost>
+		</Costs>
+		<Description>Wraps a crystal fiber mesh around molybdenum piping with iron reinforcements. A very sturdy pipe capable of withstanding great pressures and temperatures.</Description>
+	</Recipe>
+</GenericAutoCrafterDataEntry>

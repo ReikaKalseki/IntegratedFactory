@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfTerrainDataEntry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">	
+	<TerrainDataEntry>
+		<Key>GenericAssemblerMachine</Key>
+		<IsOverride>true</IsOverride>
+		<Values>
+			<ValueEntry>
+				<Key>ReikaKalseki.ReflectiveAlloyMaker</Key>
+				<Name>Reflective Alloy Furnace</Name>
+				<IconName>ReikaKalseki.ReflectiveAlloyMaker</IconName>
+				<Description>Creates an alloy perfect for the mirror finish necessary for both optimum lenses and for heat reflection.</Description>
+			</ValueEntry>
+			<ValueEntry>
+				<Key>ReikaKalseki.TurbomotorCrafter</Key>
+				<Name>Turbomotor Crafter</Name>
+				<IconName>ReikaKalseki.TurbomotorCrafter</IconName>
+				<Description>Turbocharges motors for use in heavy machinery.</Description>
+			</ValueEntry>		
+		</Values>
+	</TerrainDataEntry>	
+</ArrayOfTerrainDataEntry>
