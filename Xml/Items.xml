@@ -208,4 +208,34 @@
 			<Scan>MolybdenumOre</Scan>
 		</ScanRequirements>		
 	</ItemEntry>
+	<ItemEntry>
+		<Key>ReikaKalseki.ChromiumExperimentalPod</Key>
+		<Name>Reflective Experimental Pod</Name>
+		<Plural>Reflective Experimental Pods</Plural>
+		<Type>ItemStack</Type>	
+		<Object>ResearchPod_Complex</Object>
+		<Sprite>ReikaKalseki.ChromiumExperimentalPod</Sprite>
+		<Category>Consumable</Category>
+		<ResearchRequirements>
+			<Research>T4 ore extracting</Research>
+		</ResearchRequirements>
+		<ScanRequirements>
+			<Scan>ChromiumOre</Scan>
+		</ScanRequirements>		
+	</ItemEntry>
+	<ItemEntry>
+		<Key>ReikaKalseki.MolybdenumExperimentalPod</Key>
+		<Name>Magnetic Experimental Pod</Name>
+		<Plural>Magnetic Experimental Pods</Plural>
+		<Type>ItemStack</Type>	
+		<Object>ResearchPod_Simplified</Object>
+		<Sprite>ReikaKalseki.MolybdenumExperimentalPod</Sprite>
+		<Category>Consumable</Category>
+		<ResearchRequirements>
+			<Research>T4 ore extracting</Research>
+		</ResearchRequirements>
+		<ScanRequirements>
+			<Scan>MolybdenumOre</Scan>
+		</ScanRequirements>		
+	</ItemEntry>
 </ArrayOfItemEntry>

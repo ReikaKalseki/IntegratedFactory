@@ -19,7 +19,7 @@
 			<ValueEntry>
 				<Key>ReikaKalseki.ReinforcedPipeMaker</Key>
 				<Name>Pipe Reinforcer</Name>
-				<IconName>ReikaKalseki.ReinforcedPipeMaker</IconName>
+				<IconName>ReikaKalseki.PipeReinforcer</IconName>
 				<Description>Wraps a crystal fiber mesh around molybdenum piping with iron reinforcements. A very sturdy pipe capable of withstanding great pressures and temperatures.</Description>
 			</ValueEntry>		
 		</Values>

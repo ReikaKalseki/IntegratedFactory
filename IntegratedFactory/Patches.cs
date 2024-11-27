@@ -46,6 +46,41 @@ namespace ReikaKalseki.IntegratedFactory {
 		}
 	}
 	
+	[HarmonyPatch(typeof(ResearchAssembler))]
+	[HarmonyPatch("UpdateLookingForResources")]
+	public static class ResearchAssemblerRecipeFix {
+		
+		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) {
+			List<CodeInstruction> codes = new List<CodeInstruction>();
+			try {
+				FileLog.Log("Running patch "+MethodBase.GetCurrentMethod().DeclaringType);
+				codes.Add(new CodeInstruction(OpCodes.Ldarg_0));
+				codes.Add(new CodeInstruction(OpCodes.Ldc_I4_0));
+				codes.Add(InstructionHandlers.createMethodCall(typeof(ResearchAssembler), "UpdateAttachedHoppers", true, new Type[]{typeof(bool)}));
+				codes.Add(new CodeInstruction(OpCodes.Ldarg_0));
+				codes.Add(InstructionHandlers.createMethodCall(typeof(IntegratedFactoryMod), "getResearchAssemblerRecipe", false, new Type[]{typeof(ResearchAssembler)}));
+				
+				/*
+				codes.Add(new CodeInstruction(OpCodes.Ldarg_0));
+				codes.Add(new CodeInstruction(OpCodes.Ldfld, InstructionHandlers.convertFieldOperand(typeof(ResearchAssembler), "mnNumAttachedHoppers")));
+				codes.Add(new CodeInstruction(OpCodes.Ldarg_0));
+				codes.Add(new CodeInstruction(OpCodes.Ldfld, InstructionHandlers.convertFieldOperand(typeof(ResearchAssembler), "maAttachedHoppers")));
+				codes.Add(InstructionHandlers.createMethodCall(typeof(IntegratedFactoryMod), "getResearchAssemblerRecipe", false, new Type[]{typeof(ResearchAssembler), typeof(int), typeof(StorageMachineInterface).MakeArrayType()}));
+				 */
+				
+				codes.Add(new CodeInstruction(OpCodes.Ret));
+				FileLog.Log("Done patch "+MethodBase.GetCurrentMethod().DeclaringType);
+			}
+			catch (Exception e) {
+				FileLog.Log("Caught exception when running patch "+MethodBase.GetCurrentMethod().DeclaringType+"!");
+				FileLog.Log(e.Message);
+				FileLog.Log(e.StackTrace);
+				FileLog.Log(e.ToString());
+			}
+			return codes.AsEnumerable();
+		}
+	}
+	
 	
 	static class Lib {
 		

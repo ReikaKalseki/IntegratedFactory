@@ -4,6 +4,7 @@ using System;    //For data read/write methods
 using System.Collections.Generic;   //Working with Lists and Collections
 using System.Linq;   //More advanced manipulation of lists/collections
 using System.Threading;
+using System.Reflection;
 using Harmony;
 using ReikaKalseki;
 using ReikaKalseki.FortressCore;
@@ -51,6 +52,12 @@ namespace ReikaKalseki.IntegratedFactory
         RecipeUtil.addRecipe("MolybdenumPCB", "ReikaKalseki.MolybdenumPCB", "", set: "PCBAssembler").addIngredient("ReikaKalseki.MolybdenumCoil", 1);
         RecipeUtil.addRecipe("ChromiumPipe", "ReikaKalseki.ChromiumPipe", "", set: "PipeExtruder").addIngredient("ChromiumBar", 1);
         RecipeUtil.addRecipe("MolybdenumPipe", "ReikaKalseki.MolybdenumPipe", "", set: "PipeExtruder").addIngredient("MolybdenumBar", 1);
+        CraftData cpod = RecipeUtil.addRecipe("ChromiumExperimentalPod", "ReikaKalseki.ChromiumExperimentalPod", "", set: "ResearchAssembler");
+        cpod.addIngredient("ChromiumPlate", 6);
+        cpod.addIngredient("ChromiumPCB", 2);
+        CraftData mpod = RecipeUtil.addRecipe("MolybdenumExperimentalPod", "ReikaKalseki.MolybdenumExperimentalPod", "", set: "ResearchAssembler");
+        mpod.addIngredient("MolybdenumPlate", 6);
+        mpod.addIngredient("MolybdenumPCB", 2);
         
        	addAndSubSomeIf("powerpack2", "ChromiumBar", "ReikaKalseki.ChromiumPCB", "AlloyedPCB", 1/16F);
        	addAndSubSomeIf("powerpack2", "MolybdenumBar", "ReikaKalseki.MolybdenumPCB", "OverclockedCrystalClock", 1/4F);
@@ -152,6 +159,10 @@ namespace ReikaKalseki.IntegratedFactory
        	}
        	
        	GenericAutoCrafterNew.mMachinesByKey["LensChromer"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ReflectiveAlloy", 1F);
+       	if (GenericAutoCrafterNew.mMachinesByKey.ContainsKey("ReikaKalseki.PerfectLensChromer")) {
+       		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.PerfectLensChromer"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ReflectiveAlloy", 1F);
+       		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.ExceptionalLensChromer"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ReflectiveAlloy", 1F);
+       	}
         
         if (config.getBoolean(IFConfig.ConfigEntries.EFFICIENT_BLAST)) {
     		foreach (CraftData br in CraftData.GetRecipesForSet("BlastFurnace")) {
@@ -171,6 +182,20 @@ namespace ReikaKalseki.IntegratedFactory
     	}
     	else {
     		recipe.replaceIngredient(find, replace);
+    	}
+    }
+    
+    private static readonly MethodInfo assemblerItemFetch = typeof(ResearchAssembler).GetMethod("GetItemsForPod", BindingFlags.Instance | BindingFlags.NonPublic);
+    
+    public static void getResearchAssemblerRecipe(ResearchAssembler ra) {
+    	if (ra.meState != ResearchAssembler.eState.eLookingForResources)
+    		return;
+    	foreach (CraftData rec in CraftData.GetRecipesForSet("ResearchAssembler")) {
+    		CraftCost plate = rec.Costs.First(cc => cc.Amount == 6);
+    		CraftCost pcb = rec.Costs.First(cc => cc.Amount == 2);
+    		assemblerItemFetch.Invoke(ra, new object[]{pcb.ItemType, plate.ItemType, rec.CraftableItemType});
+	    	if (ra.meState != ResearchAssembler.eState.eLookingForResources)
+	    		break;
     	}
     }
     
