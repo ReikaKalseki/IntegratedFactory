@@ -50,8 +50,34 @@
         <Amount>1</Amount>
       </CraftCost>
       <CraftCost>
-        <Key>OverlockedCrystalClock</Key>
+        <Key>OverclockedCrystalClock</Key>
         <Amount>50</Amount>
+      </CraftCost>
+    </Costs>
+    <Description>Turbocharges motors for use in heavy machinery.</Description>
+    <ResearchRequirements>
+      <Research>T4 ore extracting</Research>
+    </ResearchRequirements>
+    <CanCraftAnywhere>false</CanCraftAnywhere>
+  </CraftData>
+  <CraftData>
+    <Key>ReikaKalseki.ReinforcedPipeMaker</Key>
+    <Category>manufacturing</Category>
+    <Tier>4</Tier>
+    <CraftedKey>ReikaKalseki.ReinforcedPipeMaker</CraftedKey>
+    <CraftedAmount>1</CraftedAmount>
+    <Costs>
+      <CraftCost>
+        <Key>ReikaKalseki.Turbomotor</Key>
+        <Amount>10</Amount>
+      </CraftCost>
+      <CraftCost>
+        <Key>TitaniumHousing</Key>
+        <Amount>2</Amount>
+      </CraftCost>
+      <CraftCost>
+        <Key>ChromiumPCB</Key>
+        <Amount>5</Amount>
       </CraftCost>
     </Costs>
     <Description>Turbocharges motors for use in heavy machinery.</Description>

@@ -26,6 +26,10 @@
 				<Amount>10</Amount>
 			</CraftCost>
 			<CraftCost>
+				<Key>OverclockedCrystalClock</Key>
+				<Amount>1</Amount>
+			</CraftCost>
+			<CraftCost>
 				<Key>MolybdenumWire</Key>
 				<Amount>10</Amount>
 			</CraftCost>
