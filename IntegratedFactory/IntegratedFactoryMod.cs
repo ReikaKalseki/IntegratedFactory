@@ -100,7 +100,7 @@ namespace ReikaKalseki.IntegratedFactory
        		rec.addIngredient("OrganicCutterHead", 1);
        	}
        	rec = RecipeUtil.getRecipeByKey("mk3trencherdrillcomponent");
-       	rec.replaceIngredient("ChromiumBar", "HeimalMachineBlock");
+       	rec.replaceIngredient("ChromiumBar", "HiemalMachineBlock");
        	if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
        		rec.addIngredient("UltimatePCB", 2);
        		rec.addIngredient("PlasmaCutterHead", 1);
@@ -153,9 +153,9 @@ namespace ReikaKalseki.IntegratedFactory
        	addAndSubSomeIf("GasBottlerPlacementcomponent", "MagneticMachineBlock", "MagneticMachineBlock", "TitaniumHousing", 1/3F);
         
        	if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
-       		GenericAutoCrafterNew.mMachinesByKey["ChromedMachineBlockAssembler"].Recipe.addIngredient("GoldFoil", 1);
-       		GenericAutoCrafterNew.mMachinesByKey["MagneticMachineBlockAssembler"].Recipe.addIngredient("TitaniumHousing", 1);
-       		GenericAutoCrafterNew.mMachinesByKey["HiemalMachineBlockAssembler"].Recipe.addIngredient("PlasticPellet", 2);
+       		addItemButScaleRest("ChromedMachineBlockAssembler", "GoldFoil", 3);
+       		addItemButScaleRest("MagneticMachineBlockAssembler", "TitaniumHousing", 4);
+       		GenericAutoCrafterNew.mMachinesByKey["HiemalMachineBlockAssembler"].Recipe.addIngredient("PlasticPellet", 2); //do not scale
        	}
        	
        	GenericAutoCrafterNew.mMachinesByKey["LensChromer"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ReflectiveAlloy", 1F);
@@ -175,6 +175,13 @@ namespace ReikaKalseki.IntegratedFactory
        		replaceResearchBarsWithPods(res);
 		
         return registrationData;
+    }
+    
+    private void addItemButScaleRest(string gac, string add, float scale) {
+    	CraftData rec = GenericAutoCrafterNew.mMachinesByKey[gac].Recipe;
+    	rec.CraftedAmount *= scale;
+    	rec.Costs.ForEach(cc => cc.Amount *= scale);
+    	rec.addIngredient(add, 1);
     }
     
     private void replaceResearchBarsWithPods(string key) {

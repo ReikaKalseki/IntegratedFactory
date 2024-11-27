@@ -80,7 +80,7 @@
         <Amount>5</Amount>
       </CraftCost>
     </Costs>
-    <Description>Turbocharges motors for use in heavy machinery.</Description>
+    <Description>Wraps a crystal fiber mesh around molybdenum piping with iron reinforcements. A very sturdy pipe capable of withstanding great pressures and temperatures.</Description>
     <ResearchRequirements>
       <Research>T4 ore extracting</Research>
     </ResearchRequirements>

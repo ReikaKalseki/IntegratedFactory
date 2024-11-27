@@ -16,15 +16,15 @@
 		<CraftedAmount>1</CraftedAmount>
 		<Costs>
 			<CraftCost>
-				<Name>IronPlate</Name>
+				<Key>IronPlate</Key>
 				<Amount>2</Amount>
 			</CraftCost>
 			<CraftCost>
-				<Name>ReikaKalseki.MolybdenumPipe</Name>
+				<Key>ReikaKalseki.MolybdenumPipe</Key>
 				<Amount>1</Amount>
 			</CraftCost>
 			<CraftCost>
-				<Name>Crystal Fiber Mesh</Name>
+				<Key>Crystal Fiber Mesh</Key>
 				<Amount>1</Amount>
 			</CraftCost>
 		</Costs>
