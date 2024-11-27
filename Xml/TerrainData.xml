@@ -15,6 +15,12 @@
 				<Name>Turbomotor Crafter</Name>
 				<IconName>ReikaKalseki.TurbomotorCrafter</IconName>
 				<Description>Turbocharges motors for use in heavy machinery.</Description>
+			</ValueEntry>
+			<ValueEntry>
+				<Key>ReikaKalseki.ReinforcedPipeMaker</Key>
+				<Name>Pipe Reinforcer</Name>
+				<IconName>ReikaKalseki.ReinforcedPipeMaker</IconName>
+				<Description>Wraps a crystal fiber mesh around molybdenum piping with iron reinforcements. A very sturdy pipe capable of withstanding great pressures and temperatures.</Description>
 			</ValueEntry>		
 		</Values>
 	</TerrainDataEntry>	

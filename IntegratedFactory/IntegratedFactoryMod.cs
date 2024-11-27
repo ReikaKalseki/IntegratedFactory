@@ -105,7 +105,8 @@ namespace ReikaKalseki.IntegratedFactory
        		foreach (CraftCost cost in rec.Costs)
        			cost.Amount *= 2;
        		rec.CraftedAmount *= 2;
-       		rec.addIngredient("ReikaKalseki.Turbomotor", 1); //three motors for two trenchers
+       		rec.addIngredient("FusionDrillMotor", 1); //three motors for two trenchers
+       		rec.addIngredient("ReikaKalseki.Turbomotor", 12); //18 motors a trencher
        	}
        	
        	//these two recipes need to match because of FortressTweaks adding intercraft!
@@ -171,6 +172,30 @@ namespace ReikaKalseki.IntegratedFactory
     	else {
     		recipe.replaceIngredient(find, replace);
     	}
+    }
+    
+    private static int getBeltGACItem(string set, ItemBase item) {
+    	return CraftData.GetRecipesForSet(set).First(rec => rec.Costs[0].ItemType == item.mnItemID).CraftableItemType;
+    }
+    
+    public static int GetPlateFromBar(ConveyorEntity stamper, ItemBase item) {
+    	return getBeltGACItem("Stamper", item);
+    }
+    
+    public static int GetPipeFromBar(ConveyorEntity extruder, ItemBase item) {
+    	return getBeltGACItem("PipeExtruder", item);
+    }
+    
+    public static int GetWireFromBar(ConveyorEntity extruder, ItemBase item) {
+    	return getBeltGACItem("Extruder", item);
+    }
+    
+    public static int GetCoilFromWire(ConveyorEntity coiler, ItemBase item) {
+    	return getBeltGACItem("Coiler", item);
+    }
+    
+    public static int GetPCBFromCoil(ConveyorEntity maker, ItemBase item) {
+    	return getBeltGACItem("PCBAssembler", item);
     }
   }
 }
