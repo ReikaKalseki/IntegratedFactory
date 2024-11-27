@@ -100,7 +100,7 @@ namespace ReikaKalseki.IntegratedFactory
        	}
        	rec = RecipeUtil.getRecipeByKey("trencher motor component");
        	rec.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumPCB");
-       	rec.replaceIngredient("MolybdenumBar", "ReikaKalseki.MolybdenumPlate");
+       	rec.replaceIngredient("MolybdenumBar", "ReikaKalseki.MolybdenumPCB");
        	if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
        		foreach (CraftCost cost in rec.Costs)
        			cost.Amount *= 2;
