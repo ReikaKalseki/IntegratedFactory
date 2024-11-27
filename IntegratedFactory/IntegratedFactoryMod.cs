@@ -53,11 +53,11 @@ namespace ReikaKalseki.IntegratedFactory
         RecipeUtil.addRecipe("ChromiumPipe", "ReikaKalseki.ChromiumPipe", "", set: "PipeExtruder").addIngredient("ChromiumBar", 1);
         RecipeUtil.addRecipe("MolybdenumPipe", "ReikaKalseki.MolybdenumPipe", "", set: "PipeExtruder").addIngredient("MolybdenumBar", 1);
         CraftData cpod = RecipeUtil.addRecipe("ChromiumExperimentalPod", "ReikaKalseki.ChromiumExperimentalPod", "", set: "ResearchAssembler");
-        cpod.addIngredient("ChromiumPlate", 6);
-        cpod.addIngredient("ChromiumPCB", 2);
+        cpod.addIngredient("ReikaKalseki.ChromiumPlate", 6);
+        cpod.addIngredient("ReikaKalseki.ChromiumPCB", 2);
         CraftData mpod = RecipeUtil.addRecipe("MolybdenumExperimentalPod", "ReikaKalseki.MolybdenumExperimentalPod", "", set: "ResearchAssembler");
-        mpod.addIngredient("MolybdenumPlate", 6);
-        mpod.addIngredient("MolybdenumPCB", 2);
+        mpod.addIngredient("ReikaKalseki.MolybdenumPlate", 6);
+        mpod.addIngredient("ReikaKalseki.MolybdenumPCB", 2);
         
        	addAndSubSomeIf("powerpack2", "ChromiumBar", "ReikaKalseki.ChromiumPCB", "AlloyedPCB", 1/16F);
        	addAndSubSomeIf("powerpack2", "MolybdenumBar", "ReikaKalseki.MolybdenumPCB", "OverclockedCrystalClock", 1/4F);
@@ -170,8 +170,21 @@ namespace ReikaKalseki.IntegratedFactory
     				br.Costs[0].Amount = FUtil.getOrePerBar();
 	        }
         }
+       	
+       	foreach (ResearchDataEntry res in ResearchDataEntry.mEntries)
+       		replaceResearchBarsWithPods(res);
 		
         return registrationData;
+    }
+    
+    private void replaceResearchBarsWithPods(string key) {
+    	replaceResearchBarsWithPods(ResearchDataEntry.mEntriesByKey[key]);
+    }
+    
+    private void replaceResearchBarsWithPods(ResearchDataEntry rec) {
+    	//still 50% more expensive
+       	rec.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumExperimentalPod", 0.25F); 
+       	rec.replaceIngredient("MolybdenumBar", "ReikaKalseki.MolybdenumExperimentalPod", 0.25F);
     }
     
     private void addAndSubSomeIf(string rec, string find, string replace, string sub, float ratio = 1, bool force = false) {
