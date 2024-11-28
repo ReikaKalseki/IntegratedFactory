@@ -156,6 +156,8 @@ namespace ReikaKalseki.IntegratedFactory
        		addItemButScaleRest("ChromedMachineBlockAssembler", "GoldFoil", 3);
        		addItemButScaleRest("MagneticMachineBlockAssembler", "TitaniumHousing", 4);
        		GenericAutoCrafterNew.mMachinesByKey["HiemalMachineBlockAssembler"].Recipe.addIngredient("PlasticPellet", 2); //do not scale
+       		
+       		GenericAutoCrafterNew.mMachinesByKey["LensPolisher"].Recipe.addIngredient("RefinedLiquidResin", 10);       		
        	}
        	
        	GenericAutoCrafterNew.mMachinesByKey["LensChromer"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ReflectiveAlloy", 1F);
@@ -171,19 +173,24 @@ namespace ReikaKalseki.IntegratedFactory
        		rec.replaceIngredient("MolybdenumBar", "ReikaKalseki.MolybdenumPCB");
        		rec.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumPCB");
        	}
-       	
+       	/*
        	//FUtil.log("Pipe reinforcer ("+GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.ReinforcedPipeMaker"].Value+"="+GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.ReinforcedPipeMaker"].CubeValue+"):");
        	//FUtil.log("Ingredients:");
+       	//why is this necessary, why is this one failing to link automatically
        	rec = GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.ReinforcedPipeMaker"].Recipe;
+       	MaterialData.GetItemIdOrCubeValues(rec.CraftedKey, out rec.CraftableItemType, out rec.CraftableCubeType, out rec.CraftableCubeValue);
        	rec.Costs.ForEach(cc => {
-       	    bool flag = MaterialData.GetItemIdOrCubeValues(cc.Key, out cc.ItemType, out cc.CubeType, out cc.CubeValue); //why is this necessary, why is this one failing to link automatically
+       	    bool flag = MaterialData.GetItemIdOrCubeValues(cc.Key, out cc.ItemType, out cc.CubeType, out cc.CubeValue);
 			//FUtil.log(cc.ingredientToString()+" {"+flag+"}");
 		});
-        
+        */
         if (config.getBoolean(IFConfig.ConfigEntries.EFFICIENT_BLAST)) {
+       		uint per = (uint)Math.Max(1F/DifficultySettings.mrResourcesFactor, FUtil.getOrePerBar()); //is multiplied against mrResourcesFactor, so needs to always result in >= 1!
     		foreach (CraftData br in CraftData.GetRecipesForSet("BlastFurnace")) {
-    			if (br.Costs[0].Amount == 16)
-    				br.Costs[0].Amount = FUtil.getOrePerBar();
+       			if (br.Costs[0].Amount == 16) {
+    				FUtil.log("Adjusting "+br.Costs[0].ingredientToString()+" cost of Blast Furnace recipe "+br.Key+" to "+per);
+    				br.Costs[0].Amount = per;
+       			}
 	        }
         }
        	

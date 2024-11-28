@@ -12,7 +12,7 @@
 	<OptionalIngredients>false</OptionalIngredients>  <!-- optional -->
 	<Recipe>
 		<Key>ReikaKalseki.ReinforcedPipe</Key>
-		<CraftedName>ReikaKalseki.ReinforcedPipe</CraftedName>
+		<CraftedKey>ReikaKalseki.ReinforcedPipe</CraftedKey>
 		<CraftedAmount>1</CraftedAmount>
 		<Costs>
 			<CraftCost>
