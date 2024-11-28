@@ -163,15 +163,23 @@ namespace ReikaKalseki.IntegratedFactory
        		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.PerfectLensChromer"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ReflectiveAlloy", 1F);
        		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.ExceptionalLensChromer"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ReflectiveAlloy", 1F);
        	}
-       	/*
-       	FUtil.log("Pipe reinforcer ("+GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.ReinforcedPipeMaker"].Value+"="+GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.ReinforcedPipeMaker"].CubeValue+"):");
-       	FUtil.log("Ingredients:");
+       	if (GenericAutoCrafterNew.mMachinesByKey.ContainsKey("ReikaKalseki.CryoSpawnerMissileCrafter")) { //cryopathy
+       		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoSpawnerMissileCrafter"].Recipe.replaceIngredient("SecondaryUpgradeModule", "ReikaKalseki.ChromiumPCB", 2F); //from 1 to 2
+       		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoMelterMissileCrafter"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumPipe", 2F); //from 1 to 2
+       		
+       		rec = RecipeUtil.getRecipeByKey("ReikaKalseki.CryoMissileTurret");
+       		rec.replaceIngredient("MolybdenumBar", "ReikaKalseki.MolybdenumPCB");
+       		rec.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumPCB");
+       	}
+       	
+       	//FUtil.log("Pipe reinforcer ("+GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.ReinforcedPipeMaker"].Value+"="+GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.ReinforcedPipeMaker"].CubeValue+"):");
+       	//FUtil.log("Ingredients:");
        	rec = GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.ReinforcedPipeMaker"].Recipe;
        	rec.Costs.ForEach(cc => {
-       	    bool flag = MaterialData.GetItemIdOrCubeValues(cc.Key, out cc.ItemType, out cc.CubeType, out cc.CubeValue);
-			FUtil.log(cc.ingredientToString()+" {"+flag+"}");
+       	    bool flag = MaterialData.GetItemIdOrCubeValues(cc.Key, out cc.ItemType, out cc.CubeType, out cc.CubeValue); //why is this necessary, why is this one failing to link automatically
+			//FUtil.log(cc.ingredientToString()+" {"+flag+"}");
 		});
-        */
+        
         if (config.getBoolean(IFConfig.ConfigEntries.EFFICIENT_BLAST)) {
     		foreach (CraftData br in CraftData.GetRecipesForSet("BlastFurnace")) {
     			if (br.Costs[0].Amount == 16)
