@@ -232,7 +232,10 @@ namespace ReikaKalseki.IntegratedFactory
        	ResearchDataEntry.mEntriesByKey["T4defence5"].addIngredient("ReikaKalseki.MolybdenumExperimentalPod", 64);
        	*/
        	if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
-       		ResearchDataEntry.mEntriesByKey["T4_Particles"].addIngredient("RefinedLiquidResin", 1024);
+       		ResearchDataEntry.mEntriesByKey["T4defence1"].addIngredient("ReikaKalseki.AlloyedExperimentalPod", 32);
+       		
+       		ResearchDataEntry.mEntriesByKey["T4_Particles"].addIngredient("ReikaKalseki.AlloyedExperimentalPod", 256);       		
+       		ResearchDataEntry.mEntriesByKey["T4_Particles"].addIngredient("RefinedLiquidResin", 3000);
        		
        		ResearchDataEntry.mEntriesByKey["T4_drills_2"].addIngredient("UltimateExperimentalPod", 32); //titanium
        		ResearchDataEntry.mEntriesByKey["T4_drills_2"].addIngredient("IntermediateExperimentalPod", 32); //iron
@@ -254,6 +257,16 @@ namespace ReikaKalseki.IntegratedFactory
        		ResearchDataEntry.mEntriesByKey["T4defence5"].addIngredient("ReikaKalseki.AlloyedExperimentalPod", 64);
        		ResearchDataEntry.mEntriesByKey["T4defence5"].addIngredient("ComplexExperimentalPod", 64);
        		ResearchDataEntry.mEntriesByKey["T4defence5"].addIngredient("RefinedLiquidResin", 512);
+       	}
+       	
+       	float scale = config.getFloat(IFConfig.ConfigEntries.T4_RESEARCH_COST_SCALE);
+       	if (scale < 0.99F || scale > 1.01F) { //do not use == 1
+	       	foreach (ResearchDataEntry res in ResearchDataEntry.mEntries) {
+	       		res.ProjectItemRequirements.ForEach(pp => {
+					if (pp.Key == "ReikaKalseki.ChromiumExperimentalPod" || pp.Key == "ReikaKalseki.MolybdenumExperimentalPod" || pp.Key == "ReikaKalseki.AlloyedExperimentalPod" || pp.Key == "ReikaKalseki.HiemalExperimentalPod")
+						pp.Amount = (int)Mathf.Max(1, pp.Amount*scale);
+				});
+	       	}
        	}
 		
         return registrationData;
