@@ -201,6 +201,11 @@ namespace ReikaKalseki.IntegratedFactory
        		rec = RecipeUtil.getRecipeByKey("ReikaKalseki.CryoMissileTurret");
        		rec.replaceIngredient("MolybdenumBar", "ReikaKalseki.MolybdenumPCB");
        		rec.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumPCB");
+       		
+       		if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
+	       		GenericAutoCrafterNew.mMachinesByKey["PerfectLensChromer"].Recipe.addIngredient("RefinedLiquidResin", 8);  
+	       		GenericAutoCrafterNew.mMachinesByKey["ExceptionalLensChromer"].Recipe.addIngredient("RefinedLiquidResin", 5);  
+       		}
        	}
        	
         if (config.getBoolean(IFConfig.ConfigEntries.EFFICIENT_BLAST)) {
@@ -234,7 +239,7 @@ namespace ReikaKalseki.IntegratedFactory
        	if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
        		ResearchDataEntry.mEntriesByKey["T4defence1"].addIngredient("ReikaKalseki.AlloyedExperimentalPod", 32);
        		
-       		ResearchDataEntry.mEntriesByKey["T4_Particles"].addIngredient("ReikaKalseki.AlloyedExperimentalPod", 256);       		
+       		ResearchDataEntry.mEntriesByKey["T4_Particles"].addIngredient("ReikaKalseki.AlloyedExperimentalPod", 128);       		
        		ResearchDataEntry.mEntriesByKey["T4_Particles"].addIngredient("RefinedLiquidResin", 3000);
        		
        		ResearchDataEntry.mEntriesByKey["T4_drills_2"].addIngredient("UltimateExperimentalPod", 32); //titanium
@@ -284,9 +289,11 @@ namespace ReikaKalseki.IntegratedFactory
     }
     
     private void replaceResearchBarsOrBlocksWithPods(ResearchDataEntry rec) {
-    	//still 50% more expensive
-       	rec.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumExperimentalPod", 0.125F); //since a pod costs 8 ingots
-       	rec.replaceIngredient("MolybdenumBar", "ReikaKalseki.MolybdenumExperimentalPod", 0.125F);
+    	float f = 0.125F; //since a pod costs 8 ingots
+    	if (rec.Key == "T4_Particles")
+    		f *= 8; //to 32
+       	rec.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumExperimentalPod", f);
+       	rec.replaceIngredient("MolybdenumBar", "ReikaKalseki.MolybdenumExperimentalPod", f);
        	
        	rec.replaceIngredient("ChromedMachineBlock", "ReikaKalseki.ChromiumExperimentalPod", 0.5F); //since a block costs 4 ingots but a pod costs 8
        	rec.replaceIngredient("MagneticMachineBlock", "ReikaKalseki.MolybdenumExperimentalPod", 0.5F);
