@@ -30,8 +30,8 @@
 				<Amount>1</Amount>
 			</CraftCost>
 			<CraftCost>
-				<Key>ReikaKalseki.MolybdenumWire</Key>
-				<Amount>10</Amount>
+				<Key>ReikaKalseki.MolybdenumCoil</Key>
+				<Amount>2</Amount>
 			</CraftCost>
 		</Costs>
 		<Description>Turbocharges motors for use in heavy machinery.</Description>

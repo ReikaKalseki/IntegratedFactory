@@ -21,6 +21,12 @@
 				<Name>Pipe Reinforcer</Name>
 				<IconName>ReikaKalseki.PipeReinforcer</IconName>
 				<Description>Wraps a crystal fiber mesh around molybdenum piping with iron reinforcements. A very sturdy pipe capable of withstanding great pressures and temperatures.</Description>
+			</ValueEntry>	
+			<ValueEntry>
+				<Key>ReikaKalseki.AlloyedPodMaker</Key>
+				<Name>Alloyed Experimental Pod Assembler</Name>
+				<IconName>ReikaKalseki.AlloyedPodMaker</IconName>
+				<Description>Combines T2 materials for the ultimate T2 research pod...slowly.</Description>
 			</ValueEntry>		
 		</Values>
 	</TerrainDataEntry>	

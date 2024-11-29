@@ -59,6 +59,16 @@ namespace ReikaKalseki.IntegratedFactory
         mpod.addIngredient("ReikaKalseki.MolybdenumPlate", 6);
         mpod.addIngredient("ReikaKalseki.MolybdenumPCB", 2);
         
+        CraftData hpod = RecipeUtil.addRecipe("HiemalExperimentalPod", "ReikaKalseki.HiemalExperimentalPod", "", set: "ResearchAssembler");
+        hpod.addIngredient("MagneticMachineBlock", 8);
+        hpod.addIngredient("ChromedMachineBlock", 8);
+        if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
+        	hpod.Costs.ForEach(c => c.Amount *= 5);
+        	hpod.CraftedAmount *= 5;
+        	hpod.addIngredient("UltimatePCB", 1); //so still 8 blocks each but 1/5 of an ultimate pcb (2 alloyed upgrades=~10 T2 ores, 5 primary upgrades=50 tin, 10 coil=50 lith) each
+        	hpod.addIngredient("OverclockedCrystalClock", 5); //so 1 clock each
+        }
+        
        	addAndSubSomeIf("powerpack2", "ChromiumBar", "ReikaKalseki.ChromiumPCB", "AlloyedPCB", 1/16F);
        	addAndSubSomeIf("powerpack2", "MolybdenumBar", "ReikaKalseki.MolybdenumPCB", "OverclockedCrystalClock", 1/4F);
        	
@@ -113,7 +123,7 @@ namespace ReikaKalseki.IntegratedFactory
        			cost.Amount *= 2;
        		rec.CraftedAmount *= 2;
        		rec.addIngredient("FusionDrillMotor", 1); //three motors for two trenchers
-       		rec.addIngredient("ReikaKalseki.Turbomotor", 12); //18 motors a trencher
+       		rec.addIngredient("ReikaKalseki.Turbomotor", 12); //18 motors (= +36 moly) a trencher
        	}
        	
        	//these two recipes need to match because of FortressTweaks adding intercraft!
@@ -173,17 +183,7 @@ namespace ReikaKalseki.IntegratedFactory
        		rec.replaceIngredient("MolybdenumBar", "ReikaKalseki.MolybdenumPCB");
        		rec.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumPCB");
        	}
-       	/*
-       	//FUtil.log("Pipe reinforcer ("+GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.ReinforcedPipeMaker"].Value+"="+GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.ReinforcedPipeMaker"].CubeValue+"):");
-       	//FUtil.log("Ingredients:");
-       	//why is this necessary, why is this one failing to link automatically
-       	rec = GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.ReinforcedPipeMaker"].Recipe;
-       	MaterialData.GetItemIdOrCubeValues(rec.CraftedKey, out rec.CraftableItemType, out rec.CraftableCubeType, out rec.CraftableCubeValue);
-       	rec.Costs.ForEach(cc => {
-       	    bool flag = MaterialData.GetItemIdOrCubeValues(cc.Key, out cc.ItemType, out cc.CubeType, out cc.CubeValue);
-			//FUtil.log(cc.ingredientToString()+" {"+flag+"}");
-		});
-        */
+       	
         if (config.getBoolean(IFConfig.ConfigEntries.EFFICIENT_BLAST)) {
        		uint per = (uint)Math.Max(1F/DifficultySettings.mrResourcesFactor, FUtil.getOrePerBar()); //is multiplied against mrResourcesFactor, so needs to always result in >= 1!
     		foreach (CraftData br in CraftData.GetRecipesForSet("BlastFurnace")) {
@@ -194,8 +194,48 @@ namespace ReikaKalseki.IntegratedFactory
 	        }
         }
        	
-       	foreach (ResearchDataEntry res in ResearchDataEntry.mEntries)
-       		replaceResearchBarsWithPods(res);
+       	ResearchDataEntry.mEntriesByKey["T4_drills_2"].ProjectItemRequirements.ForEach(r => r.Amount /= 2); //make cost half as much as T3 (=64 pods)
+       	       	
+       	foreach (ResearchDataEntry res in ResearchDataEntry.mEntries) {
+       		replaceResearchBarsOrBlocksWithPods(res);
+       	}
+       
+       	ResearchDataEntry.mEntriesByKey["T4defence2"].addIngredient("ReikaKalseki.ChromiumExperimentalPod", 32); //dazzler
+       	ResearchDataEntry.mEntriesByKey["T4defence2"].addIngredient("ReikaKalseki.MolybdenumExperimentalPod", 32);
+       		
+       	ResearchDataEntry.mEntriesByKey["T4defence3"].addIngredient("ReikaKalseki.ChromiumExperimentalPod", 32); //mines
+       	ResearchDataEntry.mEntriesByKey["T4defence3"].addIngredient("ReikaKalseki.MolybdenumExperimentalPod", 32);
+       		
+       	ResearchDataEntry.mEntriesByKey["T4defence4"].addIngredient("ReikaKalseki.ChromiumExperimentalPod", 64); //falcors
+       	ResearchDataEntry.mEntriesByKey["T4defence4"].addIngredient("ReikaKalseki.MolybdenumExperimentalPod", 64);
+       		
+       	ResearchDataEntry.mEntriesByKey["T4defence5"].addIngredient("ReikaKalseki.ChromiumExperimentalPod", 64); //supercharge
+       	ResearchDataEntry.mEntriesByKey["T4defence5"].addIngredient("ReikaKalseki.MolybdenumExperimentalPod", 64);
+       	
+       	if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
+       		ResearchDataEntry.mEntriesByKey["T4_Particles"].addIngredient("RefinedLiquidResin", 1024);
+       		
+       		ResearchDataEntry.mEntriesByKey["T4_drills_2"].addIngredient("UltimateExperimentalPod", 32); //titanium
+       		ResearchDataEntry.mEntriesByKey["T4_drills_2"].addIngredient("IntermediateExperimentalPod", 32); //iron
+       		ResearchDataEntry.mEntriesByKey["T4_drills_3"].addIngredient("UltimateExperimentalPod", 64);
+       		ResearchDataEntry.mEntriesByKey["T4_drills_3"].addIngredient("IntermediateExperimentalPod", 64);
+       		
+       		//ResearchDataEntry.mEntriesByKey["T4defence1"].addIngredient("ComplexExperimentalPod", 64);
+       		
+       		ResearchDataEntry.mEntriesByKey["T4defence2"].addIngredient("ComplexExperimentalPod", 32);
+       		ResearchDataEntry.mEntriesByKey["T4defence2"].addIngredient("ReikaKalseki.AlloyedExperimentalPod", 16);
+       		ResearchDataEntry.mEntriesByKey["T4defence2"].addIngredient("RefinedLiquidResin", 256);
+       		
+       		ResearchDataEntry.mEntriesByKey["T4defence3"].addIngredient("ReikaKalseki.AlloyedExperimentalPod", 16);
+       		ResearchDataEntry.mEntriesByKey["T4defence3"].addIngredient("ComplexExperimentalPod", 64);
+       		
+       		ResearchDataEntry.mEntriesByKey["T4defence4"].addIngredient("ReikaKalseki.AlloyedExperimentalPod", 64);
+       		ResearchDataEntry.mEntriesByKey["T4defence4"].addIngredient("ComplexExperimentalPod", 64);
+       		
+       		ResearchDataEntry.mEntriesByKey["T4defence5"].addIngredient("ReikaKalseki.AlloyedExperimentalPod", 64);
+       		ResearchDataEntry.mEntriesByKey["T4defence5"].addIngredient("ComplexExperimentalPod", 64);
+       		ResearchDataEntry.mEntriesByKey["T4defence5"].addIngredient("RefinedLiquidResin", 512);
+       	}
 		
         return registrationData;
     }
@@ -207,14 +247,25 @@ namespace ReikaKalseki.IntegratedFactory
     	rec.addIngredient(add, 1);
     }
     
-    private void replaceResearchBarsWithPods(string key) {
-    	replaceResearchBarsWithPods(ResearchDataEntry.mEntriesByKey[key]);
+    private void replaceResearchBarsOrBlocksWithPods(string key) {
+    	replaceResearchBarsOrBlocksWithPods(ResearchDataEntry.mEntriesByKey[key]);
     }
     
-    private void replaceResearchBarsWithPods(ResearchDataEntry rec) {
+    private void replaceResearchBarsOrBlocksWithPods(ResearchDataEntry rec) {
     	//still 50% more expensive
-       	rec.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumExperimentalPod", 0.25F); 
-       	rec.replaceIngredient("MolybdenumBar", "ReikaKalseki.MolybdenumExperimentalPod", 0.25F);
+       	rec.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumExperimentalPod", 0.125F); //since a pod costs 8 ingots
+       	rec.replaceIngredient("MolybdenumBar", "ReikaKalseki.MolybdenumExperimentalPod", 0.125F);
+       	
+       	rec.replaceIngredient("ChromedMachineBlock", "ReikaKalseki.ChromiumExperimentalPod", 0.5F); //since a block costs 4 ingots but a pod costs 8
+       	rec.replaceIngredient("MagneticMachineBlock", "ReikaKalseki.MolybdenumExperimentalPod", 0.5F);
+       	rec.replaceIngredient("HiemalMachineBlock", "ReikaKalseki.HiemalExperimentalPod", 0.25F); //made in a 8:1 ratio but double cost (also adds T1/2 ore cost)
+       	
+       	ProjectItemRequirement add = rec.replaceIngredient("ImbuedMachineBlock", "ReikaKalseki.ChromiumExperimentalPod", 0.5F);
+       	if (add != null)
+       		rec.addIngredient("ReikaKalseki.MolybdenumExperimentalPod", add.Amount);
+       	
+       	// /6 since each pod costs 5 alloyed blocks (80 ingots) + 3 alloyed upgrade (5-6 each)~96 vs 16 of a block
+       	rec.replaceIngredient("AlloyedMachineBlock", "ReikaKalseki.AlloyedExperimentalPod", 1/6F);
     }
     
     private void addAndSubSomeIf(string rec, string find, string replace, string sub, float ratio = 1, bool force = false) {

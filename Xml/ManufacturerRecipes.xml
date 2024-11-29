@@ -86,4 +86,34 @@
     </ResearchRequirements>
     <CanCraftAnywhere>false</CanCraftAnywhere>
   </CraftData>
+  <CraftData>
+    <Key>ReikaKalseki.AlloyedPodMaker</Key>
+    <Category>manufacturing</Category>
+    <Tier>2</Tier>
+    <CraftedKey>ReikaKalseki.AlloyedPodMaker</CraftedKey>
+    <CraftedAmount>1</CraftedAmount>
+    <Costs>
+      <CraftCost>
+        <Key>SpiderBotPowerCoil</Key>
+        <Amount>100</Amount>
+      </CraftCost>
+      <CraftCost>
+        <Key>TitaniumHousing</Key>
+        <Amount>5</Amount>
+      </CraftCost>
+      <CraftCost>
+        <Key>AdvancedMachineBlock</Key>
+        <Amount>10</Amount>
+      </CraftCost>
+      <CraftCost>
+        <Key>ConductivePCB</Key>
+        <Amount>20</Amount>
+      </CraftCost>
+    </Costs>
+    <Description>Combines T2 materials for the ultimate T2 research pod...slowly.</Description>
+    <ResearchRequirements>
+      <Research>alloys</Research>
+    </ResearchRequirements>
+    <CanCraftAnywhere>false</CanCraftAnywhere>
+  </CraftData>
 </ArrayOfCraftData>	

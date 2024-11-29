@@ -238,4 +238,29 @@
 			<Scan>MolybdenumOre</Scan>
 		</ScanRequirements>		
 	</ItemEntry>
+	<ItemEntry>
+		<Key>ReikaKalseki.AlloyedExperimentalPod</Key>
+		<Name>Alloyed Experimental Pod</Name>
+		<Plural>Alloyed Experimental Pods</Plural>
+		<Type>ItemStack</Type>	
+		<Object>ResearchPod_XL</Object>
+		<Sprite>ReikaKalseki.AlloyedExperimentalPod</Sprite>
+		<Category>Consumable</Category>
+		<ResearchRequirements>
+			<Research>alloys</Research>
+		</ResearchRequirements>	
+	</ItemEntry>
+	<ItemEntry>
+		<Key>ReikaKalseki.HiemalExperimentalPod</Key>
+		<Name>Hiemal Experimental Pod</Name>
+		<Plural>Hiemal Experimental Pods</Plural>
+		<Type>ItemStack</Type>	
+		<Object>ResearchPod_Ultimate</Object>
+		<Sprite>ReikaKalseki.HiemalExperimentalPod</Sprite>
+		<Category>Consumable</Category>
+		<ResearchRequirements>
+			<Research>T4_start</Research>
+			<Research>T4_Particles</Research>
+		</ResearchRequirements>	
+	</ItemEntry>
 </ArrayOfItemEntry>

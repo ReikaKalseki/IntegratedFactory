@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GenericAutoCrafterDataEntry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<FriendlyName>Alloyed Experimental Pod Assembler</FriendlyName>
+	<SpawnObject>ExperimentalAssembler</SpawnObject>
+	<Value>ReikaKalseki.AlloyedPodMaker</Value>
+			
+	<PowerUsePerSecond>512</PowerUsePerSecond>  <!-- optional -->
+	<PowerTransferPerSecond>5000</PowerTransferPerSecond>  <!-- optional -->
+	<MaxPowerStorage>5000</MaxPowerStorage>  <!-- optional -->
+	<CraftingString>Assembling...</CraftingString>  <!-- optional -->
+	<WorkingAnimation000></WorkingAnimation000>  <!-- optional -->
+	
+	<CraftTime>60</CraftTime>  <!-- optional -->
+	<OptionalIngredients>false</OptionalIngredients>  <!-- optional -->
+	<Recipe>
+		<Key>ReikaKalseki.AlloyedExperimentalPod</Key>
+		<CraftedKey>AlloyedExperimentalPod</CraftedKey>
+		<CraftedAmount>1</CraftedAmount>
+		<Costs>
+			<CraftCost>
+				<Key>AlloyedMachineBlock</Key>
+				<Amount>5</Amount>
+			</CraftCost>
+			<CraftCost>
+				<Key>AlloyedPCB</Key>
+				<Amount>3</Amount>
+			</CraftCost>
+		</Costs>
+		<Description>Combines T2 materials for the ultimate T2 research pod...slowly.</Description>
+	</Recipe>
+</GenericAutoCrafterDataEntry>
