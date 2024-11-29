@@ -186,7 +186,7 @@ namespace ReikaKalseki.IntegratedFactory
        		addItemButScaleRest("MagneticMachineBlockAssembler", "TitaniumHousing", 4);
        		GenericAutoCrafterNew.mMachinesByKey["HiemalMachineBlockAssembler"].Recipe.addIngredient("PlasticPellet", 2); //do not scale
        		
-       		GenericAutoCrafterNew.mMachinesByKey["LensPolisher"].Recipe.addIngredient("RefinedLiquidResin", 10);       		
+       		GenericAutoCrafterNew.mMachinesByKey["LensChromer"].Recipe.addIngredient("RefinedLiquidResin", 10);       		
        	}
        	
        	GenericAutoCrafterNew.mMachinesByKey["LensChromer"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ReflectiveAlloy", 1F);
@@ -219,18 +219,18 @@ namespace ReikaKalseki.IntegratedFactory
        		replaceResearchBarsOrBlocksWithPods(res);
        	}
        
-       	ResearchDataEntry.mEntriesByKey["T4defence2"].addIngredient("ReikaKalseki.ChromiumExperimentalPod", 32); //dazzler
-       	ResearchDataEntry.mEntriesByKey["T4defence2"].addIngredient("ReikaKalseki.MolybdenumExperimentalPod", 32);
+       	ResearchDataEntry.mEntriesByKey["T4defence2"].addIngredient("ReikaKalseki.ChromiumExperimentalPod", 64); //dazzler
+       	ResearchDataEntry.mEntriesByKey["T4defence2"].addIngredient("ReikaKalseki.MolybdenumExperimentalPod", 64);
        		
-       	ResearchDataEntry.mEntriesByKey["T4defence3"].addIngredient("ReikaKalseki.ChromiumExperimentalPod", 32); //mines
-       	ResearchDataEntry.mEntriesByKey["T4defence3"].addIngredient("ReikaKalseki.MolybdenumExperimentalPod", 32);
-       		
+       	ResearchDataEntry.mEntriesByKey["T4defence3"].addIngredient("ReikaKalseki.ChromiumExperimentalPod", 16); //mines
+       	ResearchDataEntry.mEntriesByKey["T4defence3"].addIngredient("ReikaKalseki.MolybdenumExperimentalPod", 16);
+       		/* do not do, handled by replaceResearchBarsOrBlocksWithPods
        	ResearchDataEntry.mEntriesByKey["T4defence4"].addIngredient("ReikaKalseki.ChromiumExperimentalPod", 64); //falcors
        	ResearchDataEntry.mEntriesByKey["T4defence4"].addIngredient("ReikaKalseki.MolybdenumExperimentalPod", 64);
        		
        	ResearchDataEntry.mEntriesByKey["T4defence5"].addIngredient("ReikaKalseki.ChromiumExperimentalPod", 64); //supercharge
        	ResearchDataEntry.mEntriesByKey["T4defence5"].addIngredient("ReikaKalseki.MolybdenumExperimentalPod", 64);
-       	
+       	*/
        	if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
        		ResearchDataEntry.mEntriesByKey["T4_Particles"].addIngredient("RefinedLiquidResin", 1024);
        		
@@ -304,8 +304,8 @@ namespace ReikaKalseki.IntegratedFactory
     	if (ra.meState != ResearchAssembler.eState.eLookingForResources)
     		return;
     	foreach (CraftData rec in CraftData.GetRecipesForSet("ResearchAssembler")) {
-    		CraftCost plate = rec.Costs.First(cc => cc.Amount == 6);
-    		CraftCost pcb = rec.Costs.First(cc => cc.Amount == 2);
+    		CraftCost plate = rec.Costs.First(cc => cc.Key.Contains("Plate") || cc.Key == "AlloyedMachineBlock");
+    		CraftCost pcb = rec.Costs.First(cc => cc.Key.Contains("PCB"));
     		assemblerItemFetch.Invoke(ra, new object[]{pcb.ItemType, plate.ItemType, rec.CraftableItemType});
 	    	if (ra.meState != ResearchAssembler.eState.eLookingForResources)
 	    		break;

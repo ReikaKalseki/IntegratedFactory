@@ -126,7 +126,7 @@
     <CraftedAmount>1</CraftedAmount>
     <Costs>
       <CraftCost>
-        <Key>CompressedFreezon</Key>
+        <Key>CompressedFreon</Key>
         <Amount>500</Amount>
       </CraftCost>
       <CraftCost>
