@@ -59,20 +59,39 @@ namespace ReikaKalseki.IntegratedFactory
         mpod.addIngredient("ReikaKalseki.MolybdenumPlate", 6);
         mpod.addIngredient("ReikaKalseki.MolybdenumPCB", 2);
         
+        CraftData rec;
+        
+        /* moved to GAC
         CraftData hpod = RecipeUtil.addRecipe("HiemalExperimentalPod", "ReikaKalseki.HiemalExperimentalPod", "", set: "ResearchAssembler");
         hpod.addIngredient("MagneticMachineBlock", 8);
         hpod.addIngredient("ChromedMachineBlock", 8);
+        */
+       //still need this part
         if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
-        	hpod.Costs.ForEach(c => c.Amount *= 5);
-        	hpod.CraftedAmount *= 5;
-        	hpod.addIngredient("UltimatePCB", 1); //so still 8 blocks each but 1/5 of an ultimate pcb (2 alloyed upgrades=~10 T2 ores, 5 primary upgrades=50 tin, 10 coil=50 lith) each
-        	hpod.addIngredient("OverclockedCrystalClock", 5); //so 1 clock each
+       		rec = GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.HiemalPodMaker"].Recipe;
+        	rec.Costs.ForEach(c => c.Amount *= 5);
+        	rec.CraftedAmount *= 5;
+        	rec.addIngredient("UltimatePCB", 1); //so still 8 blocks each but 1/5 of an ultimate pcb (2 alloyed upgrades=~10 T2 ores, 5 primary upgrades=50 tin, 10 coil=50 lith) each
+        	rec.addIngredient("OverclockedCrystalClock", 5); //so 1 clock each
+        	
+        	//and add this
+        	rec = RecipeUtil.getRecipeByKey("ReikaKalseki.HiemalPodMaker");
+        	rec.addIngredient("ConductivePCB", 20);
+        	rec.addIngredient("SpiderBotPowerCore", 100);
+        	rec.addIngredient("TitaniumHousing", 2);
+        	rec.addIngredient("RefinedLiquidResin", 2000);
         }
+        
+        
+        //moved from GAC
+        CraftData apod = RecipeUtil.addRecipe("AlloyedExperimentalPod", "ReikaKalseki.AlloyedExperimentalPod", "", set: "ResearchAssembler");
+        apod.addIngredient("AlloyedMachineBlock", 5);
+        apod.addIngredient("AlloyedPCB", 3);
         
        	addAndSubSomeIf("powerpack2", "ChromiumBar", "ReikaKalseki.ChromiumPCB", "AlloyedPCB", 1/16F);
        	addAndSubSomeIf("powerpack2", "MolybdenumBar", "ReikaKalseki.MolybdenumPCB", "OverclockedCrystalClock", 1/4F);
        	
-       	CraftData rec = RecipeUtil.getRecipeByKey("build gun mk3");
+       	rec = RecipeUtil.getRecipeByKey("build gun mk3");
        	float ratio = 1;
        	if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
        		rec.addIngredient("UltimatePCB", 5);

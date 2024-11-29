@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GenericAutoCrafterDataEntry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<FriendlyName>Hiemal Experimental Pod Assembler</FriendlyName>
+	<SpawnObject>ExperimentalAssembler</SpawnObject>
+	<Value>ReikaKalseki.HiemalPodMaker</Value>
+			
+	<PowerUsePerSecond>5000</PowerUsePerSecond>  <!-- optional -->
+	<PowerTransferPerSecond>10000</PowerTransferPerSecond>  <!-- optional -->
+	<MaxPowerStorage>20000</MaxPowerStorage>  <!-- optional -->
+	<CraftingString>Assembling...</CraftingString>  <!-- optional -->
+	<WorkingAnimation000></WorkingAnimation000>  <!-- optional -->
+	
+	<CraftTime>120</CraftTime>  <!-- optional -->
+	<OptionalIngredients>false</OptionalIngredients>  <!-- optional -->
+	<Recipe>
+		<Key>ReikaKalseki.HiemalExperimentalPod</Key>
+		<CraftedKey>HiemalExperimentalPod</CraftedKey>
+		<CraftedAmount>1</CraftedAmount>
+		<Costs>
+			<CraftCost>
+				<Key>HiemalMachineBlock</Key>
+				<Amount>8</Amount>
+			</CraftCost>
+			<CraftCost>
+				<Key>RefinedLiquidResin</Key>
+				<Amount>20</Amount>
+			</CraftCost>
+		</Costs>
+		<Description>Combines endgame materials for the ultimate research pod...slowly.</Description>
+	</Recipe>
+</GenericAutoCrafterDataEntry>

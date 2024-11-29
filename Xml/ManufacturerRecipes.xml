@@ -86,6 +86,7 @@
     </ResearchRequirements>
     <CanCraftAnywhere>false</CanCraftAnywhere>
   </CraftData>
+  <!--
   <CraftData>
     <Key>ReikaKalseki.AlloyedPodMaker</Key>
     <Category>manufacturing</Category>
@@ -94,7 +95,7 @@
     <CraftedAmount>1</CraftedAmount>
     <Costs>
       <CraftCost>
-        <Key>SpiderBotPowerCoil</Key>
+        <Key>SpiderBotPowerCore</Key>
         <Amount>100</Amount>
       </CraftCost>
       <CraftCost>
@@ -113,6 +114,29 @@
     <Description>Combines T2 materials for the ultimate T2 research pod...slowly.</Description>
     <ResearchRequirements>
       <Research>alloys</Research>
+    </ResearchRequirements>
+    <CanCraftAnywhere>false</CanCraftAnywhere>
+  </CraftData>
+  -->
+  <CraftData>
+    <Key>ReikaKalseki.HiemalPodMaker</Key>
+    <Category>manufacturing</Category>
+    <Tier>4</Tier>
+    <CraftedKey>ReikaKalseki.HiemalPodMaker</CraftedKey>
+    <CraftedAmount>1</CraftedAmount>
+    <Costs>
+      <CraftCost>
+        <Key>CompressedFreezon</Key>
+        <Amount>500</Amount>
+      </CraftCost>
+      <CraftCost>
+        <Key>HiemalMachineBlock</Key>
+        <Amount>50</Amount>
+      </CraftCost>
+    </Costs>
+    <Description>Combines endgame materials for the ultimate research pod...slowly.</Description>
+    <ResearchRequirements>
+      <Research>T4_Particles</Research>
     </ResearchRequirements>
     <CanCraftAnywhere>false</CanCraftAnywhere>
   </CraftData>
