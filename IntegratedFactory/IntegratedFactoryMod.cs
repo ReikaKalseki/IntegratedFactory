@@ -59,6 +59,18 @@ namespace ReikaKalseki.IntegratedFactory
         mpod.addIngredient("ReikaKalseki.MolybdenumPlate", 6);
         mpod.addIngredient("ReikaKalseki.MolybdenumPCB", 2);
         
+        CraftData fpod = RecipeUtil.addRecipe("ColdExperimentalPod", "ReikaKalseki.ColdExperimentalPod", "", set: "ResearchAssembler");
+        fpod.addIngredient("CompressedFreon", 10);
+        fpod.addIngredient(config.getBoolean(IFConfig.ConfigEntries.T3_T4) ? "TitaniumPipe" : "ReikaKalseki.ChromiumPipe", 2);
+        
+        CraftData clpod = RecipeUtil.addRecipe("ToxicExperimentalPod", "ReikaKalseki.ToxicExperimentalPod", "", set: "ResearchAssembler");
+        clpod.addIngredient("CompressedChlorine", 10);
+        clpod.addIngredient(config.getBoolean(IFConfig.ConfigEntries.T3_T4) ? "NickelPipe" : "ReikaKalseki.MolybdenumPipe", 2);
+        
+        CraftData spod = RecipeUtil.addRecipe("LavaExperimentalPod", "ReikaKalseki.LavaExperimentalPod", "", set: "ResearchAssembler");
+        spod.addIngredient("CompressedSulphur", 10);
+        spod.addIngredient(config.getBoolean(IFConfig.ConfigEntries.T3_T4) ? "GoldPipe" : "ReikaKalseki.ChromiumPipe", 2);
+        
         CraftData rec;
         
         /* moved to GAC
@@ -81,7 +93,6 @@ namespace ReikaKalseki.IntegratedFactory
         	rec.addIngredient("TitaniumHousing", 2);
         	rec.addIngredient("RefinedLiquidResin", 2000);
         }
-        
         
         //moved from GAC
         CraftData apod = RecipeUtil.addRecipe("AlloyedExperimentalPod", "ReikaKalseki.AlloyedExperimentalPod", "", set: "ResearchAssembler");
@@ -221,7 +232,7 @@ namespace ReikaKalseki.IntegratedFactory
        	ResearchDataEntry.mEntriesByKey["T4_drills_2"].ProjectItemRequirements.ForEach(r => r.Amount /= 2); //make cost half as much as T3 (=64 pods)
        	       	
        	foreach (ResearchDataEntry res in ResearchDataEntry.mEntries) {
-       		replaceResearchBarsOrBlocksWithPods(res);
+       		doResearchCostReplacement(res);
        	}
        
        	ResearchDataEntry.mEntriesByKey["T4defence2"].addIngredient("ReikaKalseki.ChromiumExperimentalPod", 64); //dazzler
@@ -262,6 +273,10 @@ namespace ReikaKalseki.IntegratedFactory
        		ResearchDataEntry.mEntriesByKey["T4defence5"].addIngredient("ReikaKalseki.AlloyedExperimentalPod", 64);
        		ResearchDataEntry.mEntriesByKey["T4defence5"].addIngredient("ComplexExperimentalPod", 64);
        		ResearchDataEntry.mEntriesByKey["T4defence5"].addIngredient("RefinedLiquidResin", 512);
+       		
+       		ResearchDataEntry.mEntriesByKey["T4_8LightsInTheDark"].addIngredient("ReikaKalseki.ColdExperimentalPod", 1024);
+       		ResearchDataEntry.mEntriesByKey["T4_8LightsInTheDark"].addIngredient("ReikaKalseki.ToxicExperimentalPod", 1024);
+       		ResearchDataEntry.mEntriesByKey["T4_8LightsInTheDark"].addIngredient("ReikaKalseki.LavaExperimentalPod", 1024);
        	}
        	
        	float scale = config.getFloat(IFConfig.ConfigEntries.T4_RESEARCH_COST_SCALE);
@@ -284,11 +299,11 @@ namespace ReikaKalseki.IntegratedFactory
     	rec.addIngredient(add, 1);
     }
     
-    private void replaceResearchBarsOrBlocksWithPods(string key) {
-    	replaceResearchBarsOrBlocksWithPods(ResearchDataEntry.mEntriesByKey[key]);
+    private void doResearchCostReplacement(string key) {
+    	doResearchCostReplacement(ResearchDataEntry.mEntriesByKey[key]);
     }
     
-    private void replaceResearchBarsOrBlocksWithPods(ResearchDataEntry rec) {
+    private void doResearchCostReplacement(ResearchDataEntry rec) {
     	float f = 0.125F; //since a pod costs 8 ingots
     	if (rec.Key == "T4_Particles")
     		f *= 8; //to 32
@@ -305,6 +320,11 @@ namespace ReikaKalseki.IntegratedFactory
        	
        	// /6 since each pod costs 5 alloyed blocks (80 ingots) + 3 alloyed upgrade (5-6 each)~96 vs 16 of a block
        	rec.replaceIngredient("AlloyedMachineBlock", "ReikaKalseki.AlloyedExperimentalPod", 1/6F);
+       	
+       	f = 0.2F*config.getFloat(IFConfig.ConfigEntries.GAS_RESEARCH_COST_SCALE); //all are 10:1 but 2x cost
+       	rec.replaceIngredient("CompressedFreon", "ReikaKalseki.ColdExperimentalPod", f);
+       	rec.replaceIngredient("CompressedChlorine", "ReikaKalseki.ToxicExperimentalPod", f);
+       	rec.replaceIngredient("CompressedSulphur", "ReikaKalseki.LavaExperimentalPod", f);
     }
     
     private void addAndSubSomeIf(string rec, string find, string replace, string sub, float ratio = 1, bool force = false) {
@@ -324,8 +344,8 @@ namespace ReikaKalseki.IntegratedFactory
     	if (ra.meState != ResearchAssembler.eState.eLookingForResources)
     		return;
     	foreach (CraftData rec in CraftData.GetRecipesForSet("ResearchAssembler")) {
-    		CraftCost plate = rec.Costs.First(cc => cc.Key.Contains("Plate") || cc.Key == "AlloyedMachineBlock");
-    		CraftCost pcb = rec.Costs.First(cc => cc.Key.Contains("PCB"));
+    		CraftCost plate = rec.Costs.First(cc => cc.Key.Contains("Plate") || cc.Key == "AlloyedMachineBlock" || cc.Key.StartsWith("Compressed", StringComparison.InvariantCultureIgnoreCase));
+    		CraftCost pcb = rec.Costs.First(cc => cc.Key.Contains("PCB") || cc.Amount == 2);
     		assemblerItemFetch.Invoke(ra, new object[]{pcb.ItemType, plate.ItemType, rec.CraftableItemType});
 	    	if (ra.meState != ResearchAssembler.eState.eLookingForResources)
 	    		break;

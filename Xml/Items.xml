@@ -263,4 +263,57 @@
 			<Research>T4_Particles</Research>
 		</ResearchRequirements>	
 	</ItemEntry>
+	<ItemEntry>
+		<Key>ReikaKalseki.ColdExperimentalPod</Key>
+		<Name>Cryogenic Experimental Pod</Name>
+		<Plural>Cryogenic Experimental Pods</Plural>
+		<Type>ItemStack</Type>	
+		<Object>ResearchPod_Ultimate</Object>
+		<Sprite>ReikaKalseki.ColdExperimentalPod</Sprite>
+		<Category>Consumable</Category>
+		<ResearchRequirements>
+			<Research>T4_start</Research>
+			<Research>T4_Particles</Research>
+		</ResearchRequirements>	
+	</ItemEntry>
+	<ItemEntry>
+		<Key>ReikaKalseki.ToxicExperimentalPod</Key>
+		<Name>Corrosive Experimental Pod</Name>
+		<Plural>Corrosive Experimental Pods</Plural>
+		<Type>ItemStack</Type>	
+		<Object>ResearchPod_XL</Object>
+		<Sprite>ReikaKalseki.ToxicExperimentalPod</Sprite>
+		<Category>Consumable</Category>
+		<ResearchRequirements>
+			<Research>T4_start</Research>
+			<Research>T4_Particles</Research>
+		</ResearchRequirements>	
+	</ItemEntry>
+	<ItemEntry>
+		<Key>ReikaKalseki.LavaExperimentalPod</Key>
+		<Name>Pyrothermic Experimental Pod</Name>
+		<Plural>Pyrothermic Experimental Pods</Plural>
+		<Type>ItemStack</Type>	
+		<Object>ResearchPod_Intermediate</Object>
+		<Sprite>ReikaKalseki.LavaExperimentalPod</Sprite>
+		<Category>Consumable</Category>
+		<ResearchRequirements>
+			<Research>T4_start</Research>
+			<Research>T4_Particles</Research>
+		</ResearchRequirements>	
+	</ItemEntry>
+	<!--
+	<ItemEntry>
+		<Key>ReikaKalseki.FreonCell</Key>
+		<Name>Freon Cell</Name>
+		<Plural>Freon Cell</Plural>
+		<Type>ItemStack</Type>	
+		<Object>ResearchPod_Ultimate</Object>
+		<Sprite>ReikaKalseki.FreonCell</Sprite>
+		<Category>Consumable</Category>
+		<ResearchRequirements>
+			<Research>T4_start</Research>
+			<Research>T4_Particles</Research>
+		</ResearchRequirements>	
+	</ItemEntry>-->
 </ArrayOfItemEntry>
