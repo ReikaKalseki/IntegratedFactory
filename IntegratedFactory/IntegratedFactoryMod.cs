@@ -192,10 +192,15 @@ namespace ReikaKalseki.IntegratedFactory
        	addAndSubSomeIf("GasBottlerPlacementcomponent", "ChromedMachineBlock", "ChromedMachineBlock", "IronGear", 5);
        	addAndSubSomeIf("GasBottlerPlacementcomponent", "MagneticMachineBlock", "MagneticMachineBlock", "TitaniumHousing", 1/3F);
         
+       	GenericAutoCrafterNew.mMachinesByKey["ChromedMachineBlockAssembler"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumPlate");
+       	GenericAutoCrafterNew.mMachinesByKey["MagneticMachineBlockAssembler"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.MolybdenumPlate");
        	if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
-       		addItemButScaleRest("ChromedMachineBlockAssembler", "GoldFoil", 3);
-       		addItemButScaleRest("MagneticMachineBlockAssembler", "TitaniumHousing", 4);
-       		GenericAutoCrafterNew.mMachinesByKey["HiemalMachineBlockAssembler"].Recipe.addIngredient("PlasticPellet", 2); //do not scale
+       		GenericAutoCrafterNew.mMachinesByKey["ChromedMachineBlockAssembler"].Recipe.addIngredient("LithiumPlate", 4);
+       		GenericAutoCrafterNew.mMachinesByKey["ChromedMachineBlockAssembler"].Recipe.addIngredient("GoldPlate", 2);
+       		GenericAutoCrafterNew.mMachinesByKey["MagneticMachineBlockAssembler"].Recipe.addIngredient("NickelPlate", 2);
+       		GenericAutoCrafterNew.mMachinesByKey["MagneticMachineBlockAssembler"].Recipe.addIngredient("IronCoil", 10);
+       		GenericAutoCrafterNew.mMachinesByKey["HiemalMachineBlockAssembler"].Recipe.addIngredient("PlasticPellet", 20);
+       		GenericAutoCrafterNew.mMachinesByKey["HiemalMachineBlockAssembler"].Recipe.addIngredient("TitaniumHousing", 5);
        		
        		GenericAutoCrafterNew.mMachinesByKey["LensChromer"].Recipe.addIngredient("RefinedLiquidResin", 10);       		
        	}
@@ -248,10 +253,10 @@ namespace ReikaKalseki.IntegratedFactory
        	ResearchDataEntry.mEntriesByKey["T4defence5"].addIngredient("ReikaKalseki.MolybdenumExperimentalPod", 64);
        	*/
        	if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
-       		ResearchDataEntry.mEntriesByKey["T4defence1"].addIngredient("ReikaKalseki.AlloyedExperimentalPod", 32);
+       		addAlloyedPodCost("T4defence1", 16);
        		
-       		ResearchDataEntry.mEntriesByKey["T4_Particles"].addIngredient("ReikaKalseki.AlloyedExperimentalPod", 128);       		
-       		ResearchDataEntry.mEntriesByKey["T4_Particles"].addIngredient("RefinedLiquidResin", 3000);
+       		addAlloyedPodCost("T4_Particles", (int)Mathf.Max(1, 128*config.getFloat(IFConfig.ConfigEntries.PARTICLE_RESEARCH_COST_SCALE)));
+       		ResearchDataEntry.mEntriesByKey["T4_Particles"].addIngredient("RefinedLiquidResin", (int)Mathf.Max(1, 3000*config.getFloat(IFConfig.ConfigEntries.PARTICLE_RESEARCH_COST_SCALE)));
        		
        		ResearchDataEntry.mEntriesByKey["T4_drills_2"].addIngredient("UltimateExperimentalPod", 32); //titanium
        		ResearchDataEntry.mEntriesByKey["T4_drills_2"].addIngredient("IntermediateExperimentalPod", 32); //iron
@@ -261,29 +266,30 @@ namespace ReikaKalseki.IntegratedFactory
        		//ResearchDataEntry.mEntriesByKey["T4defence1"].addIngredient("ComplexExperimentalPod", 64);
        		
        		ResearchDataEntry.mEntriesByKey["T4defence2"].addIngredient("ComplexExperimentalPod", 32);
-       		ResearchDataEntry.mEntriesByKey["T4defence2"].addIngredient("ReikaKalseki.AlloyedExperimentalPod", 16);
+       		addAlloyedPodCost("T4defence2", 16);
        		ResearchDataEntry.mEntriesByKey["T4defence2"].addIngredient("RefinedLiquidResin", 256);
        		
-       		ResearchDataEntry.mEntriesByKey["T4defence3"].addIngredient("ReikaKalseki.AlloyedExperimentalPod", 16);
+       		addAlloyedPodCost("T4defence3", 16);
        		ResearchDataEntry.mEntriesByKey["T4defence3"].addIngredient("ComplexExperimentalPod", 64);
        		
-       		ResearchDataEntry.mEntriesByKey["T4defence4"].addIngredient("ReikaKalseki.AlloyedExperimentalPod", 64);
+       		addAlloyedPodCost("T4defence4", 64);
        		ResearchDataEntry.mEntriesByKey["T4defence4"].addIngredient("ComplexExperimentalPod", 64);
        		
-       		ResearchDataEntry.mEntriesByKey["T4defence5"].addIngredient("ReikaKalseki.AlloyedExperimentalPod", 64);
+       		addAlloyedPodCost("T4defence5", 64);
        		ResearchDataEntry.mEntriesByKey["T4defence5"].addIngredient("ComplexExperimentalPod", 64);
        		ResearchDataEntry.mEntriesByKey["T4defence5"].addIngredient("RefinedLiquidResin", 512);
        		
        		ResearchDataEntry.mEntriesByKey["T4_8LightsInTheDark"].addIngredient("ReikaKalseki.ColdExperimentalPod", 1024);
        		ResearchDataEntry.mEntriesByKey["T4_8LightsInTheDark"].addIngredient("ReikaKalseki.ToxicExperimentalPod", 1024);
        		ResearchDataEntry.mEntriesByKey["T4_8LightsInTheDark"].addIngredient("ReikaKalseki.LavaExperimentalPod", 1024);
+       		addAlloyedPodCost("T4_8LightsInTheDark", 256);
        	}
        	
        	float scale = config.getFloat(IFConfig.ConfigEntries.T4_RESEARCH_COST_SCALE);
        	if (scale < 0.99F || scale > 1.01F) { //do not use == 1
 	       	foreach (ResearchDataEntry res in ResearchDataEntry.mEntries) {
 	       		res.ProjectItemRequirements.ForEach(pp => {
-					if (pp.Key == "ReikaKalseki.ChromiumExperimentalPod" || pp.Key == "ReikaKalseki.MolybdenumExperimentalPod" || pp.Key == "ReikaKalseki.AlloyedExperimentalPod" || pp.Key == "ReikaKalseki.HiemalExperimentalPod")
+					if (pp.Key == "ReikaKalseki.ChromiumExperimentalPod" || pp.Key == "ReikaKalseki.MolybdenumExperimentalPod" || pp.Key == "ReikaKalseki.HiemalExperimentalPod")
 						pp.Amount = (int)Mathf.Max(1, pp.Amount*scale);
 				});
 	       	}
@@ -292,11 +298,8 @@ namespace ReikaKalseki.IntegratedFactory
         return registrationData;
     }
     
-    private void addItemButScaleRest(string gac, string add, float scale) {
-    	CraftData rec = GenericAutoCrafterNew.mMachinesByKey[gac].Recipe;
-    	rec.CraftedAmount = (int)(rec.CraftedAmount*scale);
-    	rec.Costs.ForEach(cc => cc.Amount = (uint)(cc.Amount*scale));
-    	rec.addIngredient(add, 1);
+    public void addAlloyedPodCost(string research, int amt) {
+    	ResearchDataEntry.mEntriesByKey[research].addIngredient("ReikaKalseki.AlloyedExperimentalPod", (int)Mathf.Max(1, amt*config.getFloat(IFConfig.ConfigEntries.ALLOY_RESEARCH_COST_SCALE)));
     }
     
     private void doResearchCostReplacement(string key) {
@@ -319,7 +322,7 @@ namespace ReikaKalseki.IntegratedFactory
        		rec.addIngredient("ReikaKalseki.MolybdenumExperimentalPod", add.Amount);
        	
        	// /6 since each pod costs 5 alloyed blocks (80 ingots) + 3 alloyed upgrade (5-6 each)~96 vs 16 of a block
-       	rec.replaceIngredient("AlloyedMachineBlock", "ReikaKalseki.AlloyedExperimentalPod", 1/6F);
+       	rec.replaceIngredient("AlloyedMachineBlock", "ReikaKalseki.AlloyedExperimentalPod", 1/6F*config.getFloat(IFConfig.ConfigEntries.ALLOY_RESEARCH_COST_SCALE));
        	
        	f = 0.2F*config.getFloat(IFConfig.ConfigEntries.GAS_RESEARCH_COST_SCALE); //all are 10:1 but 2x cost
        	rec.replaceIngredient("CompressedFreon", "ReikaKalseki.ColdExperimentalPod", f);
