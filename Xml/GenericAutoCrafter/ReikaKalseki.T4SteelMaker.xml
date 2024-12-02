@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GenericAutoCrafterDataEntry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<FriendlyName>High Grade Steel Synthesizer</FriendlyName>
+	<SpawnObject>OreSmelterBasic</SpawnObject>
+	<Value>ReikaKalseki.T4SteelMaker</Value>
+			
+	<PowerUsePerSecond>400</PowerUsePerSecond>  <!-- optional -->
+	<PowerTransferPerSecond>1000</PowerTransferPerSecond>  <!-- optional -->
+	<MaxPowerStorage>2000</MaxPowerStorage>  <!-- optional -->
+	<CraftingString>Alloying...</CraftingString>  <!-- optional -->
+	<WorkingAnimation000></WorkingAnimation000>  <!-- optional -->
+	
+	<CraftTime>5</CraftTime>  <!-- optional -->
+	<OptionalIngredients>false</OptionalIngredients>  <!-- optional -->
+	<Recipe>
+		<Key>ReikaKalseki.T4Steel</Key>
+		<CraftedKey>ReikaKalseki.T4Steel</CraftedKey>
+		<CraftedAmount>10</CraftedAmount>
+		<Costs>
+			<CraftCost>
+				<Key>LowGradeSteelBar</Key>
+				<Amount>5</Amount>
+			</CraftCost>
+			<CraftCost>
+				<Key>ChromiumBar</Key>
+				<Amount>2</Amount>
+			</CraftCost>
+			<CraftCost>
+				<Key>MolybdenumBar</Key>
+				<Amount>5</Amount>
+			</CraftCost>
+		</Costs>
+		<Description>Upgrades steel bars to a much tougher alloy.</Description>
+	</Recipe>
+</GenericAutoCrafterDataEntry>

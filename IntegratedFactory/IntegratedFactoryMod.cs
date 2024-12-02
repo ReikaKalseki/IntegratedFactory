@@ -52,6 +52,19 @@ namespace ReikaKalseki.IntegratedFactory
         RecipeUtil.addRecipe("MolybdenumPCB", "ReikaKalseki.MolybdenumPCB", "", set: "PCBAssembler").addIngredient("ReikaKalseki.MolybdenumCoil", 1);
         RecipeUtil.addRecipe("ChromiumPipe", "ReikaKalseki.ChromiumPipe", "", set: "PipeExtruder").addIngredient("ChromiumBar", 1);
         RecipeUtil.addRecipe("MolybdenumPipe", "ReikaKalseki.MolybdenumPipe", "", set: "PipeExtruder").addIngredient("MolybdenumBar", 1);
+		
+        CraftData cresin = RecipeUtil.addRecipe("CryoResin", "ReikaKalseki.CryoResin", "", set: "Refinery");
+        cresin.addIngredient("CompressedFreon", 4);
+        cresin.addIngredient("RefinedLiquidResin", 10);
+        
+        CraftData aresin = RecipeUtil.addRecipe("AcidResin", "ReikaKalseki.AcidResin", "", set: "Refinery");
+        aresin.addIngredient("CompressedChlorine", 4);
+        aresin.addIngredient("RefinedLiquidResin", 10);
+        
+        CraftData fresin = RecipeUtil.addRecipe("PyroResin", "ReikaKalseki.PyroResin", "", set: "Refinery");
+        fresin.addIngredient("CompressedSulphur", 4);
+        fresin.addIngredient("RefinedLiquidResin", 10);
+        
         CraftData cpod = RecipeUtil.addRecipe("ChromiumExperimentalPod", "ReikaKalseki.ChromiumExperimentalPod", "", set: "ResearchAssembler");
         cpod.addIngredient("ReikaKalseki.ChromiumPlate", 6);
         cpod.addIngredient("ReikaKalseki.ChromiumPCB", 2);
@@ -60,15 +73,15 @@ namespace ReikaKalseki.IntegratedFactory
         mpod.addIngredient("ReikaKalseki.MolybdenumPCB", 2);
         
         CraftData fpod = RecipeUtil.addRecipe("ColdExperimentalPod", "ReikaKalseki.ColdExperimentalPod", "", set: "ResearchAssembler");
-        fpod.addIngredient("CompressedFreon", 10);
+        fpod.addIngredient("ReikaKalseki.CryoResin", 10);
         fpod.addIngredient(config.getBoolean(IFConfig.ConfigEntries.T3_T4) ? "TitaniumPipe" : "ReikaKalseki.ChromiumPipe", 2);
         
         CraftData clpod = RecipeUtil.addRecipe("ToxicExperimentalPod", "ReikaKalseki.ToxicExperimentalPod", "", set: "ResearchAssembler");
-        clpod.addIngredient("CompressedChlorine", 10);
+        clpod.addIngredient("ReikaKalseki.AcidResin", 10);
         clpod.addIngredient(config.getBoolean(IFConfig.ConfigEntries.T3_T4) ? "NickelPipe" : "ReikaKalseki.MolybdenumPipe", 2);
         
         CraftData spod = RecipeUtil.addRecipe("LavaExperimentalPod", "ReikaKalseki.LavaExperimentalPod", "", set: "ResearchAssembler");
-        spod.addIngredient("CompressedSulphur", 10);
+        spod.addIngredient("ReikaKalseki.PyroResin", 10);
         spod.addIngredient(config.getBoolean(IFConfig.ConfigEntries.T3_T4) ? "GoldPipe" : "ReikaKalseki.ChromiumPipe", 2);
         
         CraftData rec;
@@ -91,18 +104,18 @@ namespace ReikaKalseki.IntegratedFactory
         	rec.addIngredient("ConductivePCB", 20);
         	rec.addIngredient("SpiderBotPowerCore", 100);
         	rec.addIngredient("TitaniumHousing", 2);
-        	rec.addIngredient("RefinedLiquidResin", 2000);
         }
         
         //moved from GAC
         CraftData apod = RecipeUtil.addRecipe("AlloyedExperimentalPod", "ReikaKalseki.AlloyedExperimentalPod", "", set: "ResearchAssembler");
-        apod.addIngredient("AlloyedMachineBlock", 5);
-        apod.addIngredient("AlloyedPCB", 3);
+        apod.addIngredient("AlloyedMachineBlock", 4);
+        apod.addIngredient("AlloyedPCB", 1);
         
        	addAndSubSomeIf("powerpack2", "ChromiumBar", "ReikaKalseki.ChromiumPCB", "AlloyedPCB", 1/16F);
        	addAndSubSomeIf("powerpack2", "MolybdenumBar", "ReikaKalseki.MolybdenumPCB", "OverclockedCrystalClock", 1/4F);
        	
        	rec = RecipeUtil.getRecipeByKey("build gun mk3");
+       	rec.removeIngredient("ImbuedMachineBlock"); //keep <= 5 ingredients and this is the most used elsewhere
        	float ratio = 1;
        	if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
        		rec.addIngredient("UltimatePCB", 5);
@@ -110,6 +123,13 @@ namespace ReikaKalseki.IntegratedFactory
        	}
        	rec.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumPlate", ratio);
        	rec.replaceIngredient("MolybdenumBar", "ReikaKalseki.MolybdenumPlate", ratio);
+       	
+       	RecipeUtil.getRecipeByKey("poisonwarhead").replaceIngredient("CompressedChlorine", "ReikaKalseki.AcidResin", 0.2F); //from 5 to 1
+       	RecipeUtil.getRecipeByKey("freezewarhead").replaceIngredient("CompressedFreon", "ReikaKalseki.CryoResin", 0.2F); //from 5 to 1
+       	
+       	RecipeUtil.getRecipeByKey("CryoMine").replaceIngredient("CompressedChlorine", "ReikaKalseki.AcidResin");
+       	
+       	RecipeUtil.getRecipeByKey("T4BurnerPlacement").replaceIngredient("CompressedSulphur", "ReikaKalseki.PyroResin", 3); //from 27 per to 81 per, and x12 as much sulfur
        	
        	rec = RecipeUtil.getRecipeByKey("chrome_crafter");
        	rec.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumPlate");
@@ -128,23 +148,43 @@ namespace ReikaKalseki.IntegratedFactory
        		rec.addIngredient("AlloyedPCB", 10);
        	}
        	
+       	rec = RecipeUtil.getRecipeByKey("MagmaBoreComponent"); //33 total crafts necessary so the MB needs 495 pods = 4950 resins (~20k gas and ~50k liquid resin) + ~1k T2 bars
+       	rec.addIngredient(cresin.CraftedKey, 15);
+       	rec.addIngredient(fresin.CraftedKey, 15);
+       	rec.addIngredient(aresin.CraftedKey, 15);
+       	if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
+       		rec.addItemPerN("UltimatePCB", 3, 2); //now needs 22 crafts and 22 ultimate upgrades
+       	}
+       	
+       	rec = RecipeUtil.getRecipeByKey("MagmaStorage"); //63 total crafts necessary
+       	rec.addIngredient("CastingPipe", 10);
+       	rec.addIngredient("ReikaKalseki.ReflectiveAlloy", 32); //total just over 2k
+       	rec.replaceIngredient("CompressedSulphur", "ReikaKalseki.PyroResin", 0.5F); //from 2016 sulfur and 0 resin to 4032 sulfur and a little over 10k resin
+       	
+       	rec = RecipeUtil.getRecipeByKey("CryoPlasmInferno"); //27 crafts necessary
+       	rec.replaceIngredient("MagneticMachineBlock", "GenericPipeStraight", 1.25F); //from 4 to 5
+       	rec.addIngredient("ReikaKalseki.ReflectiveAlloy", 10);
+       	rec.replaceIngredient("CompressedSulphur", "ReikaKalseki.PyroResin", 0.25F); //keep same sulfur, and add 2160 resin
+       	
        	addAndSubSomeIf("CargoLiftBulk", "ChromiumBar", "MagneticMachineBlock", "ChromedMachineBlock", 0.5F, true);
        	
        	RecipeUtil.getRecipeByKey("trencher drill component").replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumWire", 2F);
        	addAndSubSomeIf("trencher drill component", "MolybdenumBar", "ReikaKalseki.MolybdenumPlate", "RackRail", 8F);
        	
+       	rec = RecipeUtil.getRecipeByKey("mk2trencherdrillcomponent");
        	addAndSubSomeIf("mk2trencherdrillcomponent", "MolybdenumBar", "MagneticMachineBlock", "ChromedMachineBlock", 0.5F, true);
+       	rec.replaceIngredients("ReikaKalseki.AcidResin", 10, "CompressedChlorine", "RefinedLiquidResin"); //replaces 25 chlorine and 32 resin, and costs 120 chlorine and 300 resin for the whole drill
        	if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
-       		rec = RecipeUtil.getRecipeByKey("mk2trencherdrillcomponent");
-       		rec.addIngredient("AlloyedPCB", 2);
-       		rec.addIngredient("OrganicCutterHead", 1);
+       		rec.addIngredient("OrganicCutterHead", 2);
        	}
+       	
        	rec = RecipeUtil.getRecipeByKey("mk3trencherdrillcomponent");
+       	rec.replaceIngredients("ReikaKalseki.PyroResin", 20, "CompressedSulphur", "RefinedLiquidResin"); //replaces 25 sulfur and 32 resin, and costs 240 sulfur and 600 resin for the whole drill
        	rec.replaceIngredient("ChromiumBar", "HiemalMachineBlock");
        	if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
-       		rec.addIngredient("UltimatePCB", 2);
-       		rec.addIngredient("PlasmaCutterHead", 1);
+       		rec.addIngredient("PlasmaCutterHead", 2);
        	}
+       	
        	rec = RecipeUtil.getRecipeByKey("trencher motor component");
        	rec.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumPCB");
        	rec.replaceIngredient("MolybdenumBar", "ReikaKalseki.MolybdenumPCB");
@@ -183,6 +223,12 @@ namespace ReikaKalseki.IntegratedFactory
 	       	}
        	}
        	
+       	rec = RecipeUtil.getRecipeByKey("FreezonInjector");
+       	if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
+       		rec.replaceIngredient("T4CreepLancer", "LithiumPipe", 5); //4 to 20
+       		rec.addIngredient("LightweightMachineHousing", 2);
+       	}
+       	
        	addAndSubSomeIf("particlefiltercomponent", "ChromedMachineBlock", "ChromedMachineBlock", "IronGear", 5);
        	addAndSubSomeIf("particlefiltercomponent", "MagneticMachineBlock", "MagneticMachineBlock", "TitaniumHousing", 1/3F);
        	addAndSubSomeIf("particlecompressorcomponent", "ChromedMachineBlock", "ChromedMachineBlock", "IronGear", 5);
@@ -193,14 +239,21 @@ namespace ReikaKalseki.IntegratedFactory
        	addAndSubSomeIf("GasBottlerPlacementcomponent", "MagneticMachineBlock", "MagneticMachineBlock", "TitaniumHousing", 1/3F);
         
        	GenericAutoCrafterNew.mMachinesByKey["ChromedMachineBlockAssembler"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumPlate");
-       	GenericAutoCrafterNew.mMachinesByKey["MagneticMachineBlockAssembler"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.MolybdenumPlate");
+       	GenericAutoCrafterNew.mMachinesByKey["MagneticMachineBlockAssembler"].Recipe.replaceIngredient("MolybdenumBar", "ReikaKalseki.MolybdenumPlate");
+       	GenericAutoCrafterNew.mMachinesByKey["HiemalMachineBlockAssembler"].PowerTransferPerSecond = 1200;
+       	GenericAutoCrafterNew.mMachinesByKey["HiemalMachineBlockAssembler"].MaxPowerStorage = 6000;
+       	GenericAutoCrafterNew.mMachinesByKey["HiemalMachineBlockAssembler"].PowerTransferPerSecond = 3000;
+       	
        	if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
        		GenericAutoCrafterNew.mMachinesByKey["ChromedMachineBlockAssembler"].Recipe.addIngredient("LithiumPlate", 4);
-       		GenericAutoCrafterNew.mMachinesByKey["ChromedMachineBlockAssembler"].Recipe.addIngredient("GoldPlate", 2);
-       		GenericAutoCrafterNew.mMachinesByKey["MagneticMachineBlockAssembler"].Recipe.addIngredient("NickelPlate", 2);
-       		GenericAutoCrafterNew.mMachinesByKey["MagneticMachineBlockAssembler"].Recipe.addIngredient("IronCoil", 10);
+       		//GenericAutoCrafterNew.mMachinesByKey["ChromedMachineBlockAssembler"].Recipe.addIngredient("GoldPlate", 2);
+       		//GenericAutoCrafterNew.mMachinesByKey["MagneticMachineBlockAssembler"].Recipe.addIngredient("NickelPlate", 2);
+       		GenericAutoCrafterNew.mMachinesByKey["MagneticMachineBlockAssembler"].Recipe.addIngredient("IronCoil", 8);
        		GenericAutoCrafterNew.mMachinesByKey["HiemalMachineBlockAssembler"].Recipe.addIngredient("PlasticPellet", 20);
        		GenericAutoCrafterNew.mMachinesByKey["HiemalMachineBlockAssembler"].Recipe.addIngredient("TitaniumHousing", 5);
+       		
+       		GenericAutoCrafterNew.mMachinesByKey["ChromedMachineBlockAssembler"].Recipe.scaleIOExcept(2, "ImbuedMachineBlock");
+       		GenericAutoCrafterNew.mMachinesByKey["MagneticMachineBlockAssembler"].Recipe.scaleIOExcept(2, "ImbuedMachineBlock");
        		
        		GenericAutoCrafterNew.mMachinesByKey["LensChromer"].Recipe.addIngredient("RefinedLiquidResin", 10);       		
        	}
@@ -209,7 +262,13 @@ namespace ReikaKalseki.IntegratedFactory
        	if (GenericAutoCrafterNew.mMachinesByKey.ContainsKey("ReikaKalseki.PerfectLensChromer")) {
        		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.PerfectLensChromer"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ReflectiveAlloy", 1F);
        		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.ExceptionalLensChromer"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ReflectiveAlloy", 1F);
+       		
+       		if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
+	       		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.PerfectLensChromer"].Recipe.addIngredient("RefinedLiquidResin", 8);  
+	       		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.ExceptionalLensChromer"].Recipe.addIngredient("RefinedLiquidResin", 5);  
+       		}
        	}
+       	
        	if (GenericAutoCrafterNew.mMachinesByKey.ContainsKey("ReikaKalseki.CryoSpawnerMissileCrafter")) { //cryopathy
        		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoSpawnerMissileCrafter"].Recipe.replaceIngredient("SecondaryUpgradeModule", "ReikaKalseki.ChromiumPCB", 2F); //from 1 to 2
        		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoMelterMissileCrafter"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumPipe", 2F); //from 1 to 2
@@ -217,11 +276,6 @@ namespace ReikaKalseki.IntegratedFactory
        		rec = RecipeUtil.getRecipeByKey("ReikaKalseki.CryoMissileTurret");
        		rec.replaceIngredient("MolybdenumBar", "ReikaKalseki.MolybdenumPCB");
        		rec.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumPCB");
-       		
-       		if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
-	       		GenericAutoCrafterNew.mMachinesByKey["PerfectLensChromer"].Recipe.addIngredient("RefinedLiquidResin", 8);  
-	       		GenericAutoCrafterNew.mMachinesByKey["ExceptionalLensChromer"].Recipe.addIngredient("RefinedLiquidResin", 5);  
-       		}
        	}
        	
         if (config.getBoolean(IFConfig.ConfigEntries.EFFICIENT_BLAST)) {
@@ -258,18 +312,18 @@ namespace ReikaKalseki.IntegratedFactory
        		addAlloyedPodCost("T4_Particles", (int)Mathf.Max(1, 128*config.getFloat(IFConfig.ConfigEntries.PARTICLE_RESEARCH_COST_SCALE)));
        		ResearchDataEntry.mEntriesByKey["T4_Particles"].addIngredient("RefinedLiquidResin", (int)Mathf.Max(1, 3000*config.getFloat(IFConfig.ConfigEntries.PARTICLE_RESEARCH_COST_SCALE)));
        		
-       		ResearchDataEntry.mEntriesByKey["T4_drills_2"].addIngredient("UltimateExperimentalPod", 32); //titanium
-       		ResearchDataEntry.mEntriesByKey["T4_drills_2"].addIngredient("IntermediateExperimentalPod", 32); //iron
-       		ResearchDataEntry.mEntriesByKey["T4_drills_3"].addIngredient("UltimateExperimentalPod", 64);
-       		ResearchDataEntry.mEntriesByKey["T4_drills_3"].addIngredient("IntermediateExperimentalPod", 64);
+       		ResearchDataEntry.mEntriesByKey["T4_drills_2"].addIngredient("UltimateExperimentalPod", 64); //titanium
+       		ResearchDataEntry.mEntriesByKey["T4_drills_2"].addIngredient("IntermediateExperimentalPod", 64); //iron
+       		ResearchDataEntry.mEntriesByKey["T4_drills_3"].addIngredient("IntermediateExperimentalPod", 128); //iron
+       		addAlloyedPodCost("T4_drills_3", 128);
        		
        		//ResearchDataEntry.mEntriesByKey["T4defence1"].addIngredient("ComplexExperimentalPod", 64);
        		
        		ResearchDataEntry.mEntriesByKey["T4defence2"].addIngredient("ComplexExperimentalPod", 32);
-       		addAlloyedPodCost("T4defence2", 16);
+       		addAlloyedPodCost("T4defence2", 64);
        		ResearchDataEntry.mEntriesByKey["T4defence2"].addIngredient("RefinedLiquidResin", 256);
        		
-       		addAlloyedPodCost("T4defence3", 16);
+       		addAlloyedPodCost("T4defence3", 32);
        		ResearchDataEntry.mEntriesByKey["T4defence3"].addIngredient("ComplexExperimentalPod", 64);
        		
        		addAlloyedPodCost("T4defence4", 64);
@@ -321,8 +375,9 @@ namespace ReikaKalseki.IntegratedFactory
        	if (add != null)
        		rec.addIngredient("ReikaKalseki.MolybdenumExperimentalPod", add.Amount);
        	
-       	// /6 since each pod costs 5 alloyed blocks (80 ingots) + 3 alloyed upgrade (5-6 each)~96 vs 16 of a block
-       	rec.replaceIngredient("AlloyedMachineBlock", "ReikaKalseki.AlloyedExperimentalPod", 1/6F*config.getFloat(IFConfig.ConfigEntries.ALLOY_RESEARCH_COST_SCALE));
+       	//original pod cost was an error, forgot upgrade takes TEN of each, costed 150-180 of each T2 rather than 15-16, net cost 230-260 intead of ~96
+       	//now each pod costs 4 alloyed blocks (64 ingots) + 1 alloyed upgrade (10x each T2 "part" @ 5-6 each) -> 114 to 124 vs 16 of a block
+       	rec.replaceIngredient("AlloyedMachineBlock", "ReikaKalseki.AlloyedExperimentalPod", 1/8F*config.getFloat(IFConfig.ConfigEntries.ALLOY_RESEARCH_COST_SCALE));
        	
        	f = 0.2F*config.getFloat(IFConfig.ConfigEntries.GAS_RESEARCH_COST_SCALE); //all are 10:1 but 2x cost
        	rec.replaceIngredient("CompressedFreon", "ReikaKalseki.ColdExperimentalPod", f);
@@ -341,19 +396,59 @@ namespace ReikaKalseki.IntegratedFactory
     	}
     }
     
-    private static readonly MethodInfo assemblerItemFetch = typeof(ResearchAssembler).GetMethod("GetItemsForPod", BindingFlags.Instance | BindingFlags.NonPublic);
+    //DO NOT USE, HARDCODES 6/2// private static readonly MethodInfo assemblerItemFetch = typeof(ResearchAssembler).GetMethod("GetItemsForPod", BindingFlags.Instance | BindingFlags.NonPublic);
+    //not necessary, just call SMI directly//private static readonly MethodInfo assemblerItemConsume = typeof(ResearchAssembler).GetMethod("RemovePlatesFromHopper", BindingFlags.Instance | BindingFlags.NonPublic);
+    private static readonly MethodInfo assemblerState = typeof(ResearchAssembler).GetMethod("SetNewState", BindingFlags.Instance | BindingFlags.NonPublic);
     
-    public static void getResearchAssemblerRecipe(ResearchAssembler ra) {
+    public static void getResearchAssemblerRecipe(ResearchAssembler ra, StorageMachineInterface[] maAttachedHoppers, int mnNumAttachedHoppers) {
     	if (ra.meState != ResearchAssembler.eState.eLookingForResources)
     		return;
     	foreach (CraftData rec in CraftData.GetRecipesForSet("ResearchAssembler")) {
-    		CraftCost plate = rec.Costs.First(cc => cc.Key.Contains("Plate") || cc.Key == "AlloyedMachineBlock" || cc.Key.StartsWith("Compressed", StringComparison.InvariantCultureIgnoreCase));
-    		CraftCost pcb = rec.Costs.First(cc => cc.Key.Contains("PCB") || cc.Amount == 2);
-    		assemblerItemFetch.Invoke(ra, new object[]{pcb.ItemType, plate.ItemType, rec.CraftableItemType});
+    		//CraftCost plate = rec.Costs.First(cc => cc.Key.Contains("Plate") || cc.Key == "AlloyedMachineBlock" || cc.Key.StartsWith("Compressed", StringComparison.InvariantCultureIgnoreCase));
+    		//CraftCost pcb = rec.Costs.First(cc => cc.Key.Contains("PCB") || cc.Amount == 2);
+    		//DO NOT USE//assemblerItemFetch.Invoke(ra, new object[]{pcb.ItemType, plate.ItemType, rec.CraftableItemType});
+    		getResearchRecipeItems(ra, rec, maAttachedHoppers, mnNumAttachedHoppers);
 	    	if (ra.meState != ResearchAssembler.eState.eLookingForResources)
 	    		break;
     	}
     }
+    
+    private static void getResearchRecipeItems(ResearchAssembler ra, CraftData recipe, StorageMachineInterface[] hoppers, int hopperCount) {
+    	CraftCost plate = recipe.Costs[0];
+    	CraftCost pcb = recipe.Costs[1];
+		for (int i = 0; i < hopperCount; i++) {
+			if (hoppers[i].CountItems(pcb.ItemType) > 1) {
+    			int plateCountInAttachedHoppers = getHoppersItemCount(plate.ItemType, hoppers, hopperCount);
+				if (plateCountInAttachedHoppers >= plate.Amount) {
+					ra.mTargetCreation = ItemManager.SpawnItem(recipe.CraftableItemType);
+					if (hoppers[i].TryExtractItems(ra, pcb.ItemType, (int)pcb.Amount)) {
+						int num = (int)plate.Amount;
+						for (int j = 0; j < hopperCount; j++) {
+							//num -= ra.RemovePlatesFromHopper(maAttachedHoppers[j], plate.ItemType, num);
+							//num -= (int)assemblerItemConsume.Invoke(ra, new object[]{hoppers[j], plate.ItemType, num});
+							num -= hoppers[j].TryPartialExtractItems(ra, plate.ItemType, num);
+							if (num < 0)
+								FUtil.log("Error, we removed too many "+plate.Name+"!");
+							if (num <= 0)
+								break;
+						}
+						if (num > 0)
+							FUtil.log("Error, we tried to remove "+plate.Amount+" plates, but still need to remove " + num + "!");
+						//ra.SetNewState(ResearchAssembler.eState.eCrafting);
+						assemblerState.Invoke(ra, new object[]{ResearchAssembler.eState.eCrafting});
+						return;
+					}
+				}
+			}
+		}
+	}
+    
+	private static int getHoppersItemCount(int itemID, StorageMachineInterface[] hoppers, int hopperCount) {
+		int num = 0;
+		for (int i = 0; i < hopperCount; i++)
+			num += hoppers[i].CountItems(itemID);
+		return num;
+	}
     
     private static int getBeltGACItem(string set, ItemBase item) {
     	if (item == null)

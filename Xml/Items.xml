@@ -302,6 +302,66 @@
 			<Research>T4_Particles</Research>
 		</ResearchRequirements>	
 	</ItemEntry>
+	<ItemEntry>
+		<Key>ReikaKalseki.T4Steel</Key>
+		<Name>High-Grade Steel Bar</Name>
+		<Plural>High-Grade Steel Bars</Plural>
+		<Type>ItemStack</Type>	
+		<Object>BarSteel</Object>
+		<Sprite>ReikaKalseki.T4Steel</Sprite>
+		<Category>Consumable</Category>
+		<ResearchRequirements>
+			<Research>T4 ore extracting</Research>
+		</ResearchRequirements>	
+	</ItemEntry>
+	<ItemEntry>
+		<Key>ReikaKalseki.CryoResin</Key>
+		<Name>Cryo Resin</Name>
+		<Plural>Cryo Resin</Plural>
+		<Type>ItemStack</Type>	
+		<Object>RefinedLiquidResin</Object>
+		<Sprite>ReikaKalseki.CryoResin</Sprite>
+		<Category>Consumable</Category>
+		<ResearchRequirements>
+			<Research>T4_Particles</Research>
+		</ResearchRequirements>	
+	</ItemEntry>
+	<ItemEntry>
+		<Key>ReikaKalseki.CryoResin</Key>
+		<Name>Cryo Resin</Name>
+		<Plural>Cryo Resin</Plural>
+		<Type>ItemStack</Type>	
+		<Object>RefinedLiquidResin</Object>
+		<Sprite>ReikaKalseki.CryoResin</Sprite>
+		<Category>Consumable</Category>
+		<ResearchRequirements>
+			<Research>T4_Particles</Research>
+		</ResearchRequirements>	
+	</ItemEntry>
+	<ItemEntry>
+		<Key>ReikaKalseki.AcidResin</Key>
+		<Name>Corrosive Resin</Name>
+		<Plural>Corrosive Resin</Plural>
+		<Type>ItemStack</Type>	
+		<Object>RefinedLiquidResin</Object>
+		<Sprite>ReikaKalseki.AcidResin</Sprite>
+		<Category>Consumable</Category>
+		<ResearchRequirements>
+			<Research>T4_Particles</Research>
+		</ResearchRequirements>	
+	</ItemEntry>
+	<ItemEntry>
+		<Key>ReikaKalseki.PyroResin</Key>
+		<Name>Pyro Resin</Name>
+		<Plural>Pyro Resin</Plural>
+		<Type>ItemStack</Type>	
+		<Object>RefinedLiquidResin</Object>
+		<Sprite>ReikaKalseki.PyroResin</Sprite>
+		<Category>Consumable</Category>
+		<ResearchRequirements>
+			<Research>T4_Particles</Research>
+		</ResearchRequirements>	
+	</ItemEntry>
 	<!--
 	<ItemEntry>
 		<Key>ReikaKalseki.FreonCell</Key>

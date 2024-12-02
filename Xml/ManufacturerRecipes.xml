@@ -126,8 +126,8 @@
     <CraftedAmount>1</CraftedAmount>
     <Costs>
       <CraftCost>
-        <Key>CompressedFreon</Key>
-        <Amount>500</Amount>
+        <Key>ReikaKalseki.CryoResin</Key>
+        <Amount>200</Amount>
       </CraftCost>
       <CraftCost>
         <Key>HiemalMachineBlock</Key>
@@ -140,4 +140,34 @@
     </ResearchRequirements>
     <CanCraftAnywhere>false</CanCraftAnywhere>
   </CraftData>
+<!--  <CraftData>
+    <Key>ReikaKalseki.T4SteelMaker</Key>
+    <Category>manufacturing</Category>
+    <Tier>4</Tier>
+    <CraftedKey>ReikaKalseki.T4SteelMaker</CraftedKey>
+    <CraftedAmount>1</CraftedAmount>
+    <Costs>
+      <CraftCost>
+        <Key>ReikaKalseki.MolybdenumPlate</Key>
+        <Amount>10</Amount>
+      </CraftCost>
+      <CraftCost>
+        <Key>NickelPlate</Key>
+        <Amount>10</Amount>
+      </CraftCost>
+      <CraftCost>
+        <Key>LightweightMachineHousing</Key>
+        <Amount>5</Amount>
+      </CraftCost>
+      <CraftCost>
+        <Key>ReikaKalseki.ChromiumCoil</Key>
+        <Amount>10</Amount>
+      </CraftCost>
+    </Costs>
+    <Description>Upgrades steel bars to a much tougher alloy.</Description>
+    <ResearchRequirements>
+      <Research>T4 ore extracting</Research>
+    </ResearchRequirements>
+    <CanCraftAnywhere>false</CanCraftAnywhere>
+  </CraftData>-->
 </ArrayOfCraftData>	

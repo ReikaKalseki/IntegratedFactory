@@ -35,7 +35,13 @@
 				<Name>Hiemal Experimental Pod Assembler</Name>
 				<IconName>ReikaKalseki.HiemalPodMaker</IconName>
 				<Description>Combines endgame materials for the ultimate research pod...slowly.</Description>
-			</ValueEntry>		
+			</ValueEntry>	
+<!--			<ValueEntry>
+				<Key>ReikaKalseki.T4SteelMaker</Key>
+				<Name>High Grade Steel Synthesizer</Name>
+				<IconName>ReikaKalseki.T4SteelMaker</IconName>
+				<Description>Upgrades steel bars to a much tougher alloy.</Description>
+			</ValueEntry>	-->	
 		</Values>
 	</TerrainDataEntry>	
 </ArrayOfTerrainDataEntry>

@@ -58,7 +58,11 @@ namespace ReikaKalseki.IntegratedFactory {
 				codes.Add(new CodeInstruction(OpCodes.Ldc_I4_0));
 				codes.Add(InstructionHandlers.createMethodCall(typeof(ResearchAssembler), "UpdateAttachedHoppers", true, new Type[]{typeof(bool)}));
 				codes.Add(new CodeInstruction(OpCodes.Ldarg_0));
-				codes.Add(InstructionHandlers.createMethodCall(typeof(IntegratedFactoryMod), "getResearchAssemblerRecipe", false, new Type[]{typeof(ResearchAssembler)}));
+				codes.Add(new CodeInstruction(OpCodes.Ldarg_0));
+				codes.Add(new CodeInstruction(OpCodes.Ldfld, InstructionHandlers.convertFieldOperand(typeof(ResearchAssembler), "maAttachedHoppers")));
+				codes.Add(new CodeInstruction(OpCodes.Ldarg_0));
+				codes.Add(new CodeInstruction(OpCodes.Ldfld, InstructionHandlers.convertFieldOperand(typeof(ResearchAssembler), "mnNumAttachedHoppers")));
+				codes.Add(InstructionHandlers.createMethodCall(typeof(IntegratedFactoryMod), "getResearchAssemblerRecipe", false, new Type[]{typeof(ResearchAssembler), typeof(StorageMachineInterface).MakeArrayType(), typeof(int)}));
 				
 				/*
 				codes.Add(new CodeInstruction(OpCodes.Ldarg_0));
