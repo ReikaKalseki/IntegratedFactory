@@ -53,17 +53,19 @@ namespace ReikaKalseki.IntegratedFactory
         RecipeUtil.addRecipe("ChromiumPipe", "ReikaKalseki.ChromiumPipe", "", set: "PipeExtruder").addIngredient("ChromiumBar", 1);
         RecipeUtil.addRecipe("MolybdenumPipe", "ReikaKalseki.MolybdenumPipe", "", set: "PipeExtruder").addIngredient("MolybdenumBar", 1);
 		
+        uint resingas = (uint)(4*config.getFloat(IFConfig.ConfigEntries.RESIN_GAS_COST_SCALE)/DifficultySettings.mrResourcesFactor); //unmultiply against resource factor
+        uint resinresin = (uint)(10*config.getFloat(IFConfig.ConfigEntries.RESIN_RESIN_COST_SCALE)/DifficultySettings.mrResourcesFactor);
         CraftData cresin = RecipeUtil.addRecipe("CryoResin", "ReikaKalseki.CryoResin", "", set: "Refinery");
-        cresin.addIngredient("CompressedFreon", 4);
-        cresin.addIngredient("RefinedLiquidResin", 10);
+        cresin.addIngredient("CompressedFreon", resingas);
+        cresin.addIngredient("RefinedLiquidResin", resinresin);
         
         CraftData aresin = RecipeUtil.addRecipe("AcidResin", "ReikaKalseki.AcidResin", "", set: "Refinery");
-        aresin.addIngredient("CompressedChlorine", 4);
-        aresin.addIngredient("RefinedLiquidResin", 10);
+        aresin.addIngredient("CompressedChlorine", resingas);
+        aresin.addIngredient("RefinedLiquidResin", resinresin);
         
         CraftData fresin = RecipeUtil.addRecipe("PyroResin", "ReikaKalseki.PyroResin", "", set: "Refinery");
-        fresin.addIngredient("CompressedSulphur", 4);
-        fresin.addIngredient("RefinedLiquidResin", 10);
+        fresin.addIngredient("CompressedSulphur", resingas);
+        fresin.addIngredient("RefinedLiquidResin", resinresin);
         
         CraftData cpod = RecipeUtil.addRecipe("ChromiumExperimentalPod", "ReikaKalseki.ChromiumExperimentalPod", "", set: "ResearchAssembler");
         cpod.addIngredient("ReikaKalseki.ChromiumPlate", 6);
@@ -244,6 +246,12 @@ namespace ReikaKalseki.IntegratedFactory
        	GenericAutoCrafterNew.mMachinesByKey["HiemalMachineBlockAssembler"].MaxPowerStorage = 6000;
        	GenericAutoCrafterNew.mMachinesByKey["HiemalMachineBlockAssembler"].PowerTransferPerSecond = 3000;
        	
+       	rec = GenericAutoCrafterNew.mMachinesByKey["CryoBombAssembler"].Recipe;
+       	rec.replaceIngredient("CompressedSulphur", "ReikaKalseki.PyroResin");
+       	rec.CraftedAmount *= 2; //2 gas and 5 resin each
+       	if (config.getBoolean(IFConfig.ConfigEntries.T3_T4))
+       		rec.addIngredient("LithiumPipe", 1);
+       	
        	if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
        		GenericAutoCrafterNew.mMachinesByKey["ChromedMachineBlockAssembler"].Recipe.addIngredient("LithiumPlate", 4);
        		//GenericAutoCrafterNew.mMachinesByKey["ChromedMachineBlockAssembler"].Recipe.addIngredient("GoldPlate", 2);
@@ -256,7 +264,7 @@ namespace ReikaKalseki.IntegratedFactory
        		GenericAutoCrafterNew.mMachinesByKey["MagneticMachineBlockAssembler"].Recipe.scaleIOExcept(2, "ImbuedMachineBlock");
        		
        		GenericAutoCrafterNew.mMachinesByKey["LensChromer"].Recipe.addIngredient("RefinedLiquidResin", 10);       		
-       	}
+       	} 
        	
        	GenericAutoCrafterNew.mMachinesByKey["LensChromer"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ReflectiveAlloy", 1F);
        	if (GenericAutoCrafterNew.mMachinesByKey.ContainsKey("ReikaKalseki.PerfectLensChromer")) {
@@ -272,6 +280,7 @@ namespace ReikaKalseki.IntegratedFactory
        	if (GenericAutoCrafterNew.mMachinesByKey.ContainsKey("ReikaKalseki.CryoSpawnerMissileCrafter")) { //cryopathy
        		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoSpawnerMissileCrafter"].Recipe.replaceIngredient("SecondaryUpgradeModule", "ReikaKalseki.ChromiumPCB", 2F); //from 1 to 2
        		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoMelterMissileCrafter"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumPipe", 2F); //from 1 to 2
+       		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoCrafter"].Recipe.replaceIngredient("CompressedFreon", "ReikaKalseki.CryoResin", 0.25F); //keep cost constant
        		
        		rec = RecipeUtil.getRecipeByKey("ReikaKalseki.CryoMissileTurret");
        		rec.replaceIngredient("MolybdenumBar", "ReikaKalseki.MolybdenumPCB");
