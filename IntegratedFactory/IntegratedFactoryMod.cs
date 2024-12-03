@@ -11,8 +11,8 @@ using ReikaKalseki.FortressCore;
 
 namespace ReikaKalseki.IntegratedFactory
 {
-  public class IntegratedFactoryMod : FCoreMod
-  {    
+  public class IntegratedFactoryMod : FCoreMod {    
+		
     private static Config<IFConfig.ConfigEntries> config;
     
     public IntegratedFactoryMod() : base("IntegratedFactory") {
@@ -23,24 +23,10 @@ namespace ReikaKalseki.IntegratedFactory
 		return config;
 	}
 
-    public override ModRegistrationData Register()
-    {
-        ModRegistrationData registrationData = new ModRegistrationData();
-        
+    protected override void loadMod(ModRegistrationData registrationData) {        
         config.load();
         
-        //registrationData.RegisterEntityHandler(MOD_KEY);
-        /*
-        TerrainDataEntry entry;
-        TerrainDataValueEntry valueEntry;
-        TerrainData.GetCubeByKey(CUBE_KEY, out entry, out valueEntry);
-        if (entry != null)
-          ModCubeType = entry.CubeType;
-         */
-        
         runHarmony();
-        
-        //GenericAutoCrafterNew
         
         RecipeUtil.addRecipe("ChromiumPlate", "ReikaKalseki.ChromiumPlate", "", set: "Stamper").addIngredient("ChromiumBar", 1);
         RecipeUtil.addRecipe("MolybdenumPlate", "ReikaKalseki.MolybdenumPlate", "", set: "Stamper").addIngredient("MolybdenumBar", 1);
@@ -97,6 +83,7 @@ namespace ReikaKalseki.IntegratedFactory
         if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
        		rec = GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.HiemalPodMaker"].Recipe;
         	rec.Costs.ForEach(c => c.Amount *= 5);
+        	rec.CraftTime *= 5;
         	rec.CraftedAmount *= 5;
         	rec.addIngredient("UltimatePCB", 1); //so still 8 blocks each but 1/5 of an ultimate pcb (2 alloyed upgrades=~10 T2 ores, 5 primary upgrades=50 tin, 10 coil=50 lith) each
         	rec.addIngredient("OverclockedCrystalClock", 5); //so 1 clock each
@@ -239,6 +226,10 @@ namespace ReikaKalseki.IntegratedFactory
        	addAndSubSomeIf("ParticleStoragePlacementcomponent", "MagneticMachineBlock", "MagneticMachineBlock", "TitaniumHousing", 1/3F);
        	addAndSubSomeIf("GasBottlerPlacementcomponent", "ChromedMachineBlock", "ChromedMachineBlock", "IronGear", 5);
        	addAndSubSomeIf("GasBottlerPlacementcomponent", "MagneticMachineBlock", "MagneticMachineBlock", "TitaniumHousing", 1/3F);
+       	
+       	foreach (CraftData rr in CraftData.GetRecipesForSet("Manufacturer")) {
+       		replaceGasesWithResins(rr);
+       	}
         
        	GenericAutoCrafterNew.mMachinesByKey["ChromedMachineBlockAssembler"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumPlate");
        	GenericAutoCrafterNew.mMachinesByKey["MagneticMachineBlockAssembler"].Recipe.replaceIngredient("MolybdenumBar", "ReikaKalseki.MolybdenumPlate");
@@ -249,6 +240,7 @@ namespace ReikaKalseki.IntegratedFactory
        	rec = GenericAutoCrafterNew.mMachinesByKey["CryoBombAssembler"].Recipe;
        	rec.replaceIngredient("CompressedSulphur", "ReikaKalseki.PyroResin");
        	rec.CraftedAmount *= 2; //2 gas and 5 resin each
+       	rec.CraftTime *= 2; //keep rates
        	if (config.getBoolean(IFConfig.ConfigEntries.T3_T4))
        		rec.addIngredient("LithiumPipe", 1);
        	
@@ -357,8 +349,6 @@ namespace ReikaKalseki.IntegratedFactory
 				});
 	       	}
        	}
-		
-        return registrationData;
     }
     
     public void addAlloyedPodCost(string research, int amt) {
@@ -388,10 +378,25 @@ namespace ReikaKalseki.IntegratedFactory
        	//now each pod costs 4 alloyed blocks (64 ingots) + 1 alloyed upgrade (10x each T2 "part" @ 5-6 each) -> 114 to 124 vs 16 of a block
        	rec.replaceIngredient("AlloyedMachineBlock", "ReikaKalseki.AlloyedExperimentalPod", 1/8F*config.getFloat(IFConfig.ConfigEntries.ALLOY_RESEARCH_COST_SCALE));
        	
-       	f = 0.2F*config.getFloat(IFConfig.ConfigEntries.GAS_RESEARCH_COST_SCALE); //all are 10:1 but 2x cost
-       	rec.replaceIngredient("CompressedFreon", "ReikaKalseki.ColdExperimentalPod", f);
-       	rec.replaceIngredient("CompressedChlorine", "ReikaKalseki.ToxicExperimentalPod", f);
-       	rec.replaceIngredient("CompressedSulphur", "ReikaKalseki.LavaExperimentalPod", f);
+       	f = 0.25F*config.getFloat(IFConfig.ConfigEntries.GAS_RESEARCH_COST_SCALE); //all are 10:1 and then 4:1 in the resin (40 gas per pod) but then 10x cost
+       	bool removeResin = false;
+       	removeResin |= rec.replaceIngredient("CompressedFreon", "ReikaKalseki.ColdExperimentalPod", f) != null;
+       	removeResin |= rec.replaceIngredient("CompressedChlorine", "ReikaKalseki.ToxicExperimentalPod", f) != null;
+       	removeResin |= rec.replaceIngredient("CompressedSulphur", "ReikaKalseki.LavaExperimentalPod", f) != null;
+       	if (removeResin)
+       		rec.removeIngredient("RefinedLiquidResin"); //since is included in the pods, probably more of it (10 gas resin per pod, 10 normal resin per gas resin)
+    }
+    
+    private void replaceGasesWithResins(CraftData rec) {
+       	float f = 0.25F; //all are 4 gas per pod
+       	bool found = false;
+       	found |= rec.replaceIngredient("CompressedFreon", "ReikaKalseki.CryoResin", f) != null;
+       	found |= rec.replaceIngredient("CompressedChlorine", "ReikaKalseki.AcidResin", f) != null;
+       	found |= rec.replaceIngredient("CompressedSulphur", "ReikaKalseki.PyroResin", f) != null;
+       	if (found) {
+       		bool flag = rec.removeIngredient("RefinedLiquidResin") != null;
+       		FUtil.log("Replacing gases "+(flag ? "and resin " : "")+"with resin in "+rec.recipeToString());
+       	}
     }
     
     private void addAndSubSomeIf(string rec, string find, string replace, string sub, float ratio = 1, bool force = false) {

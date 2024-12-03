@@ -327,18 +327,6 @@
 		</ResearchRequirements>	
 	</ItemEntry>
 	<ItemEntry>
-		<Key>ReikaKalseki.CryoResin</Key>
-		<Name>Cryo Resin</Name>
-		<Plural>Cryo Resin</Plural>
-		<Type>ItemStack</Type>	
-		<Object>RefinedLiquidResin</Object>
-		<Sprite>ReikaKalseki.CryoResin</Sprite>
-		<Category>Consumable</Category>
-		<ResearchRequirements>
-			<Research>T4_Particles</Research>
-		</ResearchRequirements>	
-	</ItemEntry>
-	<ItemEntry>
 		<Key>ReikaKalseki.AcidResin</Key>
 		<Name>Corrosive Resin</Name>
 		<Plural>Corrosive Resin</Plural>
