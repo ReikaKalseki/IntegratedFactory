@@ -14,6 +14,10 @@ namespace ReikaKalseki.IntegratedFactory
   public class IntegratedFactoryMod : FCoreMod {    
 		
     private static Config<IFConfig.ConfigEntries> config;
+
+    public static MultiblockData crafter;
+    
+    private static readonly Dictionary<string, BulkRecipe> bulkRecipes = new Dictionary<string, BulkRecipe>();
     
     public IntegratedFactoryMod() : base("IntegratedFactory") {
     	config = new Config<IFConfig.ConfigEntries>(this);
@@ -22,11 +26,24 @@ namespace ReikaKalseki.IntegratedFactory
 	public static Config<IFConfig.ConfigEntries> getConfig() {
 		return config;
 	}
+    
+    public static List<BulkRecipe> getBulkRecipes() {
+    	return bulkRecipes.Values.ToList().AsReadOnly().ToList();
+    }
+    
+    public class BulkRecipe : CraftData {
+    	
+    	public bool needsHeating;
+    	public bool needsCooling;
+    	
+    }
 
     protected override void loadMod(ModRegistrationData registrationData) {        
         config.load();
         
         runHarmony();
+        
+		crafter = FUtil.registerMultiblock(registrationData, "BulkPartCrafter", MultiblockData.BOTTLER);
         
         RecipeUtil.addRecipe("ChromiumPlate", "ReikaKalseki.ChromiumPlate", "", set: "Stamper").addIngredient("ChromiumBar", 1);
         RecipeUtil.addRecipe("MolybdenumPlate", "ReikaKalseki.MolybdenumPlate", "", set: "Stamper").addIngredient("MolybdenumBar", 1);
@@ -349,6 +366,43 @@ namespace ReikaKalseki.IntegratedFactory
 				});
 	       	}
        	}
+       	
+       	foreach (CraftData rr in CraftData.GetRecipesForSet("Stamper")) {
+       		createBulkRecipe(rr, true, false);
+       	}
+       	foreach (CraftData rr in CraftData.GetRecipesForSet("Extruder")) {
+       		createBulkRecipe(rr, false, true);
+       	}
+       	foreach (CraftData rr in CraftData.GetRecipesForSet("PipeExtruder")) {
+       		createBulkRecipe(rr, true, false);
+       	}
+       	foreach (CraftData rr in CraftData.GetRecipesForSet("Coiler")) { //make coils from pipes (equivalent cost)
+       		BulkRecipe rec2 = createBulkRecipe(rr, false, true);
+       		string wireID = rr.Costs[0].Key;
+       		string barID = CraftData.GetRecipesForSet("Extruder").FirstOrDefault(s => s.CraftedKey == wireID).Costs[0].Key;
+       		string pipeID = getBeltGACItem("PipeExtruder", barID);
+       		if (pipeID == null) {
+       			FUtil.log("Could not find pipe recipe made from bar '"+barID+"' via wire '"+wireID+"' to match "+rr.recipeToString());
+       			continue;
+       		}
+       		rec2.replaceIngredient(rr.Costs[0].Key, ItemEntry.mEntriesByKey[pipeID].Key); //replace wire with pipe
+       		rec2.addIngredient("ReikaKalseki.AcidResin", 2); //coils need acid to etch
+       	}
+       	CraftData.LinkEntries(bulkRecipes.Values.Select<BulkRecipe, CraftData>(r => r).ToList(), "Bulk");
+    }
+    
+    private static BulkRecipe createBulkRecipe(CraftData rr, bool heat, bool cool) {
+       	BulkRecipe rec2 = RecipeUtil.createNewRecipe<BulkRecipe>("Bulk"+rr.Key);
+       	rec2.CraftedKey = rr.CraftedKey;
+       	rec2.Category = rr.Category;
+       	rec2.CraftedAmount = BulkPartCrafter.BULK_CRAFTER_OUTPUT_AMOUNT;
+       	rec2.RecipeSet = "Bulk";
+       	rec2.needsCooling = cool;
+       	rec2.needsHeating = heat;
+       	rec2.addIngredient(rr.Costs[0].Key, BulkPartCrafter.BULK_CRAFTER_INPUT_AMOUNT);
+       	//do not add heat/cooling ingredient, use active tick code to consume to set temperature
+       	//rec2.addIngredient("ReikaKalseki.PyroResin", 2); //plates need heating
+       	bulkRecipes.Add(rr.Key, rec2);
     }
     
     public void addAlloyedPodCost(string research, int amt) {
@@ -465,9 +519,16 @@ namespace ReikaKalseki.IntegratedFactory
 	}
     
     private static int getBeltGACItem(string set, ItemBase item) {
-    	if (item == null)
-    		return -1;
-    	CraftData cc = CraftData.GetRecipesForSet(set).FirstOrDefault(rec => rec.Costs[0].ItemType == item.mnItemID);
+    	return item == null ? -1 : getBeltGACItem(set, item.mnItemID);
+    }
+    
+    private static string getBeltGACItem(string set, string key) {
+    	CraftData cc = CraftData.GetRecipesForSet(set).FirstOrDefault(rec => rec.Costs[0].Key == key);
+    	return cc == null ? null : cc.CraftedKey;
+    }
+    
+    private static int getBeltGACItem(string set, int id) {
+    	CraftData cc = CraftData.GetRecipesForSet(set).FirstOrDefault(rec => rec.Costs[0].ItemType == id);
     	return cc == null ? -1 : cc.CraftableItemType;
     }
     
@@ -490,5 +551,24 @@ namespace ReikaKalseki.IntegratedFactory
     public static int GetPCBFromCoil(ConveyorEntity maker, ItemBase item) {
     	return getBeltGACItem("PCBAssembler", item);
     }
+    
+    public override void CheckForCompletedMachine(ModCheckForCompletedMachineParameters parameters) {	 
+    	if (parameters.CubeValue == crafter.placerMeta)
+			crafter.checkForCompletedMachine(parameters);
+	}
+    
+	public override ModCreateSegmentEntityResults CreateSegmentEntity(ModCreateSegmentEntityParameters parameters) {
+		ModCreateSegmentEntityResults modCreateSegmentEntityResults = new ModCreateSegmentEntityResults();
+		try {
+			if (parameters.Cube == crafter.blockID) {
+				modCreateSegmentEntityResults.Entity = new BulkPartCrafter(parameters);
+				parameters.ObjectType = crafter.prefab.model;
+			}
+		}
+		catch (Exception e) {
+			FUtil.log(e.ToString());
+		}
+		return modCreateSegmentEntityResults;
+	}
   }
 }

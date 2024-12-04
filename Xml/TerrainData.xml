@@ -44,4 +44,94 @@
 			</ValueEntry>	-->	
 		</Values>
 	</TerrainDataEntry>	
+<TerrainDataEntry>
+		<Key>MachinePlacement</Key>
+  		<Name>Machine Placement</Name>		
+		<IsOverride>true</IsOverride>
+		<CubeType>600</CubeType>
+		<Values>	
+			<ValueEntry>
+				<Key>ReikaKalseki.BulkPartCrafterPlacement</Key>
+				<Name>Bulk Part Caster</Name>
+				<IconName>ReikaKalseki.BulkPartCrafter</IconName>
+				<Description>Casts plates, wires, or pipes at a rate far exceeding small belt-based machines, though slightly less efficiently. Can also etch pipes into coils. 3x9 base, 3 high.</Description>
+			</ValueEntry>
+		</Values>		
+		<LayerType>PrimaryTerrain</LayerType>
+		<TopTexture>267</TopTexture>
+		<SideTexture>267</SideTexture>
+		<BottomTexture>267</BottomTexture>
+		<GUITexture>267</GUITexture>
+		<isSolid>true</isSolid>
+		<isTransparent>true</isTransparent>
+		<isHollow>true</isHollow>
+		<isGlass>false</isGlass>
+		<isPassable>false</isPassable>
+		<hasObject>false</hasObject>
+		<hasEntity>false</hasEntity>
+		<Category>Machine</Category>
+		<AudioWalkType>Wood</AudioWalkType>
+		<AudioBuildType>Dirt</AudioBuildType>
+		<AudioDestroyType>None</AudioDestroyType>
+		<isMultiBlockMachine>true</isMultiBlockMachine>
+		<tags>
+			<tag>Voxel</tag>
+			<tag>Machinery</tag>
+			<tag>MultiBlock</tag>
+		</tags>
+	</TerrainDataEntry>
+	<TerrainDataEntry>
+		<Hidden>false</Hidden>
+		<Key>ReikaKalseki.BulkPartCrafter</Key>
+		<Name>Bulk Part Caster</Name>
+		<DefaultValue>0</DefaultValue>
+		<IconName>ReikaKalseki.BulkPartCrafter</IconName>
+		<Values>	
+			<ValueEntry>
+			<Key>ReikaKalseki.BulkPartCrafterBlock</Key>
+			<Name>Bulk Part Caster</Name>
+			<IconName>ReikaKalseki.BulkPartCrafter</IconName>
+			<PickReplacement>ReikaKalseki.BulkPartCrafterPlacement</PickReplacement>
+			<Description>Casts plates, wires, or pipes at a rate far exceeding small belt-based machines, though slightly less efficiently. Can also etch pipes into coils. 3x9 base, 3 high.</Description>
+			</ValueEntry>
+			<ValueEntry>
+			<Key>ReikaKalseki.BulkPartCrafterCenter</Key>
+			<Name>Bulk Part Caster</Name>
+			<IconName>ReikaKalseki.BulkPartCrafter</IconName>
+			<PickReplacement>ReikaKalseki.BulkPartCrafterPlacement</PickReplacement>
+			<Description>Casts plates, wires, or pipes at a rate far exceeding small belt-based machines, though slightly less efficiently. Can also etch pipes into coils. 3x9 base, 3 high.</Description>
+			</ValueEntry>
+			<ValueEntry>
+			<Key>ReikaKalseki.BulkPartCrafterCenterFlip</Key>
+			<Name>Bulk Part Caster</Name>
+			<IconName>ReikaKalseki.BulkPartCrafter</IconName>
+			<PickReplacement>ReikaKalseki.BulkPartCrafterPlacement</PickReplacement>
+			<Description>Casts plates, wires, or pipes at a rate far exceeding small belt-based machines, though slightly less efficiently. Can also etch pipes into coils. 3x9 base, 3 high.</Description>
+			</ValueEntry>
+		</Values>
+		<LayerType>PrimaryTerrain</LayerType>
+		<TopTexture>126</TopTexture>
+		<SideTexture>126</SideTexture>
+		<BottomTexture>126</BottomTexture>
+		<GUITexture>126</GUITexture>
+		<isSolid>false</isSolid>
+		<isTransparent>true</isTransparent>
+		<isHollow>false</isHollow>
+		<isGlass>false</isGlass>
+		<isPassable>false</isPassable>
+		<isColorised>false</isColorised>
+		<isPaintable>false</isPaintable>		
+		<hasObject>true</hasObject>
+		<hasEntity>true</hasEntity>
+		<isMultiBlockMachine>true</isMultiBlockMachine>
+		<PickReplacement>ReikaKalseki.BulkPartCrafterPlacement</PickReplacement>
+		<AudioWalkType>Metal</AudioWalkType>
+		<AudioBuildType>Dirt</AudioBuildType>
+		<isMultiBlockMachine>true</isMultiBlockMachine>
+		<AudioDestroyType>None</AudioDestroyType>
+		<tags>
+			<tag>Machinery</tag>
+		</tags>
+		<Category>Machine</Category><!-- This means, importantly, that you can't super-dig through it -->
+	</TerrainDataEntry>	
 </ArrayOfTerrainDataEntry>

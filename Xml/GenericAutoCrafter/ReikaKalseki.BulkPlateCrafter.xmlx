@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GenericAutoCrafterDataEntry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<FriendlyName></FriendlyName>
+	<SpawnObject>Stamper_T1</SpawnObject>
+	<Value>ReikaKalseki.BulkPlateCrafter</Value>
+	<PowerUsePerSecond>2000</PowerUsePerSecond>  <!-- optional -->
+	<PowerTransferPerSecond>5000</PowerTransferPerSecond>  <!-- optional -->
+	<MaxPowerStorage>25000</MaxPowerStorage>  <!-- optional -->
+	<CraftingString>Casting...</CraftingString>  <!-- optional -->
+	<WorkingAnimation000></WorkingAnimation000>  <!-- optional -->
+	
+	<CraftTime>5</CraftTime>  <!-- optional -->
+	<OptionalIngredients>false</OptionalIngredients>  <!-- optional -->
+	<Recipe>
+		<Key>ReikaKalseki.Turbomotor</Key>
+		<CraftedName>Turbomotor</CraftedName>
+		<CraftedAmount>1</CraftedAmount>
+		<Costs>
+			<CraftCost>
+				<Key>ServoMotor</Key>
+				<Amount>2</Amount>
+			</CraftCost>
+			<CraftCost>
+				<Key>IronGear</Key>
+				<Amount>10</Amount>
+			</CraftCost>
+			<CraftCost>
+				<Key>OverclockedCrystalClock</Key>
+				<Amount>1</Amount>
+			</CraftCost>
+			<CraftCost>
+				<Key>ReikaKalseki.MolybdenumCoil</Key>
+				<Amount>2</Amount>
+			</CraftCost>
+		</Costs>
+		<Description>Turbocharges motors for use in heavy machinery.</Description>
+	</Recipe>
+</GenericAutoCrafterDataEntry>

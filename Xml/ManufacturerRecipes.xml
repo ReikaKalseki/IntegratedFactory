@@ -170,4 +170,30 @@
     </ResearchRequirements>
     <CanCraftAnywhere>false</CanCraftAnywhere>
   </CraftData>-->
+  <CraftData>
+    <Key>ReikaKalseki.BulkPartCrafterPlacement</Key>
+    <Category>manufacturing</Category>
+    <Tier>4</Tier>
+    <CraftedKey>ReikaKalseki.BulkPartCrafterPlacement</CraftedKey>
+    <CraftedAmount>3</CraftedAmount>
+    <Costs>
+      <CraftCost>
+        <Key>LightweightMachineHousing</Key>
+        <Amount>10</Amount>
+      </CraftCost>
+      <CraftCost>
+        <Key>NickelPipe</Key>
+        <Amount>3</Amount>
+      </CraftCost>
+      <CraftCost>
+        <Key>HiemalMachineBlock</Key>
+        <Amount>5</Amount>
+      </CraftCost>
+    </Costs>
+    <Description>Casts plates, wires, or pipes at a rate far exceeding small belt-based machines, though slightly less efficiently. Can also etch pipes into coils. 3x9 base, 3 high.</Description>
+    <ResearchRequirements>
+      <Research>T4_Particles</Research>
+    </ResearchRequirements>
+    <CanCraftAnywhere>false</CanCraftAnywhere>
+  </CraftData>
 </ArrayOfCraftData>	
