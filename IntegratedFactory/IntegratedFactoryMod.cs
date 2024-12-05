@@ -49,8 +49,8 @@ namespace ReikaKalseki.IntegratedFactory
         RecipeUtil.addRecipe("ChromiumPipe", "ReikaKalseki.ChromiumPipe", "", set: "PipeExtruder").addIngredient("ChromiumBar", 1);
         RecipeUtil.addRecipe("MolybdenumPipe", "ReikaKalseki.MolybdenumPipe", "", set: "PipeExtruder").addIngredient("MolybdenumBar", 1);
 		
-        uint resingas = (uint)(4*config.getFloat(IFConfig.ConfigEntries.RESIN_GAS_COST_SCALE)/DifficultySettings.mrResourcesFactor); //unmultiply against resource factor
-        uint resinresin = (uint)(10*config.getFloat(IFConfig.ConfigEntries.RESIN_RESIN_COST_SCALE)/DifficultySettings.mrResourcesFactor);
+        uint resingas = (uint)(config.getInt(IFConfig.ConfigEntries.RESIN_GAS_COST)/DifficultySettings.mrResourcesFactor); //unmultiply against resource factor
+        uint resinresin = (uint)(config.getInt(IFConfig.ConfigEntries.RESIN_RESIN_COST)/DifficultySettings.mrResourcesFactor);
         CraftData cresin = RecipeUtil.addRecipe("CryoResin", "ReikaKalseki.CryoResin", "", set: "Refinery");
         cresin.addIngredient("CompressedFreon", resingas);
         cresin.addIngredient("RefinedLiquidResin", resinresin);
@@ -147,7 +147,7 @@ namespace ReikaKalseki.IntegratedFactory
        		rec.addIngredient("AlloyedPCB", 10);
        	}
        	
-       	rec = RecipeUtil.getRecipeByKey("MagmaBoreComponent"); //33 total crafts necessary so the MB needs 495 pods = 4950 resins (~20k gas and ~50k liquid resin) + ~1k T2 bars
+       	rec = RecipeUtil.getRecipeByKey("MagmaBoreComponent"); //33 total crafts necessary so the MB needs 495 pods = 4950 resins (~25k gas and ~10k liquid resin) + ~1k T2 bars
        	rec.addIngredient(cresin.CraftedKey, 15);
        	rec.addIngredient(fresin.CraftedKey, 15);
        	rec.addIngredient(aresin.CraftedKey, 15);
@@ -158,12 +158,12 @@ namespace ReikaKalseki.IntegratedFactory
        	rec = RecipeUtil.getRecipeByKey("MagmaStorage"); //63 total crafts necessary
        	rec.addIngredient("CastingPipe", 10);
        	rec.addIngredient("ReikaKalseki.ReflectiveAlloy", 32); //total just over 2k
-       	rec.replaceIngredient("CompressedSulphur", "ReikaKalseki.PyroResin", 0.5F); //from 2016 sulfur and 0 resin to 4032 sulfur and a little over 10k resin
+       	rec.replaceIngredient("CompressedSulphur", "ReikaKalseki.PyroResin", 0.5F); //from 2016 sulfur and 0 resin to 5k sulfur and 2016 resin
        	
        	rec = RecipeUtil.getRecipeByKey("CryoPlasmInferno"); //27 crafts necessary
        	rec.replaceIngredient("MagneticMachineBlock", "GenericPipeStraight", 1.25F); //from 4 to 5
        	rec.addIngredient("ReikaKalseki.ReflectiveAlloy", 10);
-       	rec.replaceIngredient("CompressedSulphur", "ReikaKalseki.PyroResin", 0.25F); //keep same sulfur, and add 2160 resin
+       	rec.replaceIngredient("CompressedSulphur", "ReikaKalseki.PyroResin", 0.25F); //1.25x sulfur, and add 432 resin
        	
        	addAndSubSomeIf("CargoLiftBulk", "ChromiumBar", "MagneticMachineBlock", "ChromedMachineBlock", 0.5F, true);
        	
@@ -172,13 +172,13 @@ namespace ReikaKalseki.IntegratedFactory
        	
        	rec = RecipeUtil.getRecipeByKey("mk2trencherdrillcomponent");
        	addAndSubSomeIf("mk2trencherdrillcomponent", "MolybdenumBar", "MagneticMachineBlock", "ChromedMachineBlock", 0.5F, true);
-       	rec.replaceIngredients("ReikaKalseki.AcidResin", 10, "CompressedChlorine", "RefinedLiquidResin"); //replaces 25 chlorine and 32 resin, and costs 120 chlorine and 300 resin for the whole drill
+       	rec.replaceIngredients("ReikaKalseki.AcidResin", 10, "CompressedChlorine", "RefinedLiquidResin"); //replaces 25 chlorine and 32 resin, and costs 150 chlorine and 60 resin for the whole drill
        	if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
        		rec.addIngredient("OrganicCutterHead", 2);
        	}
        	
        	rec = RecipeUtil.getRecipeByKey("mk3trencherdrillcomponent");
-       	rec.replaceIngredients("ReikaKalseki.PyroResin", 20, "CompressedSulphur", "RefinedLiquidResin"); //replaces 25 sulfur and 32 resin, and costs 240 sulfur and 600 resin for the whole drill
+       	rec.replaceIngredients("ReikaKalseki.PyroResin", 20, "CompressedSulphur", "RefinedLiquidResin"); //replaces 25 sulfur and 32 resin, and costs 300 sulfur and 120 resin for the whole drill
        	rec.replaceIngredient("ChromiumBar", "HiemalMachineBlock");
        	if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
        		rec.addIngredient("PlasmaCutterHead", 2);
@@ -255,7 +255,7 @@ namespace ReikaKalseki.IntegratedFactory
        		rec.addIngredient("LithiumPipe", 1);
        	
        	if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
-       		GenericAutoCrafterNew.mMachinesByKey["ChromedMachineBlockAssembler"].Recipe.addIngredient("LithiumPlate", 4);
+       		GenericAutoCrafterNew.mMachinesByKey["ChromedMachineBlockAssembler"].Recipe.addIngredient("LithiumPlate", 3);
        		//GenericAutoCrafterNew.mMachinesByKey["ChromedMachineBlockAssembler"].Recipe.addIngredient("GoldPlate", 2);
        		//GenericAutoCrafterNew.mMachinesByKey["MagneticMachineBlockAssembler"].Recipe.addIngredient("NickelPlate", 2);
        		GenericAutoCrafterNew.mMachinesByKey["MagneticMachineBlockAssembler"].Recipe.addIngredient("IronCoil", 8);
@@ -282,7 +282,9 @@ namespace ReikaKalseki.IntegratedFactory
        	if (GenericAutoCrafterNew.mMachinesByKey.ContainsKey("ReikaKalseki.CryoSpawnerMissileCrafter")) { //cryopathy
        		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoSpawnerMissileCrafter"].Recipe.replaceIngredient("SecondaryUpgradeModule", "ReikaKalseki.ChromiumPCB", 2F); //from 1 to 2
        		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoMelterMissileCrafter"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumPipe", 2F); //from 1 to 2
-       		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoCrafter"].Recipe.replaceIngredient("CompressedFreon", "ReikaKalseki.CryoResin", 0.25F); //keep cost constant
+       		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoMelterMissileCrafter"].Recipe.scaleIOExcept(2);
+       		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoMelterMissileCrafter"].Recipe.replaceIngredient("CompressedSulphur", "ReikaKalseki.PyroResin", 0.25F); //keep cost almost constant, which involves doubling first
+       		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoCrafter"].Recipe.replaceIngredient("CompressedFreon", "ReikaKalseki.CryoResin", 0.25F); //keep cost almost constant
        		
        		rec = RecipeUtil.getRecipeByKey("ReikaKalseki.CryoMissileTurret");
        		rec.replaceIngredient("MolybdenumBar", "ReikaKalseki.MolybdenumPCB");
@@ -389,6 +391,7 @@ namespace ReikaKalseki.IntegratedFactory
        	rec2.CraftedKey = rr.CraftedKey;
        	rec2.Category = rr.Category;
        	rec2.CraftedAmount = BulkPartCrafter.BULK_CRAFTER_OUTPUT_AMOUNT;
+       	rec2.CraftTime = 4; //so produces 5 per second
        	rec2.RecipeSet = "Bulk";
        	rec2.category = cat;
        	rec2.needsCooling = cat == BulkRecipeCategory.COIL || cat == BulkRecipeCategory.WIRE;
@@ -427,17 +430,17 @@ namespace ReikaKalseki.IntegratedFactory
        	//now each pod costs 4 alloyed blocks (64 ingots) + 1 alloyed upgrade (10x each T2 "part" @ 5-6 each) -> 114 to 124 vs 16 of a block
        	rec.replaceIngredient("AlloyedMachineBlock", "ReikaKalseki.AlloyedExperimentalPod", 1/8F*config.getFloat(IFConfig.ConfigEntries.ALLOY_RESEARCH_COST_SCALE));
        	
-       	f = 0.25F*config.getFloat(IFConfig.ConfigEntries.GAS_RESEARCH_COST_SCALE); //all are 10:1 and then 4:1 in the resin (40 gas per pod) but then 10x cost
+       	f = 0.25F*config.getFloat(IFConfig.ConfigEntries.GAS_RESEARCH_COST_SCALE); //all are 10:1 and then 5:1 in the resin (50 gas per pod) but then 10x cost
        	bool removeResin = false;
        	removeResin |= rec.replaceIngredient("CompressedFreon", "ReikaKalseki.ColdExperimentalPod", f) != null;
        	removeResin |= rec.replaceIngredient("CompressedChlorine", "ReikaKalseki.ToxicExperimentalPod", f) != null;
        	removeResin |= rec.replaceIngredient("CompressedSulphur", "ReikaKalseki.LavaExperimentalPod", f) != null;
        	if (removeResin)
-       		rec.removeIngredient("RefinedLiquidResin"); //since is included in the pods, probably more of it (10 gas resin per pod, 10 normal resin per gas resin)
+       		rec.removeIngredient("RefinedLiquidResin"); //since is included in the pods, probably more of it (10 gas resin per pod, 2 normal resin per gas resin)
     }
     
     private void replaceGasesWithResins(CraftData rec) {
-       	float f = 0.25F; //all are 4 gas per pod
+       	float f = 0.25F; //all are 5 gas per pod, so this 1.25x the gas cost
        	bool found = false;
        	found |= rec.replaceIngredient("CompressedFreon", "ReikaKalseki.CryoResin", f) != null;
        	found |= rec.replaceIngredient("CompressedChlorine", "ReikaKalseki.AcidResin", f) != null;
