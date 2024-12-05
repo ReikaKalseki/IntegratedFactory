@@ -24,7 +24,7 @@ using ReikaKalseki.FortressCore;
 
 namespace ReikaKalseki.IntegratedFactory {
 	
-	public class BulkPartCrafter : FCoreMBCrafter<BulkPartCrafter, IntegratedFactoryMod.BulkRecipe> {
+	public class BulkPartCrafter : FCoreMBCrafter<BulkPartCrafter, BulkRecipe> {
 		
 		public static readonly uint BULK_CRAFTER_INPUT_AMOUNT = 25;
 		public static readonly int BULK_CRAFTER_OUTPUT_AMOUNT = 20;
@@ -38,6 +38,8 @@ namespace ReikaKalseki.IntegratedFactory {
 		
 		public static readonly float RESIN_DURATION = 30; //seconds
 		
+		public BulkRecipeCategory category { get; private set; }
+		
 		public float temperature { get; private set; }
 		
 		public WorldUtil.Biomes currentBiome { get; private set; }
@@ -47,20 +49,17 @@ namespace ReikaKalseki.IntegratedFactory {
 		public float forcedHeatingTime { get; private set; }
 		
 		private bool mbLinkedToGO;
-	
-		private RotateConstantlyScript mRotCont;
-
-		private ParticleSystem SuckParticles;
+		
+		private Renderer glowOverlay;
+		private Renderer acidOverlay;
 		
 		public BulkPartCrafter(ModCreateSegmentEntityParameters parameters) : base(parameters, IntegratedFactoryMod.crafter, 2000, 10000, 5000, IntegratedFactoryMod.getBulkRecipes()) {
-			
+			category = BulkRecipeCategory.PLATE;
 		}
 
 		public override void DropGameObject() {
 			base.DropGameObject();
 			this.mbLinkedToGO = false;
-			this.mRotCont = null;
-			this.SuckParticles = null;
 		}
 		
 		public override void UnityUpdate() {
@@ -80,44 +79,48 @@ namespace ReikaKalseki.IntegratedFactory {
 				if (this.mValue == 1) {
 					this.mWrapper.mGameObjectList[0].gameObject.transform.Rotate(0f, 90f, 0f);
 				}
-				Renderer component = this.mWrapper.mGameObjectList[0].gameObject.transform.Search("Gas").GetComponent<Renderer>();
-				Material material = SegmentMeshCreator.instance.Gas_Sulphur_Swirl;//null;
-				/*
-				long num = this.mnY - WorldUtil.COORD_OFFSET;
-				if (num < (long)BiomeLayer.CavernColdCeiling && num > (long)BiomeLayer.CavernColdFloor) {
-					material = SegmentMeshCreator.instance.Gas_Freezon_Swirl;
+				glowOverlay = this.mWrapper.mGameObjectList[0].gameObject.transform.Search("Gas").GetComponent<Renderer>();
+				acidOverlay = UnityEngine.Object.Instantiate(glowOverlay);
+				acidOverlay.transform.parent = glowOverlay.transform.parent;
+				acidOverlay.material = SegmentMeshCreator.instance.Gas_Chlorine_Swirl;
+				this.mbLinkedToGO = true;
+			}
+			if (mbLinkedToGO) {
+				if (temperature >= HEATED_TEMPERATURE) {
+					glowOverlay.enabled = true;
+					glowOverlay.material = SegmentMeshCreator.instance.Gas_Sulphur_Swirl;
 				}
-				if (num < (long)BiomeLayer.CavernToxicCeiling && num > (long)BiomeLayer.CavernToxicFloor) {
-					material = SegmentMeshCreator.instance.Gas_Chlorine_Swirl;
-				}
-				if (num < (long)BiomeLayer.CavernMagmaCeiling && num > (long)BiomeLayer.CavernMagmaFloor) {
-					material = SegmentMeshCreator.instance.Gas_Sulphur_Swirl;
-				}
-				*/
-				if (material != null) {
-					component.material = material;
+				else if (temperature <= COOLED_TEMPERATURE) {
+					glowOverlay.enabled = true;
+					glowOverlay.material = SegmentMeshCreator.instance.Gas_Freezon_Swirl;
 				}
 				else {
-					component.enabled = false;
+					glowOverlay.enabled = false;
 				}
-				this.mbLinkedToGO = true;
+				
+				if (acidOverlay) {
+					acidOverlay.enabled = currentRecipe != null && currentRecipe.Costs.Count > 1 && currentRecipe.Costs[1].Key == "ReikaKalseki.AcidResin";
+				}
 			}
 		}
 		
 		public static BulkPartCrafter testingInstance;
 
 		public override void LowFrequencyUpdate() {
+			FUtil.log("mode: "+category);
 			base.LowFrequencyUpdate();
 			testingInstance = this;
 			
+			bool useHeat = mOperatingState == OperatingState.Processing;
 			currentBiome = WorldUtil.getBiome(this);
 			ambientTemp = SurvivalLocalTemperature.GetTemperatureAtDepth(mnY);
 			float dT = LowFrequencyThread.mrPreviousUpdateTimeStep;
-			if (forcedHeatingTime > 0 && currentRecipe != null && currentRecipe.needsHeating) {
+			
+			if (useHeat && forcedHeatingTime > 0 && currentRecipe != null && currentRecipe.needsHeating) {
 				temperature = Mathf.Min(temperature+MAX_HEATING_RATE*dT, HEATED_TEMPERATURE);
 				forcedHeatingTime -= dT;
 			}
-			else if (forcedCoolingTime > 0 && currentRecipe != null && currentRecipe.needsCooling) {
+			else if (useHeat && forcedCoolingTime > 0 && currentRecipe != null && currentRecipe.needsCooling) {
 				temperature = Mathf.Max(temperature-MAX_COOLING_RATE*dT, COOLED_TEMPERATURE);
 				forcedCoolingTime -= dT;
 			}
@@ -128,20 +131,43 @@ namespace ReikaKalseki.IntegratedFactory {
 				temperature += Mathf.Min(MAX_AMBIENT_NORMALIZATION_RATE, mag)*sign*dT;
 			}
 			
-			if (currentRecipe != null) {
+			if (useHeat) {
 				if (currentRecipe.needsHeating && forcedHeatingTime <= 0 && temperature < HEATED_TEMPERATURE) {
-					if (tryConsumeTemperatureResin("ReikaKalseki.PyroResin"))
+					if (tryPullItems("ReikaKalseki.PyroResin")) {
 						forcedHeatingTime = RESIN_DURATION;
+						FloatingCombatTextManager.instance.QueueText(this.mnX, mnY, this.mnZ, 1f, "Heating", Color.red, 3f, 32f);
+					}
 				}
 				else if (currentRecipe.needsCooling && forcedCoolingTime <= 0 && temperature > COOLED_TEMPERATURE) {
-					if (tryConsumeTemperatureResin("ReikaKalseki.CryoResin"))
+					if (tryPullItems("ReikaKalseki.CryoResin")) {
 						forcedCoolingTime = RESIN_DURATION;
+						FloatingCombatTextManager.instance.QueueText(this.mnX, mnY, this.mnZ, 1f, "Cooling", Color.cyan, 3f, 32f);
+					}
 				}
 			}
 		}
 		
-		private bool tryConsumeTemperatureResin(string item) {
-			
+		protected override bool canProcess() {
+			if (currentRecipe.needsHeating && temperature < HEATED_TEMPERATURE)
+				return false;
+			if (currentRecipe.needsCooling && temperature > COOLED_TEMPERATURE)
+				return false;
+			return true;
+		}
+		
+		protected override bool isRecipeCurrentlyAccessible(BulkRecipe recipe) {
+			return recipe.category == category;
+		}
+		
+		public override bool onInteract(Player ep) {
+			if (mOperatingState == OperatingState.Processing) {
+				FloatingCombatTextManager.instance.QueueText(this.mnX, mnY, this.mnZ, 0.5F, "Busy making "+BulkRecipe.getTypeName(category), Color.red, 3f, 32f);
+				AudioHUDManager.instance.HUDFail();
+				return false;
+			}
+			category = BulkRecipe.categories[((int)category+1)%BulkRecipe.categories.Length];
+			FloatingCombatTextManager.instance.QueueText(this.mnX, mnY, this.mnZ, 0.75F, "Now making "+BulkRecipe.getTypeName(category), Color.white, 3f, 32f);
+			return true;
 		}
 		
 		public override void Write(BinaryWriter writer) {
@@ -149,6 +175,7 @@ namespace ReikaKalseki.IntegratedFactory {
 			if (!this.mbIsCenter) {
 				return;
 			}
+			writer.Write(category.ToString());
 			writer.Write(temperature);
 			writer.Write(forcedCoolingTime);
 			writer.Write(forcedHeatingTime);
@@ -159,24 +186,26 @@ namespace ReikaKalseki.IntegratedFactory {
 			if (!this.mbIsCenter) {
 				return;
 			}
+			string cat = reader.ReadString();
+			try {
+				category = (BulkRecipeCategory)Enum.Parse(typeof(BulkRecipeCategory), cat);
+			}
+			catch (Exception e) {
+				category = BulkRecipeCategory.PLATE;
+				FUtil.log("Failed to deserialize bulk recipe category '"+cat+"': "+e.ToString());
+			}
 			temperature = reader.ReadSingle();
 			forcedCoolingTime = reader.ReadSingle();
 			forcedHeatingTime = reader.ReadSingle();
 		}
 		
-		public override HoloMachineEntity CreateHolobaseEntity(Holobase holobase) {
-			HolobaseEntityCreationParameters holobaseEntityCreationParameters = new HolobaseEntityCreationParameters(this);
-			if (this.mbIsCenter) {
-				HolobaseVisualisationParameters holobaseVisualisationParameters = holobaseEntityCreationParameters.AddVisualisation(holobase.PowerStorage);
-				holobaseVisualisationParameters.Scale = new Vector3((float)this.machineBounds.width, (float)this.machineBounds.height, (float)this.machineBounds.depth);
-				holobaseVisualisationParameters.Color = new Color(1f, 0.7f, 0.1f);
-				return holobase.CreateHolobaseEntity(holobaseEntityCreationParameters);
-			}
-			return null;
+		protected override bool setupHolobaseVisuals(Holobase hb, out GameObject model, out Vector3 size, out Color color) {
+			return base.setupHolobaseVisuals(hb, out model, out size, out color);
 		}
 		
-		public override string GetPopupText() {
-			string ret = base.GetPopupText();
+		public override string GetUIText() {
+			string ret = base.GetUIText();
+			ret += "\nMaking "+BulkRecipe.getTypeName(category);
 			ret += "\nEnvironment: "+currentBiome.ToString()+" ("+ambientTemp.ToString("0")+"C)";
 			ret += "\nInternal Temperature: "+temperature.ToString("0.00")+"C";
 			if (forcedCoolingTime > 0) {
@@ -191,6 +220,7 @@ namespace ReikaKalseki.IntegratedFactory {
 				else if (currentRecipe.needsCooling && temperature > COOLED_TEMPERATURE)
 					ret += "\nTemperature too high to produce "+currentRecipe.CraftedName+"!";
 			}
+			//UIManager.instance.Survival_Info_Panel_Label.fontSize = 15;
 			return ret;
 		}
 	

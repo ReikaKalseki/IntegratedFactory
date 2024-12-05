@@ -30,13 +30,6 @@ namespace ReikaKalseki.IntegratedFactory
     public static List<BulkRecipe> getBulkRecipes() {
     	return bulkRecipes.Values.ToList().AsReadOnly().ToList();
     }
-    
-    public class BulkRecipe : CraftData {
-    	
-    	public bool needsHeating;
-    	public bool needsCooling;
-    	
-    }
 
     protected override void loadMod(ModRegistrationData registrationData) {        
         config.load();
@@ -368,16 +361,16 @@ namespace ReikaKalseki.IntegratedFactory
        	}
        	
        	foreach (CraftData rr in CraftData.GetRecipesForSet("Stamper")) {
-       		createBulkRecipe(rr, true, false);
+       		createBulkRecipe(rr, BulkRecipeCategory.PLATE);
        	}
        	foreach (CraftData rr in CraftData.GetRecipesForSet("Extruder")) {
-       		createBulkRecipe(rr, false, true);
+       		createBulkRecipe(rr, BulkRecipeCategory.WIRE);
        	}
        	foreach (CraftData rr in CraftData.GetRecipesForSet("PipeExtruder")) {
-       		createBulkRecipe(rr, true, false);
+       		createBulkRecipe(rr, BulkRecipeCategory.PIPE);
        	}
        	foreach (CraftData rr in CraftData.GetRecipesForSet("Coiler")) { //make coils from pipes (equivalent cost)
-       		BulkRecipe rec2 = createBulkRecipe(rr, false, true);
+       		BulkRecipe rec2 = createBulkRecipe(rr, BulkRecipeCategory.COIL);
        		string wireID = rr.Costs[0].Key;
        		string barID = CraftData.GetRecipesForSet("Extruder").FirstOrDefault(s => s.CraftedKey == wireID).Costs[0].Key;
        		string pipeID = getBeltGACItem("PipeExtruder", barID);
@@ -391,18 +384,20 @@ namespace ReikaKalseki.IntegratedFactory
        	CraftData.LinkEntries(bulkRecipes.Values.Select<BulkRecipe, CraftData>(r => r).ToList(), "Bulk");
     }
     
-    private static BulkRecipe createBulkRecipe(CraftData rr, bool heat, bool cool) {
+    private static BulkRecipe createBulkRecipe(CraftData rr, BulkRecipeCategory cat) {
        	BulkRecipe rec2 = RecipeUtil.createNewRecipe<BulkRecipe>("Bulk"+rr.Key);
        	rec2.CraftedKey = rr.CraftedKey;
        	rec2.Category = rr.Category;
        	rec2.CraftedAmount = BulkPartCrafter.BULK_CRAFTER_OUTPUT_AMOUNT;
        	rec2.RecipeSet = "Bulk";
-       	rec2.needsCooling = cool;
-       	rec2.needsHeating = heat;
+       	rec2.category = cat;
+       	rec2.needsCooling = cat == BulkRecipeCategory.COIL || cat == BulkRecipeCategory.WIRE;
+       	rec2.needsHeating = cat == BulkRecipeCategory.PLATE || cat == BulkRecipeCategory.PIPE;
        	rec2.addIngredient(rr.Costs[0].Key, BulkPartCrafter.BULK_CRAFTER_INPUT_AMOUNT);
        	//do not add heat/cooling ingredient, use active tick code to consume to set temperature
        	//rec2.addIngredient("ReikaKalseki.PyroResin", 2); //plates need heating
        	bulkRecipes.Add(rr.Key, rec2);
+       	return rec2;
     }
     
     public void addAlloyedPodCost(string research, int amt) {
@@ -475,48 +470,38 @@ namespace ReikaKalseki.IntegratedFactory
     		//CraftCost plate = rec.Costs.First(cc => cc.Key.Contains("Plate") || cc.Key == "AlloyedMachineBlock" || cc.Key.StartsWith("Compressed", StringComparison.InvariantCultureIgnoreCase));
     		//CraftCost pcb = rec.Costs.First(cc => cc.Key.Contains("PCB") || cc.Amount == 2);
     		//DO NOT USE//assemblerItemFetch.Invoke(ra, new object[]{pcb.ItemType, plate.ItemType, rec.CraftableItemType});
-    		getResearchRecipeItems(ra, rec, maAttachedHoppers, mnNumAttachedHoppers);
+    		tryCollectRecipeItems(ra, rec, maAttachedHoppers, mnNumAttachedHoppers);
 	    	if (ra.meState != ResearchAssembler.eState.eLookingForResources)
 	    		break;
     	}
     }
     
-    private static void getResearchRecipeItems(ResearchAssembler ra, CraftData recipe, StorageMachineInterface[] hoppers, int hopperCount) {
-    	CraftCost plate = recipe.Costs[0];
-    	CraftCost pcb = recipe.Costs[1];
-		for (int i = 0; i < hopperCount; i++) {
-			if (hoppers[i].CountItems(pcb.ItemType) > 1) {
-    			int plateCountInAttachedHoppers = getHoppersItemCount(plate.ItemType, hoppers, hopperCount);
-				if (plateCountInAttachedHoppers >= plate.Amount) {
-					ra.mTargetCreation = ItemManager.SpawnItem(recipe.CraftableItemType);
-					if (hoppers[i].TryExtractItems(ra, pcb.ItemType, (int)pcb.Amount)) {
-						int num = (int)plate.Amount;
-						for (int j = 0; j < hopperCount; j++) {
-							//num -= ra.RemovePlatesFromHopper(maAttachedHoppers[j], plate.ItemType, num);
-							//num -= (int)assemblerItemConsume.Invoke(ra, new object[]{hoppers[j], plate.ItemType, num});
-							num -= hoppers[j].TryPartialExtractItems(ra, plate.ItemType, num);
-							if (num < 0)
-								FUtil.log("Error, we removed too many "+plate.Name+"!");
-							if (num <= 0)
-								break;
-						}
-						if (num > 0)
-							FUtil.log("Error, we tried to remove "+plate.Amount+" plates, but still need to remove " + num + "!");
-						//ra.SetNewState(ResearchAssembler.eState.eCrafting);
-						assemblerState.Invoke(ra, new object[]{ResearchAssembler.eState.eCrafting});
-						return;
-					}
-				}
-			}
-		}
-	}
-    
-	private static int getHoppersItemCount(int itemID, StorageMachineInterface[] hoppers, int hopperCount) {
-		int num = 0;
-		for (int i = 0; i < hopperCount; i++)
-			num += hoppers[i].CountItems(itemID);
-		return num;
-	}
+    private static void tryCollectRecipeItems(ResearchAssembler ra, CraftData recipe, StorageMachineInterface[] hoppers, int hopperCount) {
+    	CraftCost main = recipe.Costs[0];
+    	CraftCost secondary = recipe.Costs[1];
+    	for (int i = 0; i < hopperCount; i++) {
+    		if (hoppers[i].CountItems(secondary.ItemType) > 0) {
+    			int mainCount = FUtil.getHoppersItemCount(main.ItemType, hoppers, hopperCount);
+    			if (mainCount >= main.Amount) {
+    				ra.mTargetCreation = ItemManager.SpawnItem(recipe.CraftableItemType);
+    				if (hoppers[i].TryExtractItems(ra, secondary.ItemType, (int)secondary.Amount)) {
+    					int num = (int)main.Amount;
+    					for (int j = 0; j < hopperCount; j++) {
+    						num -= hoppers[j].TryPartialExtractItems(ra, main.ItemType, num);
+    						if (num < 0)
+    							FUtil.log("Error, we removed too many "+main.Name+"!");
+    						if (num <= 0)
+    							break;
+    					}
+    					if (num > 0)
+    						FUtil.log("Error, we tried to remove "+main.Amount+" "+main.Name+", but still need to remove " + num + "!");
+    					assemblerState.Invoke(ra, new object[]{ResearchAssembler.eState.eCrafting});
+    					return;
+    				}
+    			}
+    		}
+    	}
+    }
     
     private static int getBeltGACItem(string set, ItemBase item) {
     	return item == null ? -1 : getBeltGACItem(set, item.mnItemID);
@@ -561,8 +546,8 @@ namespace ReikaKalseki.IntegratedFactory
 		ModCreateSegmentEntityResults modCreateSegmentEntityResults = new ModCreateSegmentEntityResults();
 		try {
 			if (parameters.Cube == crafter.blockID) {
-				modCreateSegmentEntityResults.Entity = new BulkPartCrafter(parameters);
 				parameters.ObjectType = crafter.prefab.model;
+				modCreateSegmentEntityResults.Entity = new BulkPartCrafter(parameters);
 			}
 		}
 		catch (Exception e) {
