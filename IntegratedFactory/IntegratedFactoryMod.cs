@@ -37,6 +37,8 @@ namespace ReikaKalseki.IntegratedFactory
         runHarmony();
         
 		crafter = FUtil.registerMultiblock(registrationData, "BulkPartCrafter", MultiblockData.BOTTLER);
+		
+		registrationData.RegisterEntityHandler(eSegmentEntity.FreezonInjector);
         
         RecipeUtil.addRecipe("ChromiumPlate", "ReikaKalseki.ChromiumPlate", "", set: "Stamper").addIngredient("ChromiumBar", 1);
         RecipeUtil.addRecipe("MolybdenumPlate", "ReikaKalseki.MolybdenumPlate", "", set: "Stamper").addIngredient("MolybdenumBar", 1);
@@ -494,7 +496,7 @@ namespace ReikaKalseki.IntegratedFactory
     	CraftCost secondary = recipe.Costs[1];
     	for (int i = 0; i < hopperCount; i++) {
     		if (hoppers[i].CountItems(secondary.ItemType) > 0) {
-    			int mainCount = FUtil.getHoppersItemCount(main.ItemType, hoppers, hopperCount);
+    			int mainCount = FUtil.getHoppersItemCount(main.ItemType, hoppers);
     			if (mainCount >= main.Amount) {
     				ra.mTargetCreation = ItemManager.SpawnItem(recipe.CraftableItemType);
     				if (hoppers[i].TryExtractItems(ra, secondary.ItemType, (int)secondary.Amount)) {
@@ -561,6 +563,10 @@ namespace ReikaKalseki.IntegratedFactory
 			if (parameters.Cube == crafter.blockID) {
 				parameters.ObjectType = crafter.prefab.model;
 				modCreateSegmentEntityResults.Entity = new BulkPartCrafter(parameters);
+			}
+			else if (parameters.Type == eSegmentEntity.FreezonInjector) {
+				parameters.ObjectType = SpawnableObjectEnum.FreezonInjector;
+				modCreateSegmentEntityResults.Entity = new DynamicGasInjector(parameters);
 			}
 		}
 		catch (Exception e) {
