@@ -270,6 +270,7 @@ namespace ReikaKalseki.IntegratedFactory
        	
        	GenericAutoCrafterNew.mMachinesByKey["LensChromer"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ReflectiveAlloy", 1F);
        	if (GenericAutoCrafterNew.mMachinesByKey.ContainsKey("ReikaKalseki.PerfectLensChromer")) {
+       		FUtil.log("Adding ChromedLPTRebalance compatibility");
        		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.PerfectLensChromer"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ReflectiveAlloy", 1F);
        		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.ExceptionalLensChromer"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ReflectiveAlloy", 1F);
        		
@@ -280,6 +281,7 @@ namespace ReikaKalseki.IntegratedFactory
        	}
        	
        	if (GenericAutoCrafterNew.mMachinesByKey.ContainsKey("ReikaKalseki.CryoSpawnerMissileCrafter")) { //cryopathy
+       		FUtil.log("Adding Cryopathy compatibility");
        		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoSpawnerMissileCrafter"].Recipe.replaceIngredient("SecondaryUpgradeModule", "ReikaKalseki.ChromiumPCB", 2F); //from 1 to 2
        		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoMelterMissileCrafter"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumPipe", 2F); //from 1 to 2
        		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoMelterMissileCrafter"].Recipe.scaleIOExcept(2);
@@ -289,6 +291,14 @@ namespace ReikaKalseki.IntegratedFactory
        		rec = RecipeUtil.getRecipeByKey("ReikaKalseki.CryoMissileTurret");
        		rec.replaceIngredient("MolybdenumBar", "ReikaKalseki.MolybdenumPCB");
        		rec.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumPCB");
+       	}
+       	
+       	if (ItemEntry.mEntriesByKey.ContainsKey("ReikaKalseki.Turbofuel")) {
+       		FUtil.log("Adding Turbofuel compatibility");
+	        Type t = InstructionHandlers.getTypeBySimpleName("ReikaKalseki.TurbofuelMod");
+			if (t != null) {
+	        	t.GetMethod("setRecipeCompatibility", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[]{fresin});
+			}
        	}
        	
         if (config.getBoolean(IFConfig.ConfigEntries.EFFICIENT_BLAST)) {

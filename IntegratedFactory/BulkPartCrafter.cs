@@ -107,7 +107,7 @@ namespace ReikaKalseki.IntegratedFactory {
 		public static BulkPartCrafter testingInstance;
 
 		public override void LowFrequencyUpdate() {
-			FUtil.log("mode: "+category);
+			//FUtil.log("mode: "+category);
 			base.LowFrequencyUpdate();
 			testingInstance = this;
 			
