@@ -48,11 +48,17 @@ namespace ReikaKalseki.IntegratedFactory {
 			}
 			
 			public void register(DynamicGasInjector owner) {
-				owner.effects[blockID] = this;
+				if (!owner.effects.ContainsKey(blockID))
+					owner.effects[blockID] = new Dictionary<int, BoostEffectBase>();
+				owner.effects[blockID][requiredItem] = this;
 				owner.validItems.Add(requiredItem);
 			}
 			
 			public abstract bool invoke(SegmentEntity e);
+			
+			public virtual string applyTooltip(string text) {
+				return text;
+			}
 			
 		}
 		
@@ -70,9 +76,9 @@ namespace ReikaKalseki.IntegratedFactory {
 			
 		}
 		
-		class FreezonLancerEffect : BoostEffect<CreepLancer> {
+		abstract class FreezonLancerEffect : BoostEffect<CreepLancer> {
 			
-			public FreezonLancerEffect() : base(eCubeTypes.T4_Lancer, FREEZON_ID, eSegmentEntity.T4_Creep_Lancer, "Freezon Boost") {
+			public FreezonLancerEffect(int id, string n) : base(eCubeTypes.T4_Lancer, id, eSegmentEntity.T4_Creep_Lancer, n) {
 				
 			}
 			
@@ -82,6 +88,32 @@ namespace ReikaKalseki.IntegratedFactory {
 					return true;
 				}
 				return false;
+			}
+			
+		}
+		
+		class FreezonLancerBasicEffect : FreezonLancerEffect {
+			
+			public FreezonLancerBasicEffect() : base(FREEZON_ID, "Freezon Boost") {
+				
+			}
+			
+		}
+		
+		class FreezonLancerResinEffect : FreezonLancerEffect {
+			
+			private static readonly FieldInfo countField = typeof(CreepLancer).GetField("mnSuperChargedShots", BindingFlags.Instance | BindingFlags.NonPublic);
+			
+			public FreezonLancerResinEffect() : base(COLD_RESIN_ID, "Cryo Resin Boost") {
+				
+			}
+			
+			public override bool apply(CreepLancer e) {
+				bool flag = base.apply(e);
+				if (flag) {
+					countField.SetValue(e, 100); //100 shots instead of 20
+				}
+				return flag;
 			}
 			
 		}
@@ -139,11 +171,17 @@ namespace ReikaKalseki.IntegratedFactory {
 			
 			public abstract bool tick(E e, float dT);
 			
+			public virtual string applyTooltip(string text) {
+				if (currentRemainingLife > 0)
+					text += "\nEffect Duration Remaining: "+currentRemainingLife.ToString("0.0")+"s";
+				return text;
+			}
+			
 		}
 		
 		class BlastFurnaceBoostEffect : RateConsumptionEffect<BlastFurnace> {
 			
-			public BlastFurnaceBoostEffect() : base(eCubeTypes.BlastFurnace, HOT_RESIN_ID, eSegmentEntity.BlastFurnace, "Pyro Boost", 30) {
+			public BlastFurnaceBoostEffect() : base(eCubeTypes.BlastFurnace, COLD_RESIN_ID, eSegmentEntity.BlastFurnace, "Cryo Boost", 30) {
 				
 			}
 			
@@ -152,6 +190,7 @@ namespace ReikaKalseki.IntegratedFactory {
 					e = e.mLinkedCenter;
 				//could call UpdateSmelting() to make cost more power if wanted
 				if (e.mOperatingState == BlastFurnace.OperatingState.Smelting) { 
+					//e.rotateConstantlyScript.spinFaster();
 					e.mrSmeltTimer -= dT*(BLAST_SMELTING_RATE_FACTOR-1);
 					return true;
 				}
@@ -197,13 +236,15 @@ namespace ReikaKalseki.IntegratedFactory {
 
 		private BoostEffectBase cachedEffect;
 		
+		private ushort cachedID;
 		private ushort cachedValue;
 		
-		private readonly Dictionary<ushort, BoostEffectBase> effects = new Dictionary<ushort, BoostEffectBase>();
+		private readonly Dictionary<ushort, Dictionary<int, BoostEffectBase>> effects = new Dictionary<ushort, Dictionary<int, BoostEffectBase>>();
 		private readonly HashSet<int> validItems = new HashSet<int>();
 	
 		public DynamicGasInjector(ModCreateSegmentEntityParameters parameters) : base(parameters) {
-			new FreezonLancerEffect().register(this); //register a new one per instance, so can store values and have callbacks
+			new FreezonLancerBasicEffect().register(this); //register a new one per instance, so can store values and have callbacks
+			new FreezonLancerResinEffect().register(this);
 			new ResinAblatorEffect().register(this);
 			new ResinMelterEffect().register(this);
 			new BlastFurnaceBoostEffect().register(this);
@@ -252,6 +293,8 @@ namespace ReikaKalseki.IntegratedFactory {
 			if (!WorldScript.mbIsServer) {
 				return;
 			}
+			if (mForwards.magnitude < 0.9)
+				this.OnUpdateRotation(mFlags);
 			int vx = (int)this.mForwards.x;
 			int vy = (int)this.mForwards.y;
 			int vz = (int)this.mForwards.z;
@@ -284,10 +327,11 @@ namespace ReikaKalseki.IntegratedFactory {
 				return;
 			s = AttemptGetSegment(this.mnX - (long)vx, this.mnY - (long)vy, this.mnZ - (long)vz);
 			if (s != null) {
-				ushort id = s.GetCube(this.mnX - (long)vx, this.mnY - (long)vy, this.mnZ - (long)vz);
-				BoostEffectBase boost = effects.ContainsKey(id) ? effects[id] : null;
-				if (boost != null && boost.requiredItem == storedGas) {
-					cachedValue = s.GetCubeData(this.mnX - (long)vx, this.mnY - (long)vy, this.mnZ - (long)vz).mValue;
+				cachedID = s.GetCube(this.mnX - (long)vx, this.mnY - (long)vy, this.mnZ - (long)vz);
+				cachedValue = s.GetCubeData(this.mnX - (long)vx, this.mnY - (long)vy, this.mnZ - (long)vz).mValue;
+				Dictionary<int, BoostEffectBase> dict = effects.ContainsKey(cachedID) ? effects[cachedID] : null;
+				BoostEffectBase boost = dict != null && dict.ContainsKey(storedGas) ? dict[storedGas] : null;
+				if (boost != null) {
 					SegmentEntity e = s.FetchEntity(boost.entityType, this.mnX - (long)vx, this.mnY - (long)vy, this.mnZ - (long)vz);
 					if (e != null && !e.mbDelete && boost.invoke(e)) {
 						this.storedGas = -1;
@@ -300,6 +344,15 @@ namespace ReikaKalseki.IntegratedFactory {
 				}
 			}
 		}
+		
+		public override void OnDelete() {
+			base.OnDelete();
+			if (storedGas > 0) {
+				if (WorldScript.mbIsServer) {
+					FUtil.dropItem(this.mnX, this.mnY, this.mnZ, storedGas);
+				}
+			}
+		}
 
 		public override bool ShouldNetworkUpdate() {
 			return true;
@@ -307,25 +360,35 @@ namespace ReikaKalseki.IntegratedFactory {
 
 		public override void ReadNetworkUpdate(BinaryReader reader) {
 			Read(reader, GetVersion());
+			if (reader.ReadBoolean()) {
+				ushort id = reader.ReadUInt16();
+				int item = reader.ReadInt32();
+				try {
+					this.cachedEffect = effects[id][item];
+				}
+				catch (Exception ex) {
+					FUtil.log("Failed to deserialize cached effect from id/item pair: "+id+"/"+item);
+				}
+			}
 		}
 
 		public override void WriteNetworkUpdate(BinaryWriter writer) {
 			Write(writer);
+			writer.Write(cachedEffect != null);
+			if (cachedEffect != null) {
+				writer.Write(this.cachedEffect.blockID);
+				writer.Write(this.cachedEffect.requiredItem);
+			}
 		}
 
 		public override void Read(BinaryReader reader, int entityVersion) {
 			this.mbHasHopper = reader.ReadBoolean();
 			this.storedGas = reader.ReadInt32();
-			if (reader.ReadBoolean())
-				this.cachedEffect = effects[reader.ReadUInt16()];
 		}
 	
 		public override void Write(BinaryWriter writer) {
 			writer.Write(this.mbHasHopper);
 			writer.Write(this.storedGas);
-			writer.Write(cachedEffect != null);
-			if (cachedEffect != null)
-				writer.Write(this.cachedEffect.blockID);
 		}
 
 		public override string GetPopupText() {
@@ -337,12 +400,19 @@ namespace ReikaKalseki.IntegratedFactory {
 			else
 				text += "\nStoring "+ItemEntry.mEntriesById[storedGas].Name+", ready to inject!";
 			
-			if (cachedEffect == null)
-				text += "\nNo compatible machine located";
-			else if (cachedEffect.requiredItem != storedGas)
+			if (!mbHasHopper || storedGas <= 0)
+				return text;
+			
+			if (cachedID <= 0)
+				text += "\nNo target machine found.";
+			else if (cachedEffect == null)
+				text += "\nNo "+ItemEntry.mEntriesById[storedGas].Name+" compatibility for machine "+FUtil.getBlockName(cachedID, cachedValue);
+			else if (cachedEffect.requiredItem != storedGas) //should not happen anymore
 				text += "\nEffect "+cachedEffect.displayName+" requires "+ItemEntry.mEntriesById[cachedEffect.requiredItem].Name+"!";
-			else
-				text += "\nFound "+FUtil.getBlockName(cachedEffect.blockID, cachedValue)+", applying effect: '"+cachedEffect.displayName+"'";
+			else {
+				text += "\nFound "+FUtil.getBlockName(cachedID, cachedValue)+", applying effect: '"+cachedEffect.displayName+"'";
+				text = cachedEffect.applyTooltip(text);
+			}
 			return text;
 		}
 

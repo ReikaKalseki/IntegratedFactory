@@ -85,6 +85,32 @@ namespace ReikaKalseki.IntegratedFactory {
 		}
 	}
 	
+	[HarmonyPatch(typeof(GeothermalGenerator))]
+	[HarmonyPatch("CheckHopper")]
+	public static class GeothermalFreezonHook {
+		
+		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) {
+			List<CodeInstruction> codes = new List<CodeInstruction>();
+			try {
+				FileLog.Log("Running patch "+MethodBase.GetCurrentMethod().DeclaringType);
+				codes.Add(new CodeInstruction(OpCodes.Ldarg_0));
+				codes.Add(new CodeInstruction(OpCodes.Ldarg_1));
+				codes.Add(new CodeInstruction(OpCodes.Ldarg_0));
+				codes.Add(new CodeInstruction(OpCodes.Ldfld, InstructionHandlers.convertFieldOperand(typeof(GeothermalGenerator), "mrBoostTime")));
+				codes.Add(InstructionHandlers.createMethodCall(typeof(IntegratedFactoryMod), "geoCheckForGas", false, new Type[]{typeof(GeothermalGenerator), typeof(StorageHopper), typeof(float)}));
+				codes.Add(new CodeInstruction(OpCodes.Ret));
+				FileLog.Log("Done patch "+MethodBase.GetCurrentMethod().DeclaringType);
+			}
+			catch (Exception e) {
+				FileLog.Log("Caught exception when running patch "+MethodBase.GetCurrentMethod().DeclaringType+"!");
+				FileLog.Log(e.Message);
+				FileLog.Log(e.StackTrace);
+				FileLog.Log(e.ToString());
+			}
+			return codes.AsEnumerable();
+		}
+	}
+	
 	
 	static class Lib {
 		

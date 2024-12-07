@@ -39,6 +39,11 @@ namespace ReikaKalseki.IntegratedFactory
 		crafter = FUtil.registerMultiblock(registrationData, "BulkPartCrafter", MultiblockData.BOTTLER);
 		
 		registrationData.RegisterEntityHandler(eSegmentEntity.FreezonInjector);
+		TerrainData.mEntries[eCubeTypes.FreezonInjector].Name = "Gas Injector";
+		TerrainData.mEntries[eCubeTypes.FreezonInjector].Description = "Injects freezon and other materials into compatible machines to improve their function.";
+		foreach (CraftData cr in RecipeUtil.getRecipesFor(TerrainData.mEntries[eCubeTypes.FreezonInjector].Key)) {
+			cr.Description = TerrainData.mEntries[eCubeTypes.FreezonInjector].Description;
+		}
         
         RecipeUtil.addRecipe("ChromiumPlate", "ReikaKalseki.ChromiumPlate", "", set: "Stamper").addIngredient("ChromiumBar", 1);
         RecipeUtil.addRecipe("MolybdenumPlate", "ReikaKalseki.MolybdenumPlate", "", set: "Stamper").addIngredient("MolybdenumBar", 1);
@@ -550,6 +555,16 @@ namespace ReikaKalseki.IntegratedFactory
     
     public static int GetPCBFromCoil(ConveyorEntity maker, ItemBase item) {
     	return getBeltGACItem("PCBAssembler", item);
+    }
+    
+    public static void geoCheckForGas(GeothermalGenerator gen, StorageHopper h, float time) {
+    	if (time >= 30)
+    		return;
+		if (h.CountHowManyOfItem(DynamicGasInjector.COLD_RESIN_ID) > 0) { //instead of freezon
+			gen.RequestImmediateNetworkUpdate();
+			h.RemoveInventoryItem(DynamicGasInjector.COLD_RESIN_ID, 1);
+			gen.AddFreezon();
+		}
     }
     
     public override void CheckForCompletedMachine(ModCheckForCompletedMachineParameters parameters) {	 
