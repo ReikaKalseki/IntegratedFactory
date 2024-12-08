@@ -60,6 +60,10 @@ namespace ReikaKalseki.IntegratedFactory {
 				return text;
 			}
 			
+			public virtual void unityTick() {
+				
+			}
+			
 		}
 		
 		abstract class BoostEffect<E> : BoostEffectBase where E : SegmentEntity {
@@ -161,17 +165,22 @@ namespace ReikaKalseki.IntegratedFactory {
 			}
 			
 			public override bool apply(E e) { //doubles as tick
+				bool flag = false;
+				if (currentRemainingLife <= 0) {
+					flag = true;
+					currentRemainingLife = itemLifetime;
+				}
 				if (currentRemainingLife > 0) {
 					float dT = LowFrequencyThread.mrPreviousUpdateTimeStep;
 					if (tick(e, dT))
 						currentRemainingLife -= dT;
 				}
-				return currentRemainingLife <= 0; //needs new item
+				return flag; //needs new item
 			}
 			
 			public abstract bool tick(E e, float dT);
 			
-			public virtual string applyTooltip(string text) {
+			public override string applyTooltip(string text) {
 				if (currentRemainingLife > 0)
 					text += "\nEffect Duration Remaining: "+currentRemainingLife.ToString("0.0")+"s";
 				return text;
@@ -181,6 +190,12 @@ namespace ReikaKalseki.IntegratedFactory {
 		
 		class BlastFurnaceBoostEffect : RateConsumptionEffect<BlastFurnace> {
 			
+			private static readonly FieldInfo glowField = typeof(BlastFurnace).GetField("GlowObject", BindingFlags.Instance | BindingFlags.NonPublic);
+			
+			private BlastFurnace cachedObject;
+			
+			private bool isActive;
+			
 			public BlastFurnaceBoostEffect() : base(eCubeTypes.BlastFurnace, COLD_RESIN_ID, eSegmentEntity.BlastFurnace, "Cryo Boost", 30) {
 				
 			}
@@ -188,13 +203,30 @@ namespace ReikaKalseki.IntegratedFactory {
 			public override bool tick(BlastFurnace e, float dT) {
 				if (e.mLinkedCenter != null)
 					e = e.mLinkedCenter;
+				cachedObject = e;
 				//could call UpdateSmelting() to make cost more power if wanted
+				isActive = false;
 				if (e.mOperatingState == BlastFurnace.OperatingState.Smelting) { 
 					//e.rotateConstantlyScript.spinFaster();
 					e.mrSmeltTimer -= dT*(BLAST_SMELTING_RATE_FACTOR-1);
-					return true;
+					isActive = true;
 				}
-				return false;
+				return isActive;
+			}
+			
+			public override void unityTick() {
+				if (cachedObject == null || cachedObject.mbDelete)
+					return;
+				try {
+					GameObject go = (GameObject)glowField.GetValue(cachedObject);
+					if (go) {
+						RotateConstantlyScript rr = go.GetComponentInParent<SpawnableObjectScript>().gameObject.GetComponentInChildren<RotateConstantlyScript>();
+						rr.YRot = isActive ? 6F : 1;
+					}
+				}
+				catch (Exception ex) {
+					FUtil.log("Failed to apply "+displayName+" unity tick: "+ex.ToString());
+				}
 			}
 			
 		}
@@ -275,6 +307,7 @@ namespace ReikaKalseki.IntegratedFactory {
 				this.hopperRender.SetActive(!this.mbHasHopper);
 			}
 			if (this.cachedEffect != null) {
+				cachedEffect.unityTick();
 				if (this.mrJetOffset < 0f) {
 					this.mrJetOffset += Time.deltaTime;
 				}

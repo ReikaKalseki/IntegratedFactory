@@ -290,7 +290,7 @@ namespace ReikaKalseki.IntegratedFactory
        	if (GenericAutoCrafterNew.mMachinesByKey.ContainsKey("ReikaKalseki.CryoSpawnerMissileCrafter")) { //cryopathy
        		FUtil.log("Adding Cryopathy compatibility");
        		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoSpawnerMissileCrafter"].Recipe.replaceIngredient("SecondaryUpgradeModule", "ReikaKalseki.ChromiumPCB", 2F); //from 1 to 2
-       		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoMelterMissileCrafter"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumPipe", 2F); //from 1 to 2
+       		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoMelterMissileCrafter"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumPipe");
        		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoMelterMissileCrafter"].Recipe.scaleIOExcept(2);
        		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoMelterMissileCrafter"].Recipe.replaceIngredient("CompressedSulphur", "ReikaKalseki.PyroResin", 0.25F); //keep cost almost constant, which involves doubling first
        		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoCrafter"].Recipe.replaceIngredient("CompressedFreon", "ReikaKalseki.CryoResin", 0.25F); //keep cost almost constant
@@ -408,6 +408,8 @@ namespace ReikaKalseki.IntegratedFactory
        	rec2.CraftedKey = rr.CraftedKey;
        	rec2.Category = rr.Category;
        	rec2.CraftedAmount = BulkPartCrafter.BULK_CRAFTER_OUTPUT_AMOUNT;
+       	if (cat == BulkRecipeCategory.COIL)
+       		rec2.CraftedAmount = rec2.CraftedAmount*3/2; //+50% for coils given the two stage processing
        	rec2.CraftTime = 4; //so produces 5 per second
        	rec2.RecipeSet = "Bulk";
        	rec2.category = cat;
