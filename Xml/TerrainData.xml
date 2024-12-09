@@ -36,6 +36,12 @@
 				<IconName>ReikaKalseki.HiemalPodMaker</IconName>
 				<Description>Combines endgame materials for the ultimate research pod...slowly.</Description>
 			</ValueEntry>	
+			<ValueEntry>
+				<Key>ReikaKalseki.T3HousingCrafter</Key>
+				<Name>Advanced Housing Assembler</Name>
+				<IconName>ReikaKalseki.T3HousingCrafter</IconName>
+				<Description>Builds advanced housings for high-tier machine blocks.</Description>
+			</ValueEntry>	
 <!--			<ValueEntry>
 				<Key>ReikaKalseki.T4SteelMaker</Key>
 				<Name>High Grade Steel Synthesizer</Name>

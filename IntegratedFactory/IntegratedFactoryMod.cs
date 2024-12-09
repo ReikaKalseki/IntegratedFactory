@@ -278,8 +278,9 @@ namespace ReikaKalseki.IntegratedFactory
        		//GenericAutoCrafterNew.mMachinesByKey["ChromedMachineBlockAssembler"].Recipe.addIngredient("GoldPlate", 2);
        		//GenericAutoCrafterNew.mMachinesByKey["MagneticMachineBlockAssembler"].Recipe.addIngredient("NickelPlate", 2);
        		GenericAutoCrafterNew.mMachinesByKey["MagneticMachineBlockAssembler"].Recipe.addIngredient("IronCoil", 8);
-       		GenericAutoCrafterNew.mMachinesByKey["HiemalMachineBlockAssembler"].Recipe.addIngredient("PlasticPellet", 20);
-       		GenericAutoCrafterNew.mMachinesByKey["HiemalMachineBlockAssembler"].Recipe.addIngredient("TitaniumHousing", 5);
+       		
+       		GenericAutoCrafterNew.mMachinesByKey["HiemalMachineBlockAssembler"].Recipe.addIngredient("ReikaKalseki.T3Housing", 5);
+       		GenericAutoCrafterNew.mMachinesByKey["HiemalMachineBlockAssembler"].Recipe.addItemPerN("ReikaKalseki.CryoResin", 5); //1 resin per 5 = 1 gas per
        		
        		GenericAutoCrafterNew.mMachinesByKey["ChromedMachineBlockAssembler"].Recipe.scaleIOExcept(2, "ImbuedMachineBlock");
        		GenericAutoCrafterNew.mMachinesByKey["MagneticMachineBlockAssembler"].Recipe.scaleIOExcept(2, "ImbuedMachineBlock");

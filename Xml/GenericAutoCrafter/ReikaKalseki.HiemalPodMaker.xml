@@ -22,8 +22,8 @@
 				<Amount>8</Amount>
 			</CraftCost>
 			<CraftCost>
-				<Key>RefinedLiquidResin</Key>
-				<Amount>20</Amount>
+				<Key>ReikaKalseki.CryoResin</Key>
+				<Amount>5</Amount>
 			</CraftCost>
 		</Costs>
 		<Description>Combines endgame materials for the ultimate research pod...slowly.</Description>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GenericAutoCrafterDataEntry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<FriendlyName>Advanced Housing Assembler</FriendlyName>
+	<SpawnObject>TitaniumHousingCrafter</SpawnObject>
+	<Value>ReikaKalseki.T3HousingCrafter</Value>
+	<!-- no power requirement -->
+	<CraftingString>Crafting...</CraftingString>  <!-- optional -->
+	<WorkingAnimation000></WorkingAnimation000>  <!-- optional -->
+	
+	<CraftTime>2</CraftTime>  <!-- optional -->
+	<OptionalIngredients>false</OptionalIngredients>  <!-- optional -->
+	<Recipe>
+		<Key>ReikaKalseki.T3Housing</Key>
+		<CraftedKey>ReikaKalseki.T3Housing</CraftedKey>
+		<CraftedAmount>4</CraftedAmount>
+		<Costs>
+			<CraftCost>
+				<Key>LightweightMachineHousing</Key>
+				<Amount>5</Amount>
+			</CraftCost>
+			<CraftCost>
+				<Key>TitaniumHousing</Key>
+				<Amount>2</Amount>
+			</CraftCost>
+			<CraftCost>
+				<Key>AlloyedMachineBlock</Key>
+				<Amount>1</Amount>
+			</CraftCost>
+			<CraftCost>
+				<Key>PlasticPellet</Key>
+				<Amount>20</Amount>
+			</CraftCost>
+		</Costs>
+		<Description>Builds advanced housings for high-tier machine blocks.</Description>
+	</Recipe>
+</GenericAutoCrafterDataEntry>
