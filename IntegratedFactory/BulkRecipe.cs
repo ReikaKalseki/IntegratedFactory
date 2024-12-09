@@ -33,7 +33,25 @@ namespace ReikaKalseki.IntegratedFactory {
     	public bool needsHeating { get; internal set; }
     	public bool needsCooling { get; internal set; }
     	
+    	public TemperatureEffect heatingEffect { get; internal set; }
+    	public TemperatureEffect coolingEffect { get; internal set; }
+    	
+    	public bool acceptHeating { get { return needsHeating || heatingEffect != null; } }
+    	public bool acceptCooling { get { return needsCooling || coolingEffect != null; } }
+    	
     }
+	
+	public abstract class TemperatureEffect {
+		
+		public abstract float modifyCraftTime(float orig);
+		
+		public abstract float modifyPPS(float orig);
+		
+		public abstract int modifyYield(int amount);
+		
+		public abstract void onCraft(BulkPartCrafter machine);
+		
+	}
 	
 	public enum BulkRecipeCategory {
 		PLATE,

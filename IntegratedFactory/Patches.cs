@@ -111,6 +111,29 @@ namespace ReikaKalseki.IntegratedFactory {
 		}
 	}
 	
+	[HarmonyPatch(typeof(BlastFurnace))]
+	[HarmonyPatch("UpdateWaitingForResources")]
+	public static class BlastFurnaceTimeRespect {
+		
+		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) {
+			List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
+			try {
+				FileLog.Log("Running patch "+MethodBase.GetCurrentMethod().DeclaringType);
+				int idx = InstructionHandlers.getInstruction(codes, 0, 0, OpCodes.Stfld, typeof(BlastFurnace), "mrSmeltTimer");
+				codes[idx-1] = InstructionHandlers.createMethodCall(typeof(IntegratedFactoryMod), "getBlastFurnaceSmeltDuration", false, new Type[]{typeof(BlastFurnace)});
+				codes.Insert(idx-1, new CodeInstruction(OpCodes.Ldarg_0));
+				FileLog.Log("Done patch "+MethodBase.GetCurrentMethod().DeclaringType);
+			}
+			catch (Exception e) {
+				FileLog.Log("Caught exception when running patch "+MethodBase.GetCurrentMethod().DeclaringType+"!");
+				FileLog.Log(e.Message);
+				FileLog.Log(e.StackTrace);
+				FileLog.Log(e.ToString());
+			}
+			return codes.AsEnumerable();
+		}
+	}
+	
 	
 	static class Lib {
 		

@@ -89,6 +89,13 @@ namespace ReikaKalseki.IntegratedFactory
         spod.addIngredient("ReikaKalseki.PyroResin", 10);
         spod.addIngredient(config.getBoolean(IFConfig.ConfigEntries.T3_T4) ? "GoldPipe" : "ReikaKalseki.ChromiumPipe", 2);
         
+        CraftData plastic2 = RecipeUtil.copyRecipe(RecipeUtil.getRecipeByKey("pellets", "Refinery"), "ReikaKalseki.BulkPlastic");
+        plastic2.CraftedAmount *= 25; //makes 10 instead of 1
+        plastic2.Costs[0].Amount = plastic2.Costs[0].Amount*20; //from 16 base (2 on rapid) to 320 base (40 on rapid)
+        plastic2.CraftTime *= 5F; //5x slower but since makes 25x the amount is 5x throughput
+        plastic2.addIngredient("ReikaKalseki.AcidResin", 1); //1 (=10 chlorine and 2 resin) per 25 plastic
+		RecipeUtil.addRecipe(plastic2);
+        
         CraftData rec;
         
         /* moved to GAC
@@ -235,6 +242,11 @@ namespace ReikaKalseki.IntegratedFactory
        		rec.addIngredient("LightweightMachineHousing", 2);
        	}
        	
+       	rec = RecipeUtil.getRecipeByKey("CargoLiftBulk");
+       	rec.modifyIngredientCount("UltimatePCB", 10); //from 20
+       	rec.removeIngredient("RefinedLiquidResin"); //keep count under 5
+       	rec.addIngredient("ReikaKalseki.Turbomotor", 5);
+       	
        	addAndSubSomeIf("particlefiltercomponent", "ChromedMachineBlock", "ChromedMachineBlock", "IronGear", 5);
        	addAndSubSomeIf("particlefiltercomponent", "MagneticMachineBlock", "MagneticMachineBlock", "TitaniumHousing", 1/3F);
        	addAndSubSomeIf("particlecompressorcomponent", "ChromedMachineBlock", "ChromedMachineBlock", "IronGear", 5);
@@ -308,15 +320,19 @@ namespace ReikaKalseki.IntegratedFactory
 			}
        	}
        	
-        if (config.getBoolean(IFConfig.ConfigEntries.EFFICIENT_BLAST)) {
-       		uint per = (uint)Math.Max(1F/DifficultySettings.mrResourcesFactor, FUtil.getOrePerBar()); //is multiplied against mrResourcesFactor, so needs to always result in >= 1!
-    		foreach (CraftData br in CraftData.GetRecipesForSet("BlastFurnace")) {
-       			if (br.Costs[0].Amount == 16) {
-    				FUtil.log("Adjusting "+br.Costs[0].ingredientToString()+" cost of Blast Furnace recipe "+br.Key+" to "+per);
-    				br.Costs[0].Amount = per;
+       	uint per = (uint)Math.Max(1F/DifficultySettings.mrResourcesFactor, FUtil.getOrePerBar()); //is multiplied against mrResourcesFactor, so needs to always result in >= 1!
+    	foreach (CraftData br in CraftData.GetRecipesForSet("BlastFurnace")) {
+       		if (br.Costs[0].Amount == 16) {
+       			if (config.getBoolean(IFConfig.ConfigEntries.EFFICIENT_BLAST)) {
+	    			br.Costs[0].Amount = per;
        			}
-	        }
-        }
+       			br.CraftTime = 1; // 1/3 since cryo resin injection triples speed, so the tripled blast furnace speed can be matched with a boosted CCB
+       		}
+       		else {
+       			br.CraftTime = 3;
+       		}
+       		FUtil.log("Adjusting Blast Furnace recipe "+br.recipeToString());
+	    }
        	
        	ResearchDataEntry.mEntriesByKey["T4_drills_2"].ProjectItemRequirements.ForEach(r => r.Amount /= 2); //make cost half as much as T3 (=64 pods)
        	       	
@@ -408,19 +424,40 @@ namespace ReikaKalseki.IntegratedFactory
        	rec2.CraftedKey = rr.CraftedKey;
        	rec2.Category = rr.Category;
        	rec2.CraftedAmount = BulkPartCrafter.BULK_CRAFTER_OUTPUT_AMOUNT;
-       	if (cat == BulkRecipeCategory.COIL)
-       		rec2.CraftedAmount = rec2.CraftedAmount*3/2; //+50% for coils given the two stage processing
        	rec2.CraftTime = 4; //so produces 5 per second
        	rec2.RecipeSet = "Bulk";
        	rec2.category = cat;
-       	rec2.needsCooling = cat == BulkRecipeCategory.COIL || cat == BulkRecipeCategory.WIRE;
-       	rec2.needsHeating = cat == BulkRecipeCategory.PLATE || cat == BulkRecipeCategory.PIPE;
+       	rec2.needsCooling = cat == BulkRecipeCategory.WIRE || cat == BulkRecipeCategory.PIPE;
+       	if (cat == BulkRecipeCategory.COIL) {
+       		rec2.coolingEffect = new CoilCoolingEffect();
+       	}
+       	rec2.needsHeating = cat == BulkRecipeCategory.PLATE;
        	rec2.addIngredient(rr.Costs[0].Key, BulkPartCrafter.BULK_CRAFTER_INPUT_AMOUNT);
        	//do not add heat/cooling ingredient, use active tick code to consume to set temperature
        	//rec2.addIngredient("ReikaKalseki.PyroResin", 2); //plates need heating
        	bulkRecipes.Add(rr.Key, rec2);
        	return rec2;
     }
+	
+    internal class CoilCoolingEffect : TemperatureEffect {
+		
+    	public override float modifyCraftTime(float orig) {
+    		return orig*0.75F;
+    	}
+		
+    	public override float modifyPPS(float orig) {
+    		return orig*0.5F;
+    	}
+		
+		public override int modifyYield(int amount) {
+    		return amount*3/2; //+50% for coils given the two stage processing, if cooled
+    	}
+		
+		public override void onCraft(BulkPartCrafter machine) {
+    		
+    	}
+		
+	}
     
     public void addAlloyedPodCost(string research, int amt) {
     	ResearchDataEntry.mEntriesByKey[research].addIngredient("ReikaKalseki.AlloyedExperimentalPod", (int)Mathf.Max(1, amt*config.getFloat(IFConfig.ConfigEntries.ALLOY_RESEARCH_COST_SCALE)));
@@ -567,6 +604,10 @@ namespace ReikaKalseki.IntegratedFactory
 			h.RemoveInventoryItem(DynamicGasInjector.COLD_RESIN_ID, 1);
 			gen.AddFreezon();
 		}
+    }
+    
+    public static float getBlastFurnaceSmeltDuration(BlastFurnace bf) {
+    	return bf.mCurrentRecipe == null || bf.mCurrentRecipe.CraftTime <= 0.05F ? 3 : bf.mCurrentRecipe.CraftTime;
     }
     
     public override void CheckForCompletedMachine(ModCheckForCompletedMachineParameters parameters) {	 

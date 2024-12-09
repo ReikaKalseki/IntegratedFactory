@@ -116,11 +116,11 @@ namespace ReikaKalseki.IntegratedFactory {
 			ambientTemp = SurvivalLocalTemperature.GetTemperatureAtDepth(mnY);
 			float dT = LowFrequencyThread.mrPreviousUpdateTimeStep;
 			
-			if (useHeat && forcedHeatingTime > 0 && currentRecipe != null && currentRecipe.needsHeating) {
+			if (useHeat && forcedHeatingTime > 0 && currentRecipe != null && currentRecipe.acceptHeating) {
 				temperature = Mathf.Min(temperature+MAX_HEATING_RATE*dT, HEATED_TEMPERATURE);
 				forcedHeatingTime -= dT;
 			}
-			else if (useHeat && forcedCoolingTime > 0 && currentRecipe != null && currentRecipe.needsCooling) {
+			else if (useHeat && forcedCoolingTime > 0 && currentRecipe != null && currentRecipe.acceptCooling) {
 				temperature = Mathf.Max(temperature-MAX_COOLING_RATE*dT, COOLED_TEMPERATURE);
 				forcedCoolingTime -= dT;
 			}
@@ -132,13 +132,13 @@ namespace ReikaKalseki.IntegratedFactory {
 			}
 			
 			if (useHeat) {
-				if (currentRecipe.needsHeating && forcedHeatingTime <= 0 && temperature < HEATED_TEMPERATURE) {
+				if (currentRecipe.acceptHeating && forcedHeatingTime <= 0 && temperature < HEATED_TEMPERATURE) {
 					if (tryPullItems("ReikaKalseki.PyroResin")) {
 						forcedHeatingTime = RESIN_DURATION;
 						FloatingCombatTextManager.instance.QueueText(this.mnX, mnY, this.mnZ, 1f, "Heating", Color.red, 3f, 32f);
 					}
 				}
-				else if (currentRecipe.needsCooling && forcedCoolingTime <= 0 && temperature > COOLED_TEMPERATURE) {
+				else if (currentRecipe.acceptCooling && forcedCoolingTime <= 0 && temperature > COOLED_TEMPERATURE) {
 					if (tryPullItems("ReikaKalseki.CryoResin")) {
 						forcedCoolingTime = RESIN_DURATION;
 						FloatingCombatTextManager.instance.QueueText(this.mnX, mnY, this.mnZ, 1f, "Cooling", Color.cyan, 3f, 32f);
@@ -147,8 +147,50 @@ namespace ReikaKalseki.IntegratedFactory {
 			}
 		}
 		
+		protected override float getPPSCost() {
+			float ret = base.getPPSCost();
+			if (currentRecipe != null) {
+				if (currentRecipe.heatingEffect != null && temperature >= HEATED_TEMPERATURE)
+					ret = currentRecipe.heatingEffect.modifyPPS(ret);
+				else if (currentRecipe.coolingEffect != null && temperature <= COOLED_TEMPERATURE)
+					ret = currentRecipe.coolingEffect.modifyPPS(ret);
+			}
+			return ret;
+		}
+		
+		protected override float getCraftTime(BulkRecipe recipe) {
+			float ret = base.getCraftTime(recipe);
+			if (currentRecipe != null) {
+				if (currentRecipe.heatingEffect != null && temperature >= HEATED_TEMPERATURE)
+					ret = currentRecipe.heatingEffect.modifyCraftTime(ret);
+				else if (currentRecipe.coolingEffect != null && temperature <= COOLED_TEMPERATURE)
+					ret = currentRecipe.coolingEffect.modifyCraftTime(ret);
+			}
+			return ret;
+		}
+		
+		protected override int getYield(BulkRecipe recipe) {
+			int ret = base.getYield(recipe);
+			if (currentRecipe != null) {
+				if (currentRecipe.heatingEffect != null && temperature >= HEATED_TEMPERATURE)
+					ret = currentRecipe.heatingEffect.modifyYield(ret);
+				else if (currentRecipe.coolingEffect != null && temperature <= COOLED_TEMPERATURE)
+					ret = currentRecipe.coolingEffect.modifyYield(ret);
+			}
+			return ret;
+		}
+		
+		protected override void onCraft(BulkRecipe recipe) {
+			if (currentRecipe != null) {
+				if (currentRecipe.heatingEffect != null && temperature >= HEATED_TEMPERATURE)
+					currentRecipe.heatingEffect.onCraft(this);
+				else if (currentRecipe.coolingEffect != null && temperature <= COOLED_TEMPERATURE)
+					currentRecipe.coolingEffect.onCraft(this);
+			}
+		}
+		
 		protected override bool canProcess() {
-			if (currentRecipe.needsHeating && temperature < HEATED_TEMPERATURE)
+			if (currentRecipe.needsHeating && temperature < HEATED_TEMPERATURE) //needs, not accepts
 				return false;
 			if (currentRecipe.needsCooling && temperature > COOLED_TEMPERATURE)
 				return false;
@@ -217,8 +259,12 @@ namespace ReikaKalseki.IntegratedFactory {
 			if (currentRecipe != null) {
 				if (currentRecipe.needsHeating && temperature < HEATED_TEMPERATURE)
 					ret += "\nTemperature too low to produce "+currentRecipe.CraftedName+"!";
+				else if (currentRecipe.acceptHeating && temperature < HEATED_TEMPERATURE)
+					ret += "\nHeat the machine to improve its performance.";
 				else if (currentRecipe.needsCooling && temperature > COOLED_TEMPERATURE)
 					ret += "\nTemperature too high to produce "+currentRecipe.CraftedName+"!";
+				else if (currentRecipe.acceptCooling && temperature > COOLED_TEMPERATURE)
+					ret += "\nCool the machine to improve its performance.";
 			}
 			//UIManager.instance.Survival_Info_Panel_Label.fontSize = 15;
 			return ret;
