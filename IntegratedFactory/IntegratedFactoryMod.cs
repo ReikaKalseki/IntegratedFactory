@@ -405,7 +405,8 @@ namespace ReikaKalseki.IntegratedFactory
        		createBulkRecipe(rr, BulkRecipeCategory.PIPE);
        	}
        	foreach (CraftData rr in CraftData.GetRecipesForSet("Coiler")) { //make coils from wires (equivalent cost)
-       		BulkRecipe rec2 = createBulkRecipe(rr, BulkRecipeCategory.COIL);/*
+       		BulkRecipe rec2 = createBulkRecipe(rr, BulkRecipeCategory.COIL);
+       		
        		string wireID = rr.Costs[0].Key;
        		string barID = CraftData.GetRecipesForSet("Extruder").FirstOrDefault(s => s.CraftedKey == wireID).Costs[0].Key;
        		string pipeID = getBeltGACItem("PipeExtruder", barID);
@@ -414,7 +415,7 @@ namespace ReikaKalseki.IntegratedFactory
        			continue;
        		}
        		rec2.replaceIngredient(rr.Costs[0].Key, ItemEntry.mEntriesByKey[pipeID].Key); //replace wire with pipe
-       		*/
+       		
        		rec2.addIngredient("ReikaKalseki.AcidResin", 1); //coils need acid to etch
        	}
        	CraftData.LinkEntries(bulkRecipes.Values.Select<BulkRecipe, CraftData>(r => r).ToList(), "Bulk");
@@ -451,7 +452,7 @@ namespace ReikaKalseki.IntegratedFactory
     	}
 		
 		public override int modifyYield(int amount) {
-    		return amount;//*3/2; //+50% for coils given the two stage processing, if cooled
+    		return amount*3/2; //+50% for coils given the two stage processing, if cooled
     	}
 		
 		public override void onCraft(BulkPartCrafter machine) {
