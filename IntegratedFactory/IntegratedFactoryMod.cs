@@ -429,17 +429,40 @@ namespace ReikaKalseki.IntegratedFactory
        	rec2.CraftTime = 4; //so produces 5 per second
        	rec2.RecipeSet = "Bulk";
        	rec2.category = cat;
-       	rec2.needsCooling = cat == BulkRecipeCategory.WIRE || cat == BulkRecipeCategory.PIPE;
-       	if (cat == BulkRecipeCategory.COIL) {
+       	rec2.needsHeating = cat == BulkRecipeCategory.PLATE;
+       	rec2.needsCooling = cat == BulkRecipeCategory.PIPE;
+       	if (cat == BulkRecipeCategory.WIRE) {
+       		rec2.heatingEffect = new WireHeatingEffect();
+       	}
+       	else if (cat == BulkRecipeCategory.COIL) {
        		rec2.coolingEffect = new CoilCoolingEffect();
        	}
-       	rec2.needsHeating = cat == BulkRecipeCategory.PLATE;
        	rec2.addIngredient(rr.Costs[0].Key, BulkPartCrafter.BULK_CRAFTER_INPUT_AMOUNT);
        	//do not add heat/cooling ingredient, use active tick code to consume to set temperature
        	//rec2.addIngredient("ReikaKalseki.PyroResin", 2); //plates need heating
        	bulkRecipes.Add(rr.Key, rec2);
        	return rec2;
     }
+	
+    internal class WireHeatingEffect : TemperatureEffect {
+		
+    	public override float modifyCraftTime(float orig) {
+    		return orig*0.5F;
+    	}
+		
+    	public override float modifyPPS(float orig) {
+    		return orig*0.5F;
+    	}
+		
+		public override int modifyYield(int amount) {
+    		return amount*5/4; //+25%
+    	}
+		
+		public override void onCraft(BulkPartCrafter machine) {
+    		
+    	}
+		
+	}
 	
     internal class CoilCoolingEffect : TemperatureEffect {
 		
