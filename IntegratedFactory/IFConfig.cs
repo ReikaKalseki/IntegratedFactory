@@ -17,8 +17,9 @@ namespace ReikaKalseki.IntegratedFactory
 			[ConfigEntry("T4 Ore Research Pod Cost Multiplier", typeof(float), 1, 0.25F, 8F, 1)]T4_RESEARCH_COST_SCALE,
 			[ConfigEntry("T4 Gas Research Pod Cost Multiplier", typeof(float), 1, 0.25F, 8F, 1)]GAS_RESEARCH_COST_SCALE,
 			[ConfigEntry("Particle Filtration Extra Pod Cost Multiplier", typeof(float), 1, 0.25F, 8F, 1)]PARTICLE_RESEARCH_COST_SCALE,
-			[ConfigEntry("Gas Resin Cost (Gas)", typeof(int), 5, 1, 100, 0)]RESIN_GAS_COST,
-			[ConfigEntry("Gas Resin Cost (Resin)", typeof(int), 2, 1, 100, 0)]RESIN_RESIN_COST,
+			[ConfigEntry("Gas Resin Cost Per Cycle (Gas)", typeof(int), 10, 1, 100, 0)]RESIN_GAS_COST,
+			[ConfigEntry("Gas Resin Cost Per Cycle (Resin)", typeof(int), 3, 1, 100, 0)]RESIN_RESIN_COST,
+			[ConfigEntry("Gas Resin Yield Per Cycle", typeof(int), 2, 1, 100, 0)]RESIN_YIELD,
 		}
 	}
 }

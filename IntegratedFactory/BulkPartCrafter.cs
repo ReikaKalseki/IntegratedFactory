@@ -111,7 +111,7 @@ namespace ReikaKalseki.IntegratedFactory {
 			base.LowFrequencyUpdate();
 			testingInstance = this;
 			
-			bool useHeat = mOperatingState == OperatingState.Processing;
+			bool useHeat = state == OperatingState.Processing;
 			currentBiome = WorldUtil.getBiome(this);
 			ambientTemp = SurvivalLocalTemperature.GetTemperatureAtDepth(mnY);
 			float dT = LowFrequencyThread.mrPreviousUpdateTimeStep;
@@ -202,7 +202,7 @@ namespace ReikaKalseki.IntegratedFactory {
 		}
 		
 		public override bool onInteract(Player ep) {
-			if (mOperatingState == OperatingState.Processing) {
+			if (state == OperatingState.Processing) {
 				FloatingCombatTextManager.instance.QueueText(this.mnX, mnY, this.mnZ, 0.5F, "Busy making "+BulkRecipe.getTypeName(category), Color.red, 3f, 32f);
 				AudioHUDManager.instance.HUDFail();
 				return false;

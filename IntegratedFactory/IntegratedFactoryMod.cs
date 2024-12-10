@@ -58,15 +58,16 @@ namespace ReikaKalseki.IntegratedFactory
 		
         uint resingas = (uint)(config.getInt(IFConfig.ConfigEntries.RESIN_GAS_COST)/DifficultySettings.mrResourcesFactor); //unmultiply against resource factor
         uint resinresin = (uint)(config.getInt(IFConfig.ConfigEntries.RESIN_RESIN_COST)/DifficultySettings.mrResourcesFactor);
-        CraftData cresin = RecipeUtil.addRecipe("CryoResin", "ReikaKalseki.CryoResin", "", set: "Refinery");
+        int resinyield = config.getInt(IFConfig.ConfigEntries.RESIN_YIELD);
+        CraftData cresin = RecipeUtil.addRecipe("CryoResin", "ReikaKalseki.CryoResin", "", resinyield, set: "Refinery");
         cresin.addIngredient("CompressedFreon", resingas);
         cresin.addIngredient("RefinedLiquidResin", resinresin);
         
-        CraftData aresin = RecipeUtil.addRecipe("AcidResin", "ReikaKalseki.AcidResin", "", set: "Refinery");
+        CraftData aresin = RecipeUtil.addRecipe("AcidResin", "ReikaKalseki.AcidResin", "", resinyield, set: "Refinery");
         aresin.addIngredient("CompressedChlorine", resingas);
         aresin.addIngredient("RefinedLiquidResin", resinresin);
         
-        CraftData fresin = RecipeUtil.addRecipe("PyroResin", "ReikaKalseki.PyroResin", "", set: "Refinery");
+        CraftData fresin = RecipeUtil.addRecipe("PyroResin", "ReikaKalseki.PyroResin", "", resinyield, set: "Refinery");
         fresin.addIngredient("CompressedSulphur", resingas);
         fresin.addIngredient("RefinedLiquidResin", resinresin);
         
@@ -320,11 +321,19 @@ namespace ReikaKalseki.IntegratedFactory
        	}
        	
        	if (ItemEntry.mEntriesByKey.ContainsKey("ReikaKalseki.Turbofuel")) {
-       		FUtil.log("Adding Turbofuel compatibility");
-	        Type t = InstructionHandlers.getTypeBySimpleName("ReikaKalseki.TurbofuelMod");
-			if (t != null) {
-	        	t.GetMethod("setRecipeCompatibility", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[]{fresin});
-			}
+       		try {
+		        Type t = InstructionHandlers.getTypeBySimpleName("ReikaKalseki.Turbofuel.TurbofuelMod");
+				if (t != null) {
+	       			FUtil.log("Adding Turbofuel compatibility");
+		        	t.GetMethod("setRecipeCompatibility", BindingFlags.Static | BindingFlags.Public).Invoke(null, new object[]{fresin, 1.5F});
+				}
+		        else {
+		        	FUtil.log("Could not add Turbofuel compatibility! Mod class not found!");
+		        }
+       		}
+       		catch (Exception ex) {
+       			FUtil.log("Could not add Turbofuel compatibility: "+ex.ToString());
+       		}
        	}
        	
        	uint per = (uint)Math.Max(1F/DifficultySettings.mrResourcesFactor, FUtil.getOrePerBar()); //is multiplied against mrResourcesFactor, so needs to always result in >= 1!
