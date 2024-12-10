@@ -171,6 +171,32 @@
     <CanCraftAnywhere>false</CanCraftAnywhere>
   </CraftData>-->
   <CraftData>
+    <Key>ReikaKalseki.T3HousingCrafter</Key>
+    <Category>manufacturing</Category>
+    <Tier>4</Tier>
+    <CraftedKey>ReikaKalseki.T3HousingCrafter</CraftedKey>
+    <CraftedAmount>1</CraftedAmount>
+    <Costs>
+      <CraftCost>
+        <Key>AlloyedPCB</Key>
+        <Amount>10</Amount>
+      </CraftCost>
+      <CraftCost>
+        <Key>ChromedMachineBlock</Key>
+        <Amount>20</Amount>
+      </CraftCost>
+      <CraftCost>
+        <Key>LightweightMachineHousing</Key>
+        <Amount>30</Amount>
+      </CraftCost>
+    </Costs>
+    <Description>Builds advanced housings for high-tier machine blocks.</Description>
+    <ResearchRequirements>
+      <Research>T4 ore extracting</Research>
+    </ResearchRequirements>
+    <CanCraftAnywhere>false</CanCraftAnywhere>
+  </CraftData>
+  <CraftData>
     <Key>ReikaKalseki.BulkPartCrafterPlacement</Key>
     <Category>manufacturing</Category>
     <Tier>4</Tier>

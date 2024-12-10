@@ -4,6 +4,9 @@
 	<SpawnObject>TitaniumHousingCrafter</SpawnObject>
 	<Value>ReikaKalseki.T3HousingCrafter</Value>
 	<!-- no power requirement -->
+	<PowerUsePerSecond>0</PowerUsePerSecond>  <!-- optional -->
+	<PowerTransferPerSecond>0</PowerTransferPerSecond>  <!-- optional -->
+	<MaxPowerStorage>0</MaxPowerStorage>  <!-- optional -->
 	<CraftingString>Crafting...</CraftingString>  <!-- optional -->
 	<WorkingAnimation000></WorkingAnimation000>  <!-- optional -->
 	

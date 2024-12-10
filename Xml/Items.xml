@@ -350,26 +350,12 @@
 			<Research>T4_Particles</Research>
 		</ResearchRequirements>	
 	</ItemEntry>
-	<!--
-	<ItemEntry>
-		<Key>ReikaKalseki.FreonCell</Key>
-		<Name>Freon Cell</Name>
-		<Plural>Freon Cell</Plural>
-		<Type>ItemStack</Type>	
-		<Object>ResearchPod_Ultimate</Object>
-		<Sprite>ReikaKalseki.FreonCell</Sprite>
-		<Category>Consumable</Category>
-		<ResearchRequirements>
-			<Research>T4_start</Research>
-			<Research>T4_Particles</Research>
-		</ResearchRequirements>	
-	</ItemEntry>-->
 	<ItemEntry>
 		<Key>ReikaKalseki.T3Housing</Key>
 		<Name>Advanced Machine Housing</Name>
 		<Plural>Advanced Machine Housings</Plural>
 		<Type>ItemStack</Type>	
-		<Object>TitaniumHousing</Object>
+		<Object>HousingTitanium</Object>
 		<Sprite>ReikaKalseki.T3Housing</Sprite>
 		<Category>Consumable</Category>
 		<ResearchRequirements>
