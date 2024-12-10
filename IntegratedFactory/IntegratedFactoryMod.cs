@@ -311,6 +311,7 @@ namespace ReikaKalseki.IntegratedFactory
        		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoMelterMissileCrafter"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumPipe");
        		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoMelterMissileCrafter"].Recipe.scaleIOExcept(2);
        		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoMelterMissileCrafter"].Recipe.replaceIngredient("CompressedSulphur", "ReikaKalseki.PyroResin", 0.25F); //keep cost almost constant, which involves doubling first
+       		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoClearingMissileCrafter"].Recipe.replaceIngredient("CompressedChlorine", "ReikaKalseki.AcidResin", 0.25F); //keep cost almost constant
        		GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.CryoCrafter"].Recipe.replaceIngredient("CompressedFreon", "ReikaKalseki.CryoResin", 0.25F); //keep cost almost constant
        		
        		rec = RecipeUtil.getRecipeByKey("ReikaKalseki.CryoMissileTurret");
@@ -639,6 +640,27 @@ namespace ReikaKalseki.IntegratedFactory
     
     public static float getBlastFurnaceSmeltDuration(BlastFurnace bf) {
     	return bf.mCurrentRecipe == null || bf.mCurrentRecipe.CraftTime <= 0.05F ? 3 : bf.mCurrentRecipe.CraftTime;
+    }
+    
+    public static int getCreepLancerRange(int range, CreepLancer cr) {
+    	int bonus = cr.mbHasGas ? (int)DynamicGasInjector.FreezonLancerResinEffect.countField.GetValue(cr) : 0; //num shots, is 100 at fresh boost
+    	bool lancer = cr.mValue == 0;
+    	if (bonus > 0)
+    		range *= 2; //lancer 9->18, melter 13->26
+    	float baseRate = lancer ? (DifficultySettings.mbCasualResource ? 1.5F : 3F) : (DifficultySettings.mbCasualResource ? 0.15F : 0.4F);
+    	if (bonus >= 25) {
+    		range += lancer ? 2 : 4; //lancer 18->20, melter 26->30
+    		if (bonus >= 75)
+    			range += lancer ? 10 : 18; //lancer 20->30, melter 30->48
+    		else if (bonus >= 50)
+    			range += lancer ? 5 : 6; //lancer 20->25, melter 30->36
+    		cr.mrAblateRate = baseRate*0.4F; //more than 2x faster still if resin powered
+    	}
+    	else {
+    		cr.mrAblateRate = baseRate; //vanilla speed boost (vanilla class handles the speed bonus separately)
+    	}
+    	//FUtil.log(cr.machineToString()+" computing range of "+range+" from nshots="+bonus);
+    	return range;
     }
     
     public override void CheckForCompletedMachine(ModCheckForCompletedMachineParameters parameters) {	 

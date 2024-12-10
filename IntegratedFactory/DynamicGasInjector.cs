@@ -33,7 +33,7 @@ namespace ReikaKalseki.IntegratedFactory {
 		
 		public static readonly float BLAST_SMELTING_RATE_FACTOR = 3;
 		
-		abstract class BoostEffectBase {
+		internal abstract class BoostEffectBase {
 			
 			public readonly ushort blockID;
 			public readonly int requiredItem;
@@ -66,7 +66,7 @@ namespace ReikaKalseki.IntegratedFactory {
 			
 		}
 		
-		abstract class BoostEffect<E> : BoostEffectBase where E : SegmentEntity {
+		internal abstract class BoostEffect<E> : BoostEffectBase where E : SegmentEntity {
 			
 			protected BoostEffect(ushort id, int item, eSegmentEntity entity, string n) : base(id, item, entity, n) {
 
@@ -80,7 +80,7 @@ namespace ReikaKalseki.IntegratedFactory {
 			
 		}
 		
-		abstract class FreezonLancerEffect : BoostEffect<CreepLancer> {
+		internal abstract class FreezonLancerEffect : BoostEffect<CreepLancer> {
 			
 			public FreezonLancerEffect(int id, string n) : base(eCubeTypes.T4_Lancer, id, eSegmentEntity.T4_Creep_Lancer, n) {
 				
@@ -104,9 +104,9 @@ namespace ReikaKalseki.IntegratedFactory {
 			
 		}
 		
-		class FreezonLancerResinEffect : FreezonLancerEffect {
+		internal class FreezonLancerResinEffect : FreezonLancerEffect {
 			
-			private static readonly FieldInfo countField = typeof(CreepLancer).GetField("mnSuperChargedShots", BindingFlags.Instance | BindingFlags.NonPublic);
+			internal static readonly FieldInfo countField = typeof(CreepLancer).GetField("mnSuperChargedShots", BindingFlags.Instance | BindingFlags.NonPublic);
 			
 			public FreezonLancerResinEffect() : base(COLD_RESIN_ID, "Cryo Resin Boost") {
 				
@@ -196,7 +196,7 @@ namespace ReikaKalseki.IntegratedFactory {
 			
 			private bool isActive;
 			
-			public BlastFurnaceBoostEffect() : base(eCubeTypes.BlastFurnace, COLD_RESIN_ID, eSegmentEntity.BlastFurnace, "Cryo Boost", 30) {
+			public BlastFurnaceBoostEffect() : base(eCubeTypes.BlastFurnace, COLD_RESIN_ID, eSegmentEntity.BlastFurnace, "Cryo Boost", 60) {
 				
 			}
 			
@@ -233,21 +233,41 @@ namespace ReikaKalseki.IntegratedFactory {
 		
 		class CCBBoostEffect : RateConsumptionEffect<ContinuousCastingBasin> {
 			
-			public CCBBoostEffect() : base(eCubeTypes.ContinuousCastingBasin, COLD_RESIN_ID, eSegmentEntity.ContinuousCastingBasin, "Cryo Boost", 10) {
+			public CCBBoostEffect() : base(eCubeTypes.ContinuousCastingBasin, COLD_RESIN_ID, eSegmentEntity.ContinuousCastingBasin, "Cryo Boost", 20) {
 				
 			}
 			
 			public override bool tick(ContinuousCastingBasin e, float dT) {
+				if (e == null) {
+					FUtil.log("Somehow ticked a null CCB effect despite a null check?!");
+					return false;
+				}
 				if (e.mLinkedCenter != null)
 					e = e.mLinkedCenter;
 				bool flag = false;
 				for (int i = 0; i < 4; i++) {
-					if (e.mItemsCooling[i] != null) {
+					if (e.mItemsCooling != null && e.mItemsCooling[i] != null) {
 						e.mItemCoolTimers[i] -= dT*(BLAST_SMELTING_RATE_FACTOR-1);
 						flag = true;
 					}
 				}
 				return flag;
+			}
+			
+		}
+		
+		class ResinRefinerEffect : RateConsumptionEffect<GenericAutoCrafterNew> {
+			
+			public ResinRefinerEffect() : base(eCubeTypes.GenericCraftingStationNEW, SULFUR_ID, eSegmentEntity.GenericCraftingStationNew, "Sulfur Boost", 20) {
+				
+			}
+			
+			public override bool tick(GenericAutoCrafterNew te, float dT) {
+				if (te.mMachine.Value == "LiquidResinRefiner" && te.meState == GenericAutoCrafterNew.eState.eCrafting) {
+					te.mrCraftingTimer -= dT*3; //4x speed
+					return true;
+				}
+				return false;
 			}
 			
 		}
@@ -279,6 +299,7 @@ namespace ReikaKalseki.IntegratedFactory {
 			new FreezonLancerResinEffect().register(this);
 			new ResinAblatorEffect().register(this);
 			new ResinMelterEffect().register(this);
+			new ResinRefinerEffect().register(this);
 			new BlastFurnaceBoostEffect().register(this);
 			new CCBBoostEffect().register(this);
 		}

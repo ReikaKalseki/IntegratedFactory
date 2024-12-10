@@ -134,6 +134,30 @@ namespace ReikaKalseki.IntegratedFactory {
 		}
 	}
 	
+	[HarmonyPatch(typeof(CreepLancer))]
+	[HarmonyPatch("FinishedSearch")]
+	public static class CryoResinLancerRangeBoost {
+		
+		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) {
+			List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
+			try {
+				FileLog.Log("Running patch "+MethodBase.GetCurrentMethod().DeclaringType);
+				int idx = InstructionHandlers.getInstruction(codes, 0, 0, OpCodes.Ldfld, typeof(CreepLancer), "mbHasGas");
+				idx = InstructionHandlers.getFirstOpcode(codes, idx, OpCodes.Mul);
+				codes[idx] = InstructionHandlers.createMethodCall(typeof(IntegratedFactoryMod), "getCreepLancerRange", false, new Type[]{typeof(int), typeof(CreepLancer)});
+				codes[idx-1] = new CodeInstruction(OpCodes.Ldarg_0); //replace ldc-i4-2
+				FileLog.Log("Done patch "+MethodBase.GetCurrentMethod().DeclaringType);
+			}
+			catch (Exception e) {
+				FileLog.Log("Caught exception when running patch "+MethodBase.GetCurrentMethod().DeclaringType+"!");
+				FileLog.Log(e.Message);
+				FileLog.Log(e.StackTrace);
+				FileLog.Log(e.ToString());
+			}
+			return codes.AsEnumerable();
+		}
+	}
+	
 	
 	static class Lib {
 		
