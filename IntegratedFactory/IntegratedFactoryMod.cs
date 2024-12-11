@@ -59,7 +59,7 @@ namespace ReikaKalseki.IntegratedFactory
         uint resingas = (uint)(config.getInt(IFConfig.ConfigEntries.RESIN_GAS_COST)/DifficultySettings.mrResourcesFactor); //unmultiply against resource factor
         uint resinresin = (uint)(config.getInt(IFConfig.ConfigEntries.RESIN_RESIN_COST)/DifficultySettings.mrResourcesFactor);
         int resinyield = config.getInt(IFConfig.ConfigEntries.RESIN_YIELD);
-        CraftData cresin = RecipeUtil.addRecipe("CryoResin", "ReikaKalseki.CryoResin", "", resinyield, set: "Refinery");
+        CraftData cresin = RecipeUtil.addRecipe("CryoResin", "ReikaKalseki.CryoResin", "", resinyield*2, set: "Refinery"); //double the yield of this one
         cresin.addIngredient("CompressedFreon", resingas);
         cresin.addIngredient("RefinedLiquidResin", resinresin);
         
@@ -107,10 +107,7 @@ namespace ReikaKalseki.IntegratedFactory
        //still need this part
         if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
        		rec = GenericAutoCrafterNew.mMachinesByKey["ReikaKalseki.HiemalPodMaker"].Recipe;
-        	rec.Costs.ForEach(c => c.Amount *= 5);
-        	rec.CraftTime *= 5;
-        	rec.CraftedAmount *= 5;
-        	rec.addIngredient("UltimatePCB", 1); //so still 8 blocks each but 1/5 of an ultimate pcb (2 alloyed upgrades=~10 T2 ores, 5 primary upgrades=50 tin, 10 coil=50 lith) each
+       		rec.addItemPerN("UltimatePCB", 5);//so still 8 blocks each but 1/5 of an ultimate pcb (2 alloyed upgrades=~10 T2 ores, 5 primary upgrades=50 tin, 10 coil=50 lith) each
         	rec.addIngredient("OverclockedCrystalClock", 5); //so 1 clock each
         	
         	//and add this
@@ -250,8 +247,17 @@ namespace ReikaKalseki.IntegratedFactory
        	
        	addAndSubSomeIf("particlefiltercomponent", "ChromedMachineBlock", "ChromedMachineBlock", "IronGear", 5);
        	addAndSubSomeIf("particlefiltercomponent", "MagneticMachineBlock", "MagneticMachineBlock", "TitaniumHousing", 1/3F);
+       	
+       	rec = RecipeUtil.getRecipeByKey("particlefiltercomponent");
+       	rec.CraftedAmount *= 3;
+       	rec.addIngredient("ReikaKalseki.Turbomotor", 1); //5 for whole MB
+       	
        	addAndSubSomeIf("particlecompressorcomponent", "ChromedMachineBlock", "ChromedMachineBlock", "IronGear", 5);
        	addAndSubSomeIf("particlecompressorcomponent", "MagneticMachineBlock", "MagneticMachineBlock", "TitaniumHousing", 1/3F);
+       	
+       	rec = RecipeUtil.getRecipeByKey("particlecompressorcomponent");
+       	rec.addIngredient("ReikaKalseki.Turbomotor", 3); //9 for MB
+       	
        	addAndSubSomeIf("ParticleStoragePlacementcomponent", "ChromedMachineBlock", "ChromedMachineBlock", "IronGear", 5);
        	addAndSubSomeIf("ParticleStoragePlacementcomponent", "MagneticMachineBlock", "MagneticMachineBlock", "TitaniumHousing", 1/3F);
        	addAndSubSomeIf("GasBottlerPlacementcomponent", "ChromedMachineBlock", "ChromedMachineBlock", "IronGear", 5);

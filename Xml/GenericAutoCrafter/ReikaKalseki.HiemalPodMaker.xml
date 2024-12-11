@@ -14,7 +14,7 @@
 	<OptionalIngredients>false</OptionalIngredients>  <!-- optional -->
 	<Recipe>
 		<Key>ReikaKalseki.HiemalExperimentalPod</Key>
-		<CraftedKey>HiemalExperimentalPod</CraftedKey>
+		<CraftedKey>ReikaKalseki.HiemalExperimentalPod</CraftedKey>
 		<CraftedAmount>1</CraftedAmount>
 		<Costs>
 			<CraftCost>
@@ -23,7 +23,7 @@
 			</CraftCost>
 			<CraftCost>
 				<Key>ReikaKalseki.CryoResin</Key>
-				<Amount>5</Amount>
+				<Amount>3</Amount>
 			</CraftCost>
 		</Costs>
 		<Description>Combines endgame materials for the ultimate research pod...slowly.</Description>
