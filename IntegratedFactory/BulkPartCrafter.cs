@@ -38,6 +38,9 @@ namespace ReikaKalseki.IntegratedFactory {
 		
 		public static readonly float RESIN_DURATION = 30; //seconds
 		
+		//half speed below 10% power, then normal speed to 50% power, then to 2x speed at 75%, and 3x at 100% 
+		private static readonly Interpolation SPEED_CURVE = new Interpolation().addPoint(0, 0.5F).addPoint(0.1F, 0.5F).addPoint(0.25F, 1F).addPoint(0.5F, 1F).addPoint(0.75F, 2F).addPoint(1F, 3F);
+		
 		public BulkRecipeCategory category { get; private set; }
 		
 		public float temperature { get; private set; }
@@ -145,6 +148,10 @@ namespace ReikaKalseki.IntegratedFactory {
 					}
 				}
 			}
+		}
+		
+		protected override float getCraftingSpeed() {
+			return SPEED_CURVE.getValue(currentPower/maxPower);
 		}
 		
 		protected override float getPPSCost() {
@@ -265,6 +272,14 @@ namespace ReikaKalseki.IntegratedFactory {
 					ret += "\nTemperature too high to produce "+currentRecipe.CraftedName+"!";
 				else if (currentRecipe.acceptCooling && temperature > COOLED_TEMPERATURE)
 					ret += "\nCool the machine to improve its performance.";
+				
+				if (state == OperatingState.Processing) {
+					float maxSpeed = SPEED_CURVE.maxValue;
+					if (computedCraftSpeed >= maxSpeed)
+						ret += "\nRunning at maximum speed!";
+					else
+						ret += "\nPower at "+((currentPower/maxPower)*100).ToString("0")+"%, running at "+(computedCraftSpeed*100).ToString("0.0")+"% speed!\nSupply more power to run faster, up to "+maxSpeed+"x!";
+				}
 			}
 			//UIManager.instance.Survival_Info_Panel_Label.fontSize = 15;
 			return ret;

@@ -249,6 +249,7 @@ namespace ReikaKalseki.IntegratedFactory
        	addAndSubSomeIf("particlefiltercomponent", "MagneticMachineBlock", "MagneticMachineBlock", "TitaniumHousing", 1/3F);
        	
        	rec = RecipeUtil.getRecipeByKey("particlefiltercomponent");
+       	rec.removeIngredient("IronGear");
        	rec.CraftedAmount *= 3;
        	rec.addIngredient("ReikaKalseki.Turbomotor", 1); //5 for whole MB
        	
@@ -256,6 +257,7 @@ namespace ReikaKalseki.IntegratedFactory
        	addAndSubSomeIf("particlecompressorcomponent", "MagneticMachineBlock", "MagneticMachineBlock", "TitaniumHousing", 1/3F);
        	
        	rec = RecipeUtil.getRecipeByKey("particlecompressorcomponent");
+       	rec.removeIngredient("IronGear");
        	rec.addIngredient("ReikaKalseki.Turbomotor", 3); //9 for MB
        	
        	addAndSubSomeIf("ParticleStoragePlacementcomponent", "ChromedMachineBlock", "ChromedMachineBlock", "IronGear", 5);
