@@ -159,23 +159,26 @@ namespace ReikaKalseki.IntegratedFactory
        		rec.addIngredient("AlloyedPCB", 10);
        	}
        	
-       	rec = RecipeUtil.getRecipeByKey("MagmaBoreComponent"); //33 total crafts necessary so the MB needs 495 pods = 4950 resins (~25k gas and ~10k liquid resin) + ~1k T2 bars
-       	rec.addIngredient(cresin.CraftedKey, 15);
-       	rec.addIngredient(fresin.CraftedKey, 15);
-       	rec.addIngredient(aresin.CraftedKey, 15);
+       	rec = RecipeUtil.getRecipeByKey("MagmaBoreComponent"); //33 total crafts necessary so the MB needs 495 pods = 4950 resins (~25k gas and ~7.5k liquid resin) + ~1k T2 bars
+       	rec.addIngredient(fpod.CraftedKey, 15);
+       	rec.addIngredient(clpod.CraftedKey, 15);
+       	rec.addIngredient(spod.CraftedKey, 15);
+       	rec.modifyIngredientCount("HiemalMachineBlock", 66); //from 99 (1:1), so 3267 hiemal to 2178 (1:2)
        	if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
-       		rec.addItemPerN("UltimatePCB", 3, 2); //now needs 22 crafts and 22 ultimate upgrades
+       		//rec.addIngredient(apod.CraftedKey, 5); too many ingredients
+       		rec.modifyIngredientCount("HiemalMachineBlock", 33); //from 66, so 2178 hiemal to 1089 (1:3)
+       		rec.addItemPerN("UltimatePCB", 3, 2); //now needs 11 crafts and 22 ultimate upgrades
        	}
        	
        	rec = RecipeUtil.getRecipeByKey("MagmaStorage"); //63 total crafts necessary
-       	rec.addIngredient("CastingPipe", 10);
-       	rec.addIngredient("ReikaKalseki.ReflectiveAlloy", 32); //total just over 2k
-       	rec.replaceIngredient("CompressedSulphur", "ReikaKalseki.PyroResin", 0.5F); //from 2016 sulfur and 0 resin to 5k sulfur and 2016 resin
+       	rec.addIngredient("CastingPipe", 12); //total just over 750k
+       	rec.replaceIngredient("CompressedSulphur", "ReikaKalseki.PyroResin", 1); //from 2016 sulfur and 0 resin to 10k sulfur and 3024 resin
+       	rec.scaleIOExcept(7, "HiemalMachineBlock"); //cut hiemal cost from 504 to 72
+       	rec.Costs.ForEach(c => {if (c.Key == "HiemalMachineBlock")c.Amount = 20;}); //increase from 72 to 180
        	
        	rec = RecipeUtil.getRecipeByKey("CryoPlasmInferno"); //27 crafts necessary
-       	rec.replaceIngredient("MagneticMachineBlock", "GenericPipeStraight", 1.25F); //from 4 to 5
-       	rec.addIngredient("ReikaKalseki.ReflectiveAlloy", 10);
-       	rec.replaceIngredient("CompressedSulphur", "ReikaKalseki.PyroResin", 0.25F); //1.25x sulfur, and add 432 resin
+       	rec.replaceIngredient("MagneticMachineBlock", "CastingPipe", 2.5F); //from 4 to 10, total cost 270, so need about 1k for the pair
+       	rec.replaceIngredient("CompressedSulphur", "ReikaKalseki.PyroResin", 0.5F); //2.5x sulfur (~4k), and add 648 resin
        	
        	addAndSubSomeIf("CargoLiftBulk", "ChromiumBar", "MagneticMachineBlock", "ChromedMachineBlock", 0.5F, true);
        	
@@ -220,9 +223,10 @@ namespace ReikaKalseki.IntegratedFactory
        	string[] pipes = new string[]{"CastingPipeStraight", "CastingPipeBend"};
        	foreach (string rk in pipes) {
 	       	rec = RecipeUtil.getRecipeByKey(rk);
-	       	rec.replaceIngredient("HeatConductingPipe", "ReikaKalseki.ReinforcedPipe");
-	       	rec.replaceIngredient("ChromiumBar", "ReikaKalseki.ReflectiveAlloy");
+	       	rec.replaceIngredient("HeatConductingPipe", "ReikaKalseki.ReinforcedPipe", 2);
+	       	rec.replaceIngredient("ChromiumBar", "ReikaKalseki.ReflectiveAlloy", 2);
 	       	rec.removeIngredient("MolybdenumBar");
+	       	rec.CraftedAmount = 3;
        	}
        	pipes = new string[]{"GenericPipeStraightkey", "GenericPipeBendkeyMP"};
        	foreach (string rk in pipes) {
@@ -267,6 +271,23 @@ namespace ReikaKalseki.IntegratedFactory
        	
        	foreach (CraftData rr in CraftData.GetRecipesForSet("Manufacturer")) {
        		replaceGasesWithResins(rr);
+       	}
+       	
+       	rec = RecipeUtil.getRecipeByKey("FlexibleGames.CompositeAlloySmelter");
+       	if (rec != null) {
+       		rec.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumWire");
+       		rec.replaceIngredient("MolybdenumBar", "ReikaKalseki.MolybdenumPlate");
+       		if (config.getBoolean(IFConfig.ConfigEntries.T3_T4)) {
+       			rec.addIngredient("SecondaryUpgradeModule", 5);
+       			rec.addIngredient("CrystalClock", 20);
+       			rec.addIngredient("CopperPlate", 30);
+       		}
+	       	//keep his alloy smelter GAC using bars, that feels right
+	       	//but change the yellowcake processor
+       		GenericAutoCrafterNew.mMachinesByKey["FlexibleGames.YellowcakeProcessor"].Recipe.replaceIngredient("CompressedChlorine", "ReikaKalseki.AcidResin");
+	       	GenericAutoCrafterNew.mMachinesByKey["FlexibleGames.YellowcakeProcessor"].Recipe.CraftedAmount *= 5; //keep gas cost constant
+	       	GenericAutoCrafterNew.mMachinesByKey["FlexibleGames.YellowcakeProcessor"].Recipe.CraftTime *= 5; //keep output rate constant
+	       	GenericAutoCrafterNew.mMachinesByKey["FlexibleGames.YellowcakeProcessor"].Recipe.Costs[0].Amount = 200;	// now 2.5x more uranium efficient, and only needs two ore hoppers
        	}
         
        	GenericAutoCrafterNew.mMachinesByKey["ChromedMachineBlockAssembler"].Recipe.replaceIngredient("ChromiumBar", "ReikaKalseki.ChromiumPlate");
@@ -403,10 +424,10 @@ namespace ReikaKalseki.IntegratedFactory
        		ResearchDataEntry.mEntriesByKey["T4defence5"].addIngredient("ComplexExperimentalPod", 64);
        		ResearchDataEntry.mEntriesByKey["T4defence5"].addIngredient("RefinedLiquidResin", 512);
        		
-       		ResearchDataEntry.mEntriesByKey["T4_8LightsInTheDark"].addIngredient("ReikaKalseki.ColdExperimentalPod", 1024);
-       		ResearchDataEntry.mEntriesByKey["T4_8LightsInTheDark"].addIngredient("ReikaKalseki.ToxicExperimentalPod", 1024);
-       		ResearchDataEntry.mEntriesByKey["T4_8LightsInTheDark"].addIngredient("ReikaKalseki.LavaExperimentalPod", 1024);
-       		addAlloyedPodCost("T4_8LightsInTheDark", 256);
+       		ResearchDataEntry.mEntriesByKey["T4_8LightsInTheDark"].addIngredient("ReikaKalseki.ColdExperimentalPod", 100);
+       		ResearchDataEntry.mEntriesByKey["T4_8LightsInTheDark"].addIngredient("ReikaKalseki.ToxicExperimentalPod", 100);
+       		ResearchDataEntry.mEntriesByKey["T4_8LightsInTheDark"].addIngredient("ReikaKalseki.LavaExperimentalPod", 100);
+       		addAlloyedPodCost("T4_8LightsInTheDark", 200);
        	}
        	
        	float scale = config.getFloat(IFConfig.ConfigEntries.T4_RESEARCH_COST_SCALE);

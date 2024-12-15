@@ -163,7 +163,7 @@
 		<Name>Reflective Alloy</Name>
 		<Plural>Reflective Alloy</Plural>
 		<Type>ItemStack</Type>	
-		<Object>BarGold</Object>
+		<Object>BarRainbowAlloy</Object>
 		<Sprite>ReikaKalseki.ReflectiveAlloy</Sprite>
 		<!-- Atlas optional -->
 		<Category>CraftingIngredient</Category>
